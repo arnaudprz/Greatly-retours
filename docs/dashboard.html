@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=15">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=15">
+<link rel="stylesheet" href="assets/css/shared.css?v=16">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=16">
 </head>
 <body>
 
@@ -283,13 +283,13 @@
     <div class="grid">
       <div class="card full">
         <h3>Évolution du NPS</h3>
-        <div class="sub">Question « recommanderiez-vous… » (0–10) · par mois et par parcours</div>
+        <div class="sub">« Imaginez qu'un proche traverse une période intense — lui conseilleriez-vous de vivre cette expérience ? » · par mois</div>
         <div class="chartbox"><canvas id="c-nps"></canvas></div>
       </div>
 
       <div class="card" id="card-energie">
         <h3>Énergie ressentie avant / après séance</h3>
-        <div class="sub">Moyenne mensuelle (0–10) · parcours Énergie</div>
+        <div class="sub">« Comment vous sentiez-vous en arrivant ? » vs « Et maintenant ? » · moyenne mensuelle</div>
         <div class="chartbox"><canvas id="c-energie"></canvas></div>
       </div>
 
@@ -313,13 +313,13 @@
 
       <div class="card" id="card-phases-e">
         <h3>La séance Énergie, étape par étape</h3>
-        <div class="sub">Note moyenne par temps de séance (0–10)</div>
+        <div class="sub">« Comment avez-vous vécu chaque temps de la séance ? » · note 0–10</div>
         <div class="chartbox"><canvas id="c-phases-e"></canvas></div>
       </div>
 
       <div class="card" id="card-phases-l">
         <h3>La rencontre Lucidité, étape par étape</h3>
-        <div class="sub">Note moyenne par temps de rencontre (0–10)</div>
+        <div class="sub">« Comment avez-vous vécu chaque temps de la rencontre ? » · note 0–10</div>
         <div class="chartbox"><canvas id="c-phases-l"></canvas></div>
       </div>
 
@@ -331,7 +331,7 @@
 
       <div class="card full" id="card-perint">
         <h3>Par intervenant·e</h3>
-        <div class="sub">Retours des membres sur les séances de chaque intervenant·e</div>
+        <div class="sub">« Comment avez-vous trouvé l'accompagnement du coach ? » · note moyenne par mois</div>
         <div class="fgroup" id="f-coach" style="display:inline-flex;margin-bottom:14px">
           <button class="on" data-v="yoga">🧘 Coach Yoga</button>
           <button data-v="padel">🎾 Coach Padel</button>
@@ -400,22 +400,22 @@
           <div class="kpi k-nps">
             <div class="lab">NPS prospect</div>
             <div class="val" id="pk-nps">—</div>
-            <div class="sub">« Recommanderiez-vous Greatly ? »</div>
+            <div class="sub">« Parleriez-vous de Greatly à un·e dirigeant·e de votre entourage ? »</div>
           </div>
           <div class="kpi">
             <div class="lab">Première impression</div>
             <div class="val"><span id="pk-impression">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">note moyenne</div>
+            <div class="sub">« Votre première impression en découvrant Greatly »</div>
           </div>
           <div class="kpi">
             <div class="lab">Clarté de l'offre</div>
             <div class="val"><span id="pk-clarte">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">« La proposition est claire »</div>
+            <div class="sub">« Vous avez compris ce que Greatly propose »</div>
           </div>
           <div class="kpi">
             <div class="lab">Projection</div>
             <div class="val"><span id="pk-projection">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">« Je me vois rejoindre le programme »</div>
+            <div class="sub">« Vous vous imaginez rejoindre un groupe Greatly ? »</div>
           </div>
         </div>
 
@@ -423,49 +423,49 @@
           <!-- Sources de découverte -->
           <div class="card">
             <h3>Comment ils nous découvrent</h3>
-            <div class="sub">Répartition des canaux de découverte</div>
+            <div class="sub">« Comment nos chemins se sont-ils croisés ? »</div>
             <div class="chartbox"><canvas id="c-prospect-sources"></canvas></div>
           </div>
 
           <!-- Perception valeur -->
           <div class="card">
             <h3>Perception de la valeur</h3>
-            <div class="sub">« L'investissement est justifié » · note moyenne (0–10)</div>
+            <div class="sub">« Le programme vous semble à la hauteur de ce qu'il représente » · note 0–10</div>
             <div class="chartbox"><canvas id="c-prospect-valeur"></canvas></div>
           </div>
 
           <!-- Freins identifiés -->
           <div class="card">
             <h3>Ce qui freine</h3>
-            <div class="sub">Freins les plus cités par les prospects</div>
+            <div class="sub">« Y a-t-il des choses qui vous retiennent aujourd'hui ? »</div>
             <div class="chartbox"><canvas id="c-prospect-freins"></canvas></div>
           </div>
 
           <!-- Attraits -->
           <div class="card">
             <h3>Ce qui attire</h3>
-            <div class="sub">Ce qui donne envie de rejoindre Greatly</div>
+            <div class="sub">« Qu'est-ce qui vous a touché ou donné envie ? »</div>
             <div class="chartbox"><canvas id="c-prospect-attraits"></canvas></div>
           </div>
 
           <!-- NPS prospect dans le temps -->
           <div class="card full">
             <h3>Évolution du NPS prospect</h3>
-            <div class="sub">Question « recommanderiez-vous Greatly ? » · par mois</div>
+            <div class="sub">« Parleriez-vous de Greatly à un·e dirigeant·e de votre entourage ? » · par mois</div>
             <div class="chartbox"><canvas id="c-prospect-nps"></canvas></div>
           </div>
 
           <!-- Pertinence vs Projection -->
           <div class="card full">
             <h3>Pertinence perçue vs projection</h3>
-            <div class="sub">« Le programme est adapté à mes besoins » vs « Je me vois rejoindre » · moyennes mensuelles</div>
+            <div class="sub">« Ce que Greatly propose résonne avec ce que vous vivez » vs « Vous vous imaginez rejoindre ? » · par mois</div>
             <div class="chartbox"><canvas id="c-prospect-pertproj"></canvas></div>
           </div>
 
           <!-- Verbatims : ce qui ferait franchir le pas -->
           <div class="card">
             <h3>Ce qui ferait franchir le pas</h3>
-            <div class="sub">Réponses à « Qu'est-ce qui vous ferait nous rejoindre ? »</div>
+            <div class="sub">« Qu'est-ce qui vous ferait franchir le pas ? »</div>
             <div id="prospect-verbatims-pas"></div>
             <button type="button" class="btn-ghost" style="margin-top:12px;width:100%" onclick="openVerbatims()">Voir tous les retours</button>
           </div>
@@ -488,22 +488,22 @@
           <div class="kpi k-nps">
             <div class="lab">Satisfaction globale</div>
             <div class="val" id="ig-satisfaction">—<span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">moyenne des 6 dimensions</div>
+            <div class="sub">moyenne des 6 dimensions Greatly & vous</div>
           </div>
           <div class="kpi">
             <div class="lab">Logistique</div>
             <div class="val"><span id="ig-logistique">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">planification, matériel, jour J</div>
+            <div class="sub">« Comment trouvez-vous la logistique autour de vos interventions ? »</div>
           </div>
           <div class="kpi">
             <div class="lab">Accompagnement pédagogique</div>
             <div class="val"><span id="ig-pedagogie">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">cadrage, soutien, échanges</div>
+            <div class="sub">« Comment vivez-vous l'accompagnement pédagogique ? »</div>
           </div>
           <div class="kpi">
             <div class="lab">Relation avec l'équipe</div>
             <div class="val"><span id="ig-relation">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">confiance, écoute, plaisir</div>
+            <div class="sub">« Comment décririez-vous votre relation avec l'équipe Greatly ? »</div>
           </div>
         </div>
 
@@ -525,21 +525,21 @@
           <!-- Détail par dimension -->
           <div class="card">
             <h3>Suivi administratif</h3>
-            <div class="sub">Contrats, facturation, réactivité</div>
+            <div class="sub">« Êtes-vous satisfait du suivi administratif ? »</div>
             <div class="kpi" style="border:none;padding:8px 0"><div class="val" id="ig-admin">—<span style="font-size:1rem;color:var(--warm-grey)">/10</span></div></div>
             <div class="chartbox" style="height:120px"><canvas id="c-ig-admin"></canvas></div>
           </div>
 
           <div class="card">
             <h3>Communication interne</h3>
-            <div class="sub">Infos en amont, retours, clarté</div>
+            <div class="sub">« La communication interne vous convient-elle ? »</div>
             <div class="kpi" style="border:none;padding:8px 0"><div class="val" id="ig-comm">—<span style="font-size:1rem;color:var(--warm-grey)">/10</span></div></div>
             <div class="chartbox" style="height:120px"><canvas id="c-ig-comm"></canvas></div>
           </div>
 
           <div class="card full">
             <h3>Cadre & confort des lieux</h3>
-            <div class="sub">Greatly House + lieux sportifs — vu par les intervenants</div>
+            <div class="sub">« Que pensez-vous du cadre et du confort des lieux où vous intervenez ? » · Greatly House + lieux sportifs</div>
             <div class="chartbox" style="height:180px"><canvas id="c-ig-cadre"></canvas></div>
           </div>
 
@@ -566,14 +566,14 @@
           <!-- Verbatims -->
           <div class="card">
             <h3>Ce qui faciliterait la vie</h3>
-            <div class="sub">Suggestions pratiques des intervenants</div>
+            <div class="sub">« Y a-t-il quelque chose qui vous faciliterait la vie au quotidien ? »</div>
             <div id="ig-verbatims-facilite"></div>
             <button type="button" class="btn-ghost" style="margin-top:12px;width:100%" onclick="openVerbatims()">Voir tous les retours</button>
           </div>
 
           <div class="card">
             <h3>Pour que la collaboration grandisse</h3>
-            <div class="sub">Idées et ressentis partagés librement</div>
+            <div class="sub">« Qu'aimeriez-vous nous partager pour que notre collaboration grandisse ? »</div>
             <div id="ig-verbatims-collab"></div>
             <button type="button" class="btn-ghost" style="margin-top:12px;width:100%" onclick="openVerbatims()">Voir tous les retours</button>
           </div>
@@ -689,15 +689,15 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=15"></script>
-<script src="assets/js/api.js?v=15"></script>
-<script src="assets/js/dashboard/filters.js?v=15"></script>
-<script src="assets/js/dashboard/charts.js?v=15"></script>
-<script src="assets/js/dashboard/auth.js?v=15"></script>
-<script src="assets/js/dashboard/data.js?v=15"></script>
-<script src="assets/js/dashboard/admin.js?v=15"></script>
-<script src="assets/js/dashboard/alerts.js?v=15"></script>
-<script src="assets/js/dashboard/chat.js?v=15"></script>
+<script src="assets/js/config.js?v=16"></script>
+<script src="assets/js/api.js?v=16"></script>
+<script src="assets/js/dashboard/filters.js?v=16"></script>
+<script src="assets/js/dashboard/charts.js?v=16"></script>
+<script src="assets/js/dashboard/auth.js?v=16"></script>
+<script src="assets/js/dashboard/data.js?v=16"></script>
+<script src="assets/js/dashboard/admin.js?v=16"></script>
+<script src="assets/js/dashboard/alerts.js?v=16"></script>
+<script src="assets/js/dashboard/chat.js?v=16"></script>
 <script>
 // Navigation principale (navbar)
 document.querySelectorAll('.navbar-item[data-view]').forEach(btn => {

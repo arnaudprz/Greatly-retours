@@ -95,20 +95,20 @@ const D = {
 
   // --- Détail par question Énergie ---
   qEnergie: [
-    { label: 'Énergie avant la séance',    val: 4.6, delta: +0.2, data: [4.2, 4.5, 4.1, 4.8, 4.3, 4.6, 4.4, 4.7, 4.2, 4.5, 4.3, 4.6] },
-    { label: 'Énergie après la séance',    val: 8.6, delta: +0.4, data: [7.8, 8.0, 7.6, 8.2, 8.1, 8.3, 8.0, 8.4, 8.2, 8.5, 8.3, 8.6] },
-    { label: 'Séance à mon rythme',        val: 8.3, delta: +0.4, data: [7.5, 7.8, 7.9, 8.0, 8.1, 8.0, 8.2, 8.1, 8.2, 8.3, 8.2, 8.3] },
-    { label: 'Plaisir à bouger',           val: 8.6, delta: +0.2, data: [8.0, 8.1, 8.2, 8.3, 8.4, 8.3, 8.4, 8.5, 8.5, 8.6, 8.5, 8.6] },
-    { label: 'Accompagnement du coach',    val: 8.8, delta: +0.3, data: [8.2, 8.3, 8.4, 8.5, 8.5, 8.6, 8.6, 8.7, 8.7, 8.8, 8.7, 8.8] },
+    { label: 'Énergie avant la séance',    q: 'Comment vous sentiez-vous en arrivant ?', val: 4.6, delta: +0.2, data: [4.2, 4.5, 4.1, 4.8, 4.3, 4.6, 4.4, 4.7, 4.2, 4.5, 4.3, 4.6] },
+    { label: 'Énergie après la séance',    q: 'Et maintenant, comment vous sentez-vous ?', val: 8.6, delta: +0.4, data: [7.8, 8.0, 7.6, 8.2, 8.1, 8.3, 8.0, 8.4, 8.2, 8.5, 8.3, 8.6] },
+    { label: 'Séance à mon rythme',        q: 'La séance était-elle à votre rythme ?', val: 8.3, delta: +0.4, data: [7.5, 7.8, 7.9, 8.0, 8.1, 8.0, 8.2, 8.1, 8.2, 8.3, 8.2, 8.3] },
+    { label: 'Plaisir à bouger',           q: 'Avez-vous pris du plaisir à bouger ?', val: 8.6, delta: +0.2, data: [8.0, 8.1, 8.2, 8.3, 8.4, 8.3, 8.4, 8.5, 8.5, 8.6, 8.5, 8.6] },
+    { label: 'Accompagnement du coach',    q: 'Comment avez-vous trouvé l\'accompagnement du coach ?', val: 8.8, delta: +0.3, data: [8.2, 8.3, 8.4, 8.5, 8.5, 8.6, 8.6, 8.7, 8.7, 8.8, 8.7, 8.8] },
   ],
 
   // --- Détail par question Lucidité ---
   qLucidite: [
-    { label: 'Recul & clarté',            val: 8.1, delta: +0.5, data: [7.2, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.8, 7.9, 8.0, 8.0, 8.1] },
-    { label: 'Qualité des échanges',      val: 8.5, delta: +0.3, data: [7.8, 7.9, 8.0, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5, 8.5] },
-    { label: 'Outils & méthodes',         val: 7.7, delta: +0.2, data: [7.2, 7.3, 7.3, 7.4, 7.5, 7.4, 7.5, 7.6, 7.6, 7.7, 7.6, 7.7] },
-    { label: 'Élan après la rencontre',   val: 8.0, delta: +0.4, data: [7.2, 7.4, 7.4, 7.5, 7.6, 7.7, 7.7, 7.8, 7.8, 7.9, 7.9, 8.0] },
-    { label: 'Animation de l\'atelier',   val: 8.4, delta: +0.3, data: [7.8, 7.9, 8.0, 8.1, 8.1, 8.2, 8.2, 8.3, 8.3, 8.3, 8.4, 8.4] },
+    { label: 'Recul & clarté',            q: 'Cet atelier vous a-t-il aidé à voir plus clair ?', val: 8.1, delta: +0.5, data: [7.2, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.8, 7.9, 8.0, 8.0, 8.1] },
+    { label: 'Qualité des échanges',      q: 'Comment avez-vous trouvé les échanges avec le groupe ?', val: 8.5, delta: +0.3, data: [7.8, 7.9, 8.0, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5, 8.5] },
+    { label: 'Outils & méthodes',         q: 'Repartez-vous avec quelque chose de concret ?', val: 7.7, delta: +0.2, data: [7.2, 7.3, 7.3, 7.4, 7.5, 7.4, 7.5, 7.6, 7.6, 7.7, 7.6, 7.7] },
+    { label: 'Élan après la rencontre',   q: 'Sentez-vous une envie de faire bouger les choses ?', val: 8.0, delta: +0.4, data: [7.2, 7.4, 7.4, 7.5, 7.6, 7.7, 7.7, 7.8, 7.8, 7.9, 7.9, 8.0] },
+    { label: 'Animation de l\'atelier',   q: 'Comment avez-vous trouvé l\'animation de l\'atelier ?', val: 8.4, delta: +0.3, data: [7.8, 7.9, 8.0, 8.1, 8.1, 8.2, 8.2, 8.3, 8.3, 8.3, 8.4, 8.4] },
   ],
 
   // --- Par intervenant (note moyenne par mois) ---
@@ -150,16 +150,16 @@ const D = {
 
   // --- Échelles intervenants (retours de séance) ---
   qIntervenantEnergie: [
-    { label: 'Ressenti du groupe',          val: 8.3, delta: +0.3, data: [7.8, 7.9, 8.0, 8.0, 8.1, 8.1, 8.2, 8.2, 8.2, 8.3, 8.2, 8.3] },
-    { label: 'Adaptation de la séance',     val: 8.0, delta: +0.2, data: [7.5, 7.6, 7.7, 7.7, 7.8, 7.8, 7.9, 7.9, 7.9, 8.0, 7.9, 8.0] },
-    { label: 'Conditions de travail',       val: 7.8, delta: +0.1, data: [7.4, 7.5, 7.5, 7.6, 7.6, 7.7, 7.7, 7.7, 7.8, 7.8, 7.7, 7.8] },
-    { label: 'Ressenti d\'animation',       val: 8.6, delta: +0.4, data: [8.0, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5, 8.5, 8.6, 8.6] },
+    { label: 'Ressenti du groupe',          q: 'Comment avez-vous senti le groupe aujourd\'hui ?', val: 8.3, delta: +0.3, data: [7.8, 7.9, 8.0, 8.0, 8.1, 8.1, 8.2, 8.2, 8.2, 8.3, 8.2, 8.3] },
+    { label: 'Adaptation de la séance',     q: 'Avez-vous pu adapter la séance comme vous le souhaitiez ?', val: 8.0, delta: +0.2, data: [7.5, 7.6, 7.7, 7.7, 7.8, 7.8, 7.9, 7.9, 7.9, 8.0, 7.9, 8.0] },
+    { label: 'Conditions de travail',       q: 'Les conditions étaient-elles réunies pour bien travailler ?', val: 7.8, delta: +0.1, data: [7.4, 7.5, 7.5, 7.6, 7.6, 7.7, 7.7, 7.7, 7.8, 7.8, 7.7, 7.8] },
+    { label: 'Ressenti d\'animation',       q: 'Comment vous êtes-vous senti dans votre rôle ?', val: 8.6, delta: +0.4, data: [8.0, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5, 8.5, 8.6, 8.6] },
   ],
   qIntervenantLucidite: [
-    { label: 'Ressenti du groupe',          val: 8.5, delta: +0.3, data: [7.9, 8.0, 8.1, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5, 8.5] },
-    { label: 'Contenu de l\'atelier',       val: 8.2, delta: +0.2, data: [7.7, 7.8, 7.8, 7.9, 8.0, 8.0, 8.0, 8.1, 8.1, 8.2, 8.1, 8.2] },
-    { label: 'Conditions de travail',       val: 8.0, delta: +0.1, data: [7.6, 7.7, 7.7, 7.8, 7.8, 7.9, 7.9, 7.9, 8.0, 8.0, 7.9, 8.0] },
-    { label: 'Ressenti d\'animation',       val: 8.7, delta: +0.3, data: [8.1, 8.2, 8.3, 8.3, 8.4, 8.5, 8.5, 8.6, 8.6, 8.7, 8.6, 8.7] },
+    { label: 'Ressenti du groupe',          q: 'Comment avez-vous senti le groupe pendant l\'atelier ?', val: 8.5, delta: +0.3, data: [7.9, 8.0, 8.1, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5, 8.5] },
+    { label: 'Contenu de l\'atelier',       q: 'Le contenu de l\'atelier a-t-il bien fonctionné ?', val: 8.2, delta: +0.2, data: [7.7, 7.8, 7.8, 7.9, 8.0, 8.0, 8.0, 8.1, 8.1, 8.2, 8.1, 8.2] },
+    { label: 'Conditions de travail',       q: 'Les conditions étaient-elles réunies pour un bon atelier ?', val: 8.0, delta: +0.1, data: [7.6, 7.7, 7.7, 7.8, 7.8, 7.9, 7.9, 7.9, 8.0, 8.0, 7.9, 8.0] },
+    { label: 'Ressenti d\'animation',       q: 'Comment vous êtes-vous senti dans l\'animation ?', val: 8.7, delta: +0.3, data: [8.1, 8.2, 8.3, 8.3, 8.4, 8.5, 8.5, 8.6, 8.6, 8.7, 8.6, 8.7] },
   ],
 
   // --- Intervenants + Greatly ---
@@ -673,6 +673,7 @@ function renderDetail(isTous, isEnergie, isLucidite, mois, m) {
       card.className = 'qcard';
       card.innerHTML = `
         <h4>${q.label}</h4>
+        ${q.q ? `<div class="qq">« ${q.q} »</div>` : ''}
         <div class="qval">
           ${fr(q.val)}<span style="font-size:.85rem;color:var(--warm-grey)">/10</span>
           <span class="qdelta" style="color:${deltaColor}">${deltaSign}${fr(q.delta)}</span>
@@ -1207,6 +1208,7 @@ function renderIvSeance(mois, m) {
       card.className = 'qcard';
       card.innerHTML = `
         <h4>${q.label}</h4>
+        ${q.q ? `<div class="qq">« ${q.q} »</div>` : ''}
         <div class="qval">
           ${fr(q.val)}<span style="font-size:.85rem;color:var(--warm-grey)">/10</span>
           <span class="qdelta" style="color:${deltaColor}">${deltaSign}${fr(q.delta)}</span>
