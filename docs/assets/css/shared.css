@@ -57,6 +57,11 @@ body.t-lucidite {
   --accent-pale: var(--lucidite-pale);
   --accent-dark: var(--lucidite-dark);
 }
+body.t-prospect {
+  --accent: #8B6E4E;
+  --accent-pale: #EDE4D8;
+  --accent-dark: #6B5139;
+}
 
 /* --- Typographie --- */
 .brand {

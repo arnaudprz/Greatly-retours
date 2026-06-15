@@ -42,24 +42,34 @@ function last(arr, m) {
 /** Render principal — sera complété quand on branche les données réelles */
 function render() {
   const isLieux = F.type === 'lieux';
+  const isProspect = F.type === 'prospect';
+  const isStandard = !isLieux && !isProspect;
 
-  // Basculer entre vue standard et vue Lieux
-  show('standard-section', !isLieux);
+  // Basculer entre les trois vues
+  show('standard-section', isStandard);
   show('lieux-section', isLieux);
+  show('prospect-section', isProspect);
 
-  // Masquer les filtres secondaires en mode Lieux (pas pertinents)
-  show('f-act', !isLieux);
-  show('f-who', !isLieux);
+  // Masquer les filtres secondaires quand pas pertinent
+  show('f-act', isStandard);
+  show('f-who', isStandard);
+  // Période reste visible partout
+  show('f-period', !isProspect || true);
 
-  if (isLieux) {
-    renderLieux();
-  }
+  // Masquer verbatims/alertes membres en mode Lieux ou Prospect
+  show('card-verbatims', isStandard);
+  show('card-alerts', isStandard);
 
-  console.log('render() appelé avec filtres:', JSON.stringify(F));
+  if (isLieux) renderLieux();
+  if (isProspect) renderProspect();
 }
 
 /** Render de la vue Lieux */
 function renderLieux() {
   // TODO: remplacer par les données réelles du relais
-  // Pour l'instant, données de démonstration
+}
+
+/** Render de la vue Futurs membres */
+function renderProspect() {
+  // TODO: remplacer par les données réelles du relais
 }

@@ -195,7 +195,8 @@
   <!-- Onglets -->
   <div class="tabs" id="view-tabs">
     <button class="on" data-view="dashboard">📊 Tableau de bord</button>
-    <a href="index.html" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:9px;font-size:.88rem;font-weight:600;color:var(--warm-grey);text-decoration:none;transition:all .12s">📋 Formulaire membres & intervenants</a>
+    <a href="index.html" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:9px;font-size:.88rem;font-weight:600;color:var(--warm-grey);text-decoration:none;transition:all .12s">📋 Formulaire membres</a>
+    <a href="prospect.html" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:9px;font-size:.88rem;font-weight:600;color:var(--warm-grey);text-decoration:none;transition:all .12s">🌱 Formulaire futurs membres</a>
     <button class="admin-only" data-view="admin">🔒 Administration</button>
   </div>
 
@@ -209,6 +210,7 @@
         <button data-v="energie">⛷️ Énergie</button>
         <button data-v="lucidite">🦉 Lucidité</button>
         <button data-v="lieux">📍 Lieux</button>
+        <button data-v="prospect">🌱 Futurs membres</button>
       </div>
       <div class="fgroup" id="f-act">
         <button class="on" data-v="tous">Toutes activités</button>
@@ -361,6 +363,92 @@
             <h3>Retours sur les lieux</h3>
             <div class="sub">Verbatims mentionnant le lieu, l'espace ou les équipements</div>
             <div id="lieux-verbatims-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ VUE FUTURS MEMBRES (filtre 🌱 Futurs membres) ============ -->
+      <div id="prospect-section" style="display:none">
+
+        <!-- KPIs prospect -->
+        <div class="kpis">
+          <div class="kpi k-nps">
+            <div class="lab">NPS prospect</div>
+            <div class="val" id="pk-nps">—</div>
+            <div class="sub">« Recommanderiez-vous Greatly ? »</div>
+          </div>
+          <div class="kpi">
+            <div class="lab">Première impression</div>
+            <div class="val"><span id="pk-impression">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
+            <div class="sub">note moyenne</div>
+          </div>
+          <div class="kpi">
+            <div class="lab">Clarté de l'offre</div>
+            <div class="val"><span id="pk-clarte">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
+            <div class="sub">« La proposition est claire »</div>
+          </div>
+          <div class="kpi">
+            <div class="lab">Projection</div>
+            <div class="val"><span id="pk-projection">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
+            <div class="sub">« Je me vois rejoindre le programme »</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <!-- Sources de découverte -->
+          <div class="card">
+            <h3>Comment ils nous découvrent</h3>
+            <div class="sub">Répartition des canaux de découverte</div>
+            <div class="chartbox"><canvas id="c-prospect-sources"></canvas></div>
+          </div>
+
+          <!-- Perception valeur -->
+          <div class="card">
+            <h3>Perception de la valeur</h3>
+            <div class="sub">« L'investissement est justifié » · note moyenne (0–10)</div>
+            <div class="chartbox"><canvas id="c-prospect-valeur"></canvas></div>
+          </div>
+
+          <!-- Freins identifiés -->
+          <div class="card">
+            <h3>Ce qui freine</h3>
+            <div class="sub">Freins les plus cités par les prospects</div>
+            <div class="chartbox"><canvas id="c-prospect-freins"></canvas></div>
+          </div>
+
+          <!-- Attraits -->
+          <div class="card">
+            <h3>Ce qui attire</h3>
+            <div class="sub">Ce qui donne envie de rejoindre Greatly</div>
+            <div class="chartbox"><canvas id="c-prospect-attraits"></canvas></div>
+          </div>
+
+          <!-- NPS prospect dans le temps -->
+          <div class="card full">
+            <h3>Évolution du NPS prospect</h3>
+            <div class="sub">Question « recommanderiez-vous Greatly ? » · par mois</div>
+            <div class="chartbox"><canvas id="c-prospect-nps"></canvas></div>
+          </div>
+
+          <!-- Pertinence vs Projection -->
+          <div class="card full">
+            <h3>Pertinence perçue vs projection</h3>
+            <div class="sub">« Le programme est adapté à mes besoins » vs « Je me vois rejoindre » · moyennes mensuelles</div>
+            <div class="chartbox"><canvas id="c-prospect-pertproj"></canvas></div>
+          </div>
+
+          <!-- Verbatims : ce qui ferait franchir le pas -->
+          <div class="card">
+            <h3>Ce qui ferait franchir le pas</h3>
+            <div class="sub">Réponses à « Qu'est-ce qui vous ferait nous rejoindre ? »</div>
+            <div id="prospect-verbatims-pas"></div>
+          </div>
+
+          <!-- Verbatims : suggestions -->
+          <div class="card">
+            <h3>Suggestions d'amélioration</h3>
+            <div class="sub">« Un mot, une idée pour nous aider à nous améliorer »</div>
+            <div id="prospect-verbatims-suggestions"></div>
           </div>
         </div>
       </div>
