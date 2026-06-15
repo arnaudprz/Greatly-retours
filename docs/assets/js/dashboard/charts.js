@@ -77,7 +77,7 @@ const D = {
   npsDetrac:    [18, 18, 17, 15, 13, 12, 12, 12, 11, 10, 10,  8],
 
   // --- NPS par atelier Lucidité ---
-  ateliersNoms: ['1. Miroir', '2. Gouvernail', '3. Compas', '4. Ancre', '5. Boussole', '6. Horizon', 'Bilan'],
+  ateliersNoms: ['1 · Le cadre', '2 · Les décisions', '3 · L\'énergie', '4 · Les émotions', '5 · Le temps', '6 · Le collectif', 'Bilan'],
   ateliersNPS:  [72, 78, 68, 80, 74, 82, 85],
 
   // --- Yoga vs Padel ---
@@ -86,19 +86,20 @@ const D = {
   sportsNote: [8.4, 8.1],
 
   // --- Séance Énergie étape par étape ---
-  phasesENoms:  ['Accueil & briefing', 'Échauffement', 'Corps de séance', 'Retour au calme', 'Temps d\'échange'],
-  phasesENote:  [8.6, 7.9, 8.5, 8.8, 8.2],
+  phasesENoms:  ['Accueil', 'Échauffement', 'Cœur de séance', 'Récupération', 'Clôture', 'Lieu'],
+  phasesENote:  [8.6, 7.9, 8.5, 8.8, 8.2, 7.8],
 
   // --- Rencontre Lucidité étape par étape ---
-  phasesLNoms:  ['Accueil', 'Brunch', 'Atelier', 'Greatly House'],
-  phasesLNote:  [9.0, 7.8, 8.4, 8.9],
+  phasesLNoms:  ['Accueil', 'Brunch', 'Atelier', 'Debrief & clôture', 'Greatly House'],
+  phasesLNote:  [9.0, 7.8, 8.4, 8.1, 8.9],
 
   // --- Détail par question Énergie ---
   qEnergie: [
-    { label: 'Rythme de la séance',      val: 8.3, delta: +0.4, data: [7.5, 7.8, 7.9, 8.0, 8.1, 8.0, 8.2, 8.1, 8.2, 8.3, 8.2, 8.3] },
-    { label: 'Plaisir à bouger',          val: 8.6, delta: +0.2, data: [8.0, 8.1, 8.2, 8.3, 8.4, 8.3, 8.4, 8.5, 8.5, 8.6, 8.5, 8.6] },
-    { label: 'Lieu & cadre (sport)',       val: 7.9, delta: -0.1, data: [8.0, 7.8, 8.0, 7.9, 7.8, 8.0, 7.9, 7.8, 8.0, 7.9, 8.0, 7.9] },
-    { label: 'Qualité de l\'intervenant',  val: 8.8, delta: +0.3, data: [8.2, 8.3, 8.4, 8.5, 8.5, 8.6, 8.6, 8.7, 8.7, 8.8, 8.7, 8.8] },
+    { label: 'Énergie avant la séance',    val: 4.6, delta: +0.2, data: [4.2, 4.5, 4.1, 4.8, 4.3, 4.6, 4.4, 4.7, 4.2, 4.5, 4.3, 4.6] },
+    { label: 'Énergie après la séance',    val: 8.6, delta: +0.4, data: [7.8, 8.0, 7.6, 8.2, 8.1, 8.3, 8.0, 8.4, 8.2, 8.5, 8.3, 8.6] },
+    { label: 'Séance à mon rythme',        val: 8.3, delta: +0.4, data: [7.5, 7.8, 7.9, 8.0, 8.1, 8.0, 8.2, 8.1, 8.2, 8.3, 8.2, 8.3] },
+    { label: 'Plaisir à bouger',           val: 8.6, delta: +0.2, data: [8.0, 8.1, 8.2, 8.3, 8.4, 8.3, 8.4, 8.5, 8.5, 8.6, 8.5, 8.6] },
+    { label: 'Accompagnement du coach',    val: 8.8, delta: +0.3, data: [8.2, 8.3, 8.4, 8.5, 8.5, 8.6, 8.6, 8.7, 8.7, 8.8, 8.7, 8.8] },
   ],
 
   // --- Détail par question Lucidité ---
@@ -107,7 +108,7 @@ const D = {
     { label: 'Qualité des échanges',      val: 8.5, delta: +0.3, data: [7.8, 7.9, 8.0, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5, 8.5] },
     { label: 'Outils & méthodes',         val: 7.7, delta: +0.2, data: [7.2, 7.3, 7.3, 7.4, 7.5, 7.4, 7.5, 7.6, 7.6, 7.7, 7.6, 7.7] },
     { label: 'Élan après la rencontre',   val: 8.0, delta: +0.4, data: [7.2, 7.4, 7.4, 7.5, 7.6, 7.7, 7.7, 7.8, 7.8, 7.9, 7.9, 8.0] },
-    { label: 'Greatly House (cadre)',     val: 8.9, delta: +0.1, data: [8.5, 8.6, 8.6, 8.7, 8.7, 8.8, 8.8, 8.8, 8.9, 8.9, 8.8, 8.9] },
+    { label: 'Animation de l\'atelier',   val: 8.4, delta: +0.3, data: [7.8, 7.9, 8.0, 8.1, 8.1, 8.2, 8.2, 8.3, 8.3, 8.3, 8.4, 8.4] },
   ],
 
   // --- Par intervenant (note moyenne par mois) ---
@@ -115,7 +116,7 @@ const D = {
   coachPadel: [7.9, 8.0, 8.1, 8.0, 8.2, 8.1, 8.3, 8.2, 8.4, 8.3, 8.5, 8.4],
 
   // --- Lieux (note 0-10) ---
-  lieuxNoms:   ['Greatly House', 'Studio Yoga (Lille)', 'Club Padel (Villeneuve)'],
+  lieuxNoms:   ['Greatly House', 'Lieu Yoga', 'Lieu Padel'],
   lieuxNotes:  [8.9, 7.8, 7.6],
   lieuxHouse:  [8.4, 8.5, 8.5, 8.6, 8.7, 8.7, 8.8, 8.8, 8.9, 8.9, 8.8, 8.9],
   lieuxSport:  [7.5, 7.6, 7.5, 7.7, 7.6, 7.8, 7.7, 7.8, 7.7, 7.9, 7.8, 7.7],
@@ -125,20 +126,35 @@ const D = {
   prospectImpression: [7.2, 7.4, 7.5, 7.6, 7.8, 7.7, 8.0, 7.9, 8.1, 8.0, 8.2, 8.3],
   prospectClarte:     [6.8, 7.0, 7.2, 7.1, 7.4, 7.5, 7.6, 7.8, 7.7, 7.9, 8.0, 8.1],
   prospectProjection: [5.8, 6.0, 6.2, 6.4, 6.5, 6.8, 7.0, 6.9, 7.2, 7.1, 7.4, 7.5],
+  prospectValeur:     [6.5, 6.7, 6.8, 7.0, 7.1, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9],
   prospectPertinence: [7.0, 7.2, 7.3, 7.5, 7.6, 7.8, 7.9, 8.0, 8.1, 8.0, 8.2, 8.3],
 
   // Sources de découverte (prospect)
-  sourcesLabels: ['Bouche-à-oreille', 'LinkedIn', 'Site web', 'Événement', 'Autre'],
-  sourcesData:   [38, 24, 18, 14, 6],
-  sourcesColors: ['#6B7D5C', '#C0814E', '#4F7C82', '#8B6E4E', '#E7E1D7'],
+  sourcesLabels: ['Bouche-à-oreille', 'Réseaux sociaux', 'Site web', 'Événement', 'Presse', 'Autre'],
+  sourcesData:   [38, 20, 18, 14, 4, 6],
+  sourcesColors: ['#6B7D5C', '#C0814E', '#4F7C82', '#8B6E4E', '#9B8B7A', '#E7E1D7'],
 
-  // Freins (prospect)
-  freinsLabels: ['Prix / investissement', 'Manque de temps', 'Pas assez d\'info', 'Distance / logistique', 'Doute sur la valeur'],
-  freinsData:   [42, 28, 18, 15, 12],
+  // Freins (prospect) — alignés sur prospect.html data-v
+  freinsLabels: ['L\'investissement financier', 'Trouver le temps', 'Le déplacement', 'Le format en groupe', 'Je ne cerne pas bien ce que c\'est', 'Le côté sportif m\'impressionne', 'Rien de particulier'],
+  freinsData:   [42, 28, 15, 12, 18, 8, 22],
 
-  // Attraits (prospect)
-  attraitsLabels: ['Approche corps + esprit', 'Réseau de dirigeants', 'Cadre intimiste', 'Accompagnement sur-mesure', 'Greatly House'],
-  attraitsData:   [48, 35, 30, 26, 22],
+  // Attraits (prospect) — alignés sur prospect.html data-v
+  attraitsLabels: ['Bouger, prendre soin de son corps', 'Prendre du recul, réfléchir autrement', 'Échanger entre pairs', 'Le cadre, la Greatly House', 'L\'approche globale', 'S\'accorder une vraie pause'],
+  attraitsData:   [48, 42, 35, 30, 26, 22],
+
+  // --- Échelles intervenants (retours de séance) ---
+  qIntervenantEnergie: [
+    { label: 'Ressenti du groupe',          val: 8.3, delta: +0.3, data: [7.8, 7.9, 8.0, 8.0, 8.1, 8.1, 8.2, 8.2, 8.2, 8.3, 8.2, 8.3] },
+    { label: 'Adaptation de la séance',     val: 8.0, delta: +0.2, data: [7.5, 7.6, 7.7, 7.7, 7.8, 7.8, 7.9, 7.9, 7.9, 8.0, 7.9, 8.0] },
+    { label: 'Conditions de travail',       val: 7.8, delta: +0.1, data: [7.4, 7.5, 7.5, 7.6, 7.6, 7.7, 7.7, 7.7, 7.8, 7.8, 7.7, 7.8] },
+    { label: 'Ressenti d\'animation',       val: 8.6, delta: +0.4, data: [8.0, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5, 8.5, 8.6, 8.6] },
+  ],
+  qIntervenantLucidite: [
+    { label: 'Ressenti du groupe',          val: 8.5, delta: +0.3, data: [7.9, 8.0, 8.1, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5, 8.5] },
+    { label: 'Contenu de l\'atelier',       val: 8.2, delta: +0.2, data: [7.7, 7.8, 7.8, 7.9, 8.0, 8.0, 8.0, 8.1, 8.1, 8.2, 8.1, 8.2] },
+    { label: 'Conditions de travail',       val: 8.0, delta: +0.1, data: [7.6, 7.7, 7.7, 7.8, 7.8, 7.9, 7.9, 7.9, 8.0, 8.0, 7.9, 8.0] },
+    { label: 'Ressenti d\'animation',       val: 8.7, delta: +0.3, data: [8.1, 8.2, 8.3, 8.3, 8.4, 8.5, 8.5, 8.6, 8.6, 8.7, 8.6, 8.7] },
+  ],
 
   // --- Intervenants + Greatly ---
   igLabels:    ['Logistique', 'Administratif', 'Pédagogie', 'Communication', 'Cadre & lieux', 'Relation équipe'],
@@ -312,13 +328,15 @@ function render() {
   show('ivgreatly-section', isIvGreatly);
 
   // Filtres secondaires
-  show('f-act', isStandard);
+  show('nav-act-wrap', isStandard);
   show('f-who', isStandard);
   show('f-period', true);
 
-  // Verbatims et alertes membres
-  show('card-verbatims', isStandard);
-  show('card-alerts', isStandard);
+  // Masquer verbatims/alertes hors vue standard
+  if (!isStandard) {
+    show('card-verbatims', false);
+    show('card-alerts', false);
+  }
 
   // Sous-sections selon le filtre actif
   if (isStandard) renderStandard(isTous, isEnergie, isLucidite);
@@ -335,16 +353,21 @@ function render() {
 function renderStandard(isTous, isEnergie, isLucidite) {
   const m = F.period;
   const mois = last(MOIS, m);
+  const isMembres = F.who === 'membres';
+  const isIntervenants = F.who === 'intervenants';
 
   // --- Masquer/afficher les cartes selon le filtre ---
-  show('card-energie',   isTous || isEnergie);
-  show('card-ateliers',  isTous || isLucidite);
-  show('card-sports',    isTous || isEnergie);
-  show('card-phases-e',  isTous || isEnergie);
-  show('card-phases-l',  isTous || isLucidite);
-  show('card-lieux',     isTous);
-  show('kpi-ea',         isTous || isEnergie);
-  show('kpi-cl',         isTous || isLucidite);
+  show('card-energie',   (isTous || isEnergie) && !isIntervenants);
+  show('card-ateliers',  (isTous || isLucidite) && !isIntervenants);
+  show('card-sports',    (isTous || isEnergie) && !isIntervenants && F.act === 'tous');
+  show('card-phases-e',  (isTous || isEnergie) && !isIntervenants);
+  show('card-phases-l',  (isTous || isLucidite) && !isIntervenants);
+  show('card-lieux',     isTous && !isIntervenants);
+  show('kpi-ea',         (isTous || isEnergie) && !isIntervenants);
+  show('kpi-cl',         (isTous || isLucidite) && !isIntervenants);
+  show('card-perint',    (isTous || isEnergie) && !isIntervenants);
+  show('card-verbatims', !isIntervenants);
+  show('card-alerts',    !isMembres);
 
   // --- KPIs ---
   renderKPIs(isTous, isEnergie, isLucidite, m);
@@ -380,10 +403,10 @@ function renderStandard(isTous, isEnergie, isLucidite) {
   if (isTous) renderLieuxSynthese();
 
   // --- Verbatims ---
-  renderVerbatims(isTous, isEnergie, isLucidite);
+  if (!isIntervenants) renderVerbatims(isTous, isEnergie, isLucidite);
 
   // --- Alertes ---
-  renderAlertes();
+  if (!isMembres) renderAlertes();
 }
 
 
@@ -930,7 +953,7 @@ function renderProspect() {
     type: 'line',
     data: {
       labels: mois,
-      datasets: [lineds('Perception valeur', last(D.prospectImpression, m), C.sage)],
+      datasets: [lineds('Perception valeur', last(D.prospectValeur, m), C.sage)],
     },
     options: lineOpts(5, 10),
   });
@@ -1096,6 +1119,9 @@ function renderIvGreatly() {
     options: lineOpts(6, 10),
   });
 
+  // --- Retours de séance des intervenants (détail par question) ---
+  renderIvSeance(mois, m);
+
   // --- Verbatims ---
   const facList = document.getElementById('ig-verbatims-facilite');
   if (facList) {
@@ -1116,4 +1142,63 @@ function renderIvGreatly() {
       </div>
     `).join('');
   }
+}
+
+
+/* =============================================
+   RETOURS DE SÉANCE DES INTERVENANTS
+   ============================================= */
+
+function renderIvSeance(mois, m) {
+  const grid = document.getElementById('iv-seance-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  const sections = [
+    { titre: '⛷️ Séances Énergie', questions: D.qIntervenantEnergie, color: C.energie },
+    { titre: '🦉 Ateliers Lucidité', questions: D.qIntervenantLucidite, color: C.lucidite },
+  ];
+
+  sections.forEach(sec => {
+    const div = document.createElement('div');
+    div.className = 'qdivider';
+    div.textContent = sec.titre;
+    grid.appendChild(div);
+
+    sec.questions.forEach((q, i) => {
+      const id = 'spark-iv-' + sec.titre.substring(0, 3) + '-' + i;
+      const deltaColor = q.delta >= 0 ? C.good : C.bad;
+      const deltaSign = q.delta >= 0 ? '+' : '';
+
+      const card = document.createElement('div');
+      card.className = 'qcard';
+      card.innerHTML = `
+        <h4>${q.label}</h4>
+        <div class="qval">
+          ${fr(q.val)}<span style="font-size:.85rem;color:var(--warm-grey)">/10</span>
+          <span class="qdelta" style="color:${deltaColor}">${deltaSign}${fr(q.delta)}</span>
+        </div>
+        <div class="qchart"><canvas id="${id}"></canvas></div>
+      `;
+      grid.appendChild(card);
+
+      requestAnimationFrame(() => {
+        mk(id, {
+          type: 'line',
+          data: {
+            labels: mois,
+            datasets: [{
+              data: last(q.data, m),
+              borderColor: sec.color,
+              backgroundColor: sec.color + '15',
+              borderWidth: 2,
+              fill: true,
+              tension: 0.4,
+            }],
+          },
+          options: sparkOpts(),
+        });
+      });
+    });
+  });
 }

@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=13">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=13">
+<link rel="stylesheet" href="assets/css/shared.css?v=14">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=14">
 </head>
 <body>
 
@@ -163,6 +163,16 @@
     <div class="navbar-menu">
       <button class="navbar-item on" data-view="dashboard">📊 Tableau de bord</button>
 
+      <!-- Activités (dropdown) -->
+      <div class="navbar-dropdown-wrap" id="nav-act-wrap">
+        <button class="navbar-item navbar-has-dropdown" id="nav-act-btn">🏃 Activités ▾</button>
+        <div class="navbar-dropdown">
+          <button data-act="tous" class="on">Toutes activités</button>
+          <button data-act="yoga">🧘 Yoga</button>
+          <button data-act="padel">🎾 Padel</button>
+        </div>
+      </div>
+
       <!-- Formulaires (dropdown) -->
       <div class="navbar-dropdown-wrap">
         <button class="navbar-item navbar-has-dropdown">📋 Formulaires ▾</button>
@@ -220,8 +230,8 @@
   <!-- ============ VUE TABLEAU DE BORD ============ -->
   <div class="view active" id="view-dashboard">
 
-    <!-- Filtres -->
-    <div class="filters">
+    <!-- Filtres (sticky sous la navbar) -->
+    <div class="filters" id="filters-bar">
       <div class="fgroup f-type" id="f-type">
         <button class="on" data-v="tous">Tous</button>
         <button data-v="energie">⛷️ Énergie</button>
@@ -230,12 +240,7 @@
         <button data-v="ivgreatly">🧭 Intervenants + Greatly</button>
         <button data-v="prospect">🌱 Futurs membres</button>
       </div>
-      <div class="fgroup" id="f-act">
-        <button class="on" data-v="tous">Toutes activités</button>
-        <button data-v="yoga">🧘 Yoga</button>
-        <button data-v="padel">🎾 Padel</button>
-      </div>
-      <div class="fgroup" id="f-who">
+<div class="fgroup" id="f-who">
         <button class="on" data-v="tous">Membres + intervenants</button>
         <button data-v="membres">Membres</button>
         <button data-v="intervenants">Intervenants</button>
@@ -467,8 +472,8 @@
 
           <!-- Verbatims : suggestions -->
           <div class="card">
-            <h3>Suggestions d'amélioration</h3>
-            <div class="sub">« Un mot, une idée pour nous aider à nous améliorer »</div>
+            <h3>Un dernier mot</h3>
+            <div class="sub">« Un dernier mot, une idée, quelque chose que vous aimeriez nous dire ? »</div>
             <div id="prospect-verbatims-suggestions"></div>
             <button type="button" class="btn-ghost" style="margin-top:12px;width:100%" onclick="openVerbatims()">Voir tous les retours</button>
           </div>
@@ -536,6 +541,13 @@
             <h3>Cadre & confort des lieux</h3>
             <div class="sub">Greatly House + lieux sportifs — vu par les intervenants</div>
             <div class="chartbox" style="height:180px"><canvas id="c-ig-cadre"></canvas></div>
+          </div>
+
+          <!-- Retours de séance des intervenants -->
+          <div class="card full">
+            <h3>Retours de séance — vue intervenants</h3>
+            <div class="sub">Échelles remplies par les intervenants après chaque séance ou atelier · note 0–10 · par parcours</div>
+            <div class="qgrid" id="iv-seance-grid"></div>
           </div>
 
           <!-- Verbatims -->
@@ -664,15 +676,15 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=13"></script>
-<script src="assets/js/api.js?v=13"></script>
-<script src="assets/js/dashboard/filters.js?v=13"></script>
-<script src="assets/js/dashboard/charts.js?v=13"></script>
-<script src="assets/js/dashboard/auth.js?v=13"></script>
-<script src="assets/js/dashboard/data.js?v=13"></script>
-<script src="assets/js/dashboard/admin.js?v=13"></script>
-<script src="assets/js/dashboard/alerts.js?v=13"></script>
-<script src="assets/js/dashboard/chat.js?v=13"></script>
+<script src="assets/js/config.js?v=14"></script>
+<script src="assets/js/api.js?v=14"></script>
+<script src="assets/js/dashboard/filters.js?v=14"></script>
+<script src="assets/js/dashboard/charts.js?v=14"></script>
+<script src="assets/js/dashboard/auth.js?v=14"></script>
+<script src="assets/js/dashboard/data.js?v=14"></script>
+<script src="assets/js/dashboard/admin.js?v=14"></script>
+<script src="assets/js/dashboard/alerts.js?v=14"></script>
+<script src="assets/js/dashboard/chat.js?v=14"></script>
 <script>
 // Navigation principale (navbar)
 document.querySelectorAll('.navbar-item[data-view]').forEach(btn => {
@@ -702,8 +714,20 @@ document.addEventListener('click', () => {
 
 // Filtres
 bindFilter('f-type', 'type');
-bindFilter('f-act', 'act');
 bindFilter('f-who', 'who');
+
+// Filtre activités dans la navbar
+document.querySelectorAll('#nav-act-wrap .navbar-dropdown button[data-act]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    document.querySelectorAll('#nav-act-wrap .navbar-dropdown button').forEach(x => x.classList.remove('on'));
+    btn.classList.add('on');
+    F.act = btn.dataset.act;
+    document.getElementById('nav-act-btn').textContent = btn.dataset.act === 'tous' ? '🏃 Activités ▾' : btn.textContent + ' ▾';
+    document.querySelectorAll('.navbar-dropdown-wrap').forEach(w => w.classList.remove('open'));
+    render();
+  });
+});
 bindFilter('f-period', 'period', v => +v);
 bindFilter('f-coach', 'coach');
 
@@ -711,6 +735,16 @@ bindFilter('f-coach', 'coach');
 document.getElementById('pwd').addEventListener('keydown', e => {
   if (e.key === 'Enter') login();
 });
+
+// Sticky filters — ajoute une ombre quand les filtres collent sous la navbar
+const filtersBar = document.getElementById('filters-bar');
+if (filtersBar) {
+  const observer = new IntersectionObserver(
+    ([e]) => filtersBar.classList.toggle('stuck', e.intersectionRatio < 1),
+    { threshold: [1], rootMargin: '-57px 0px 0px 0px' }
+  );
+  observer.observe(filtersBar);
+}
 
 // Vérifier la session existante au chargement
 checkSession();

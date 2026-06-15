@@ -142,12 +142,37 @@ body.is-admin .admin-only { display: inline-flex; }
   transition: background .1s;
 }
 .navbar-dropdown a:hover { background: var(--cream); }
+.navbar-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  font-size: .86rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .1s;
+}
+.navbar-dropdown button:hover { background: var(--cream); }
+.navbar-dropdown button.on { background: var(--sage-pale); color: var(--sage-dark); }
 
 .view { display: none; }
 .view.active { display: block; }
 
 /* --- Filtres --- */
-.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.filters {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;
+  position: sticky; top: 56px; z-index: 90;
+  background: var(--cream); padding: 12px 0 14px;
+}
+.filters.stuck {
+  box-shadow: 0 4px 12px rgba(26,26,26,.06);
+  border-bottom: 1px solid var(--line);
+}
 .fgroup {
   display: flex;
   background: #fff;
