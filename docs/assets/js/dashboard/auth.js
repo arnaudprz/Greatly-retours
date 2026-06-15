@@ -48,6 +48,7 @@ async function login() {
     localStorage.setItem(CONFIG.SESSION_START_KEY, Date.now().toString());
     enterDashboard(role);
   } catch (err) {
+    console.error('Login error:', err);
     btn.disabled = false;
     btn.textContent = 'Entrer';
     document.getElementById('login-error').textContent = 'Mot de passe incorrect.';

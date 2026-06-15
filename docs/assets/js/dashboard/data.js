@@ -6,6 +6,11 @@ let dashboardData = null;
 
 /** Charge les données depuis le relais selon les filtres actifs */
 async function loadData() {
+  if (CONFIG.DEMO_MODE) {
+    // Mode démo : pas d'appel réseau, le dashboard affichera des états vides
+    dashboardData = null;
+    return null;
+  }
   try {
     dashboardData = await API.getData({
       type: F.type,
