@@ -156,8 +156,6 @@ const OPENS = {
   membre_lucidite: [
     { t: "Qu'est-ce qui vous a le plus touché ou surpris aujourd'hui ?",
       h: "Un échange, une prise de conscience, un moment de silence, un outil…" },
-    { t: "Avec quoi repartez-vous pour votre quotidien ?",
-      h: "Une idée, une décision, une question à creuser, un réflexe à adopter…" },
     { t: "Si vous pouviez changer une chose pour le prochain atelier ?",
       h: "Le thème, le format, la durée du brunch, un détail pratique — tout compte." },
   ],
