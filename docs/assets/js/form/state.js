@@ -2,7 +2,7 @@
    Greatly — Vos retours · État du formulaire
    ============================================ */
 
-const TOTAL_STEPS = 4;
+let TOTAL_STEPS = 4;
 
 const state = {
   role: null,   // 'membre' | 'intervenant'

@@ -98,18 +98,18 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=11"></script>
-<script src="assets/js/api.js?v=11"></script>
-<script src="assets/js/form/scales.js?v=11"></script>
-<script src="assets/js/form/state.js?v=11"></script>
-<script src="assets/js/form/ui.js?v=11"></script>
-<script src="assets/js/form/steps.js?v=11"></script>
-<script src="assets/js/form/submit.js?v=11"></script>
+<script src="assets/js/config.js?v=12"></script>
+<script src="assets/js/api.js?v=12"></script>
+<script src="assets/js/form/scales.js?v=12"></script>
+<script src="assets/js/form/state.js?v=12"></script>
+<script src="assets/js/form/ui.js?v=12"></script>
+<script src="assets/js/form/steps.js?v=12"></script>
+<script src="assets/js/form/submit.js?v=12"></script>
 <script>
 // --- Rôle fixe : intervenant, 5 étapes ---
 state.role = 'intervenant';
-// Override pour 5 étapes (séance + NPS + Greatly & vous)
-Object.defineProperty(window, 'TOTAL_STEPS', { value: 5, writable: true });
+// 5 étapes (séance + NPS + Greatly & vous)
+TOTAL_STEPS = 5;
 
 // --- Étape 0 : sélection du type ---
 document.querySelectorAll('[data-type]').forEach(btn =>
