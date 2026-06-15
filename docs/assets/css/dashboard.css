@@ -129,6 +129,7 @@ body.is-admin .tabs .admin-only { display: inline-flex; }
 .fgroup button.on { background: var(--sage); color: #fff; }
 .fgroup.f-type button.on[data-v="energie"] { background: var(--energie); }
 .fgroup.f-type button.on[data-v="lucidite"] { background: var(--lucidite); }
+.fgroup.f-type button.on[data-v="lieux"] { background: var(--sage-dark); }
 
 /* --- KPIs --- */
 .kpis {

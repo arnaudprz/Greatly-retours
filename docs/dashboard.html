@@ -208,6 +208,7 @@
         <button class="on" data-v="tous">Tous</button>
         <button data-v="energie">⛷️ Énergie</button>
         <button data-v="lucidite">🦉 Lucidité</button>
+        <button data-v="lieux">📍 Lieux</button>
       </div>
       <div class="fgroup" id="f-act">
         <button class="on" data-v="tous">Toutes activités</button>
@@ -225,6 +226,9 @@
         <button data-v="12">12 mois</button>
       </div>
     </div>
+
+    <!-- Contenu standard (masqué en vue Lieux) -->
+    <div id="standard-section">
 
     <!-- KPIs -->
     <div class="kpis">
@@ -314,6 +318,51 @@
         <h3>Les lieux</h3>
         <div class="sub">Note moyenne (0–10) · Greatly House (Lucidité) et lieux extérieurs (Énergie)</div>
         <div class="chartbox" style="height:180px"><canvas id="c-lieux"></canvas></div>
+      </div>
+
+    </div><!-- /standard-section -->
+
+      <!-- ============ VUE LIEUX (filtre 📍 Lieux) ============ -->
+      <div id="lieux-section" style="display:none">
+        <div class="grid">
+          <div class="card full">
+            <h3>Vue d'ensemble des lieux</h3>
+            <div class="sub">Note moyenne par lieu (0–10) · toutes les réponses à la question « lieu »</div>
+            <div class="chartbox" style="height:220px"><canvas id="c-lieux-overview"></canvas></div>
+          </div>
+
+          <div class="card">
+            <h3>🏡 Greatly House</h3>
+            <div class="sub">Accueil, confort, cadre, atmosphère · ateliers Lucidité</div>
+            <div class="kpi" style="border:none;padding:12px 0">
+              <div class="val" id="lx-house">—<span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
+              <div class="sub" id="lx-house-sub">note moyenne sur la période</div>
+            </div>
+            <div class="chartbox" style="height:140px"><canvas id="c-lieux-house"></canvas></div>
+          </div>
+
+          <div class="card">
+            <h3>🏟️ Lieux sportifs</h3>
+            <div class="sub">Accès, équipements, vestiaires · séances Énergie</div>
+            <div class="kpi" style="border:none;padding:12px 0">
+              <div class="val" id="lx-sport">—<span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
+              <div class="sub" id="lx-sport-sub">note moyenne sur la période</div>
+            </div>
+            <div class="chartbox" style="height:140px"><canvas id="c-lieux-sport"></canvas></div>
+          </div>
+
+          <div class="card full">
+            <h3>Évolution par lieu</h3>
+            <div class="sub">Greatly House vs lieux sportifs (Yoga + Padel) · note moyenne mensuelle</div>
+            <div class="chartbox"><canvas id="c-lieux-evol"></canvas></div>
+          </div>
+
+          <div class="card full" id="card-lieux-verbatims">
+            <h3>Retours sur les lieux</h3>
+            <div class="sub">Verbatims mentionnant le lieu, l'espace ou les équipements</div>
+            <div id="lieux-verbatims-list"></div>
+          </div>
+        </div>
       </div>
 
       <div class="card" id="card-verbatims">

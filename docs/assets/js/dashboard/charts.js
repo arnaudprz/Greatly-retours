@@ -41,6 +41,25 @@ function last(arr, m) {
 
 /** Render principal — sera complété quand on branche les données réelles */
 function render() {
-  // TODO: implémenter avec les données réelles du relais
+  const isLieux = F.type === 'lieux';
+
+  // Basculer entre vue standard et vue Lieux
+  show('standard-section', !isLieux);
+  show('lieux-section', isLieux);
+
+  // Masquer les filtres secondaires en mode Lieux (pas pertinents)
+  show('f-act', !isLieux);
+  show('f-who', !isLieux);
+
+  if (isLieux) {
+    renderLieux();
+  }
+
   console.log('render() appelé avec filtres:', JSON.stringify(F));
+}
+
+/** Render de la vue Lieux */
+function renderLieux() {
+  // TODO: remplacer par les données réelles du relais
+  // Pour l'instant, données de démonstration
 }
