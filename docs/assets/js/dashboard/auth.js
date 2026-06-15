@@ -2,6 +2,13 @@
    Greatly — Vos retours · Authentification dashboard
    ============================================ */
 
+/** Hash SHA-256 d'une chaîne (Web Crypto API) */
+async function sha256(str) {
+  const buf = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 /** Gestion des panneaux de la gate (connexion / mot de passe oublié / demande d'accès) */
 function showPanel(name) {
   document.querySelectorAll('#gate .panel').forEach(p => p.classList.remove('active'));
@@ -19,11 +26,27 @@ async function login() {
   btn.textContent = 'Connexion…';
 
   try {
-    const res = await API.login(pwd);
-    localStorage.setItem(CONFIG.TOKEN_KEY, res.token);
-    localStorage.setItem(CONFIG.ROLE_KEY, res.role);
+    let role, token;
+
+    if (CONFIG.DEMO_MODE) {
+      // Mode démo : vérification locale par hash
+      const hash = await sha256(pwd);
+      if (hash !== CONFIG.DEMO_PASSWORD_HASH) {
+        throw new Error('Mot de passe incorrect');
+      }
+      role = pwd.includes('admin') ? 'Super-admin' : 'Lecture seule';
+      token = 'demo_' + Date.now();
+    } else {
+      // Mode réel : appel au relais
+      const res = await API.login(pwd);
+      role = res.role;
+      token = res.token;
+    }
+
+    localStorage.setItem(CONFIG.TOKEN_KEY, token);
+    localStorage.setItem(CONFIG.ROLE_KEY, role);
     localStorage.setItem(CONFIG.SESSION_START_KEY, Date.now().toString());
-    enterDashboard(res.role);
+    enterDashboard(role);
   } catch (err) {
     btn.disabled = false;
     btn.textContent = 'Entrer';
@@ -37,10 +60,8 @@ async function forgotPassword() {
   const email = document.getElementById('forgot-email').value;
   if (!email) return;
 
-  try {
-    await API.forgot(email);
-  } catch (_) {
-    // Réponse neutre dans tous les cas
+  if (!CONFIG.DEMO_MODE) {
+    try { await API.forgot(email); } catch (_) {}
   }
   showPanel('forgot-confirm');
 }
@@ -56,10 +77,8 @@ async function requestAccess() {
   };
   if (!form.name || !form.email) return;
 
-  try {
-    await API.requestAccess(form);
-  } catch (_) {
-    // Réponse neutre
+  if (!CONFIG.DEMO_MODE) {
+    try { await API.requestAccess(form); } catch (_) {}
   }
   showPanel('request-confirm');
 }
