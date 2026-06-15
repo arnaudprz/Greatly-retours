@@ -17,12 +17,14 @@ const PHASES = {
     { n: 'Comment avez-vous vécu le cœur de séance ?',      d: 'Les exercices, les variantes, l\'intensité, les ajustements à votre rythme…' },
     { n: 'Que pensez-vous du temps de récupération ?',      d: 'Le retour au calme, la respiration, ce moment pour soi…' },
     { n: 'Comment avez-vous vécu la clôture ?',             d: 'Le partage de ressentis, le petit rituel de fin, la transition vers la suite de votre journée…' },
+    { n: 'Que pensez-vous du lieu ?',                       d: 'L\'accès, les équipements, les vestiaires, le confort, l\'ambiance du lieu…' },
   ],
   lucidite: [
     { n: 'Comment avez-vous vécu l\'accueil ?',             d: 'L\'arrivée à la Greatly House, la déconnexion, le premier contact avec le groupe…' },
     { n: 'Que pensez-vous du brunch ?',                     d: 'Le moment de convivialité, les échanges informels autour de la table…' },
     { n: 'Comment avez-vous vécu l\'atelier ?',             d: 'Le contenu, la façon dont il était animé, les outils proposés…' },
     { n: 'Que pensez-vous du debrief et de la clôture ?',   d: 'Le bilan partagé, le défi d\'intersession, ce que vous en gardez…' },
+    { n: 'Que pensez-vous de la Greatly House ?',           d: 'L\'accueil, le confort, le cadre, l\'atmosphère — ce lieu est-il à la hauteur de ce qu\'on y vit ?' },
   ],
 };
 
@@ -34,12 +36,14 @@ const PHASES_INTERVENANT = {
     { n: 'Comment s\'est déroulé le cœur de séance ?',        d: 'La dynamique, les ajustements que vous avez faits, la réceptivité du groupe…' },
     { n: 'Le temps de récupération était-il suffisant ?',     d: 'Le retour au calme, l\'état du groupe à ce moment, la qualité du silence…' },
     { n: 'Comment s\'est passée la clôture ?',                d: 'Les échanges spontanés, les ressentis partagés, la qualité du moment…' },
+    { n: 'Que pensez-vous du lieu pour cette activité ?',     d: 'L\'espace, l\'adéquation à la pratique, les équipements, le confort pour les membres…' },
   ],
   lucidite: [
     { n: 'Comment s\'est passé l\'accueil ?',                 d: 'L\'état d\'esprit des membres, la qualité de la déconnexion, l\'ambiance…' },
     { n: 'Que pensez-vous du temps de brunch ?',              d: 'Les échanges entre membres, l\'énergie du groupe avant l\'atelier…' },
     { n: 'Comment s\'est déroulé l\'atelier ?',               d: 'La réceptivité, les réactions, les moments forts, les difficultés éventuelles…' },
     { n: 'Comment s\'est passé le debrief ?',                 d: 'La qualité des prises de parole, l\'adhésion au défi d\'intersession…' },
+    { n: 'Que pensez-vous de la Greatly House ?',             d: 'L\'accueil, le confort, le cadre, l\'atmosphère — ce lieu est-il à la hauteur de ce qu\'on y vit ?' },
   ],
 };
 
@@ -66,19 +70,16 @@ const SCALES = {
     { id: 'coach',   t: "Comment avez-vous trouvé l'accompagnement du coach ?",
       hint: "Son écoute, ses conseils, sa capacité à s'adapter à chacun…",
       labels: ['À améliorer', 'Excellent'] },
-    { id: 'lieu',    t: "Que pensez-vous du lieu ?",
-      hint: "L'accès, les équipements, les vestiaires, le confort, l'ambiance…",
-      labels: ['À revoir', 'Très bien'] },
   ],
 
   // --- MEMBRE × LUCIDITÉ ---
   membre_lucidite: [
-    { id: 'clarte',   t: "Cet atelier vous a-t-il aidé à voir plus clair ?",
-      hint: "Sur une situation, une question, un sujet qui vous occupe en ce moment…",
-      labels: ['Pas vraiment', 'Oui, nettement'] },
     { id: 'echanges', t: "Comment avez-vous trouvé les échanges avec le groupe ?",
       hint: "La qualité d'écoute, la profondeur des discussions, le sentiment de confiance…",
       labels: ['Superficiels', 'Très riches'] },
+    { id: 'clarte',   t: "Cet atelier vous a-t-il aidé à voir plus clair ?",
+      hint: "Sur une situation, une question, un sujet qui vous occupe en ce moment…",
+      labels: ['Pas vraiment', 'Oui, nettement'] },
     { id: 'outils',   t: "Repartez-vous avec quelque chose de concret ?",
       hint: "Un outil, une méthode, un déclic, une pratique à essayer dès demain…",
       labels: ['Pas vraiment', 'Clairement'] },
@@ -88,9 +89,6 @@ const SCALES = {
     { id: 'animation', t: "Comment avez-vous trouvé l'animation de l'atelier ?",
       hint: "Le rythme, la façon de guider les échanges, l'espace laissé à chacun…",
       labels: ['À améliorer', 'Excellente'] },
-    { id: 'lieu',     t: "Que pensez-vous de la Greatly House ?",
-      hint: "L'accueil, le confort, le cadre, l'atmosphère — ce lieu est-il à la hauteur de ce qu'on y vit ?",
-      labels: ['À revoir', 'Un vrai cocon'] },
   ],
 
   // --- INTERVENANT × ÉNERGIE ---
@@ -104,9 +102,6 @@ const SCALES = {
     { id: 'cadre',    t: "Les conditions étaient-elles réunies pour bien travailler ?",
       hint: "Le matériel, la logistique, la coordination avec l'équipe Greatly…",
       labels: ['À améliorer', 'Idéales'] },
-    { id: 'lieu',     t: "Que pensez-vous du lieu pour cette activité ?",
-      hint: "L'espace, l'adéquation à la pratique, le confort pour les membres…",
-      labels: ['Pas adapté', 'Très bien'] },
     { id: 'moi',      t: "Comment vous êtes-vous senti dans votre rôle ?",
       hint: "Votre confort d'animation, votre plaisir, votre énergie personnelle…",
       labels: ['Pas à l\'aise', 'Dans mon élément'] },
@@ -123,9 +118,6 @@ const SCALES = {
     { id: 'cadre',    t: "Les conditions étaient-elles réunies pour un bon atelier ?",
       hint: "Le timing, la coordination, la logistique du brunch…",
       labels: ['À améliorer', 'Idéales'] },
-    { id: 'house',    t: "La Greatly House était-elle adaptée à cet atelier ?",
-      hint: "L'espace, l'ambiance, le confort, l'intimité…",
-      labels: ['Des ajustements à faire', 'Parfaitement'] },
     { id: 'moi',      t: "Comment vous êtes-vous senti dans l'animation ?",
       hint: "Votre aisance, votre connexion au groupe, votre plaisir à animer…",
       labels: ['Inconfortable', 'Très à l\'aise'] },
