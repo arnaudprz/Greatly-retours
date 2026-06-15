@@ -59,27 +59,60 @@ function serializeForm() {
     result.ouvertes[open.t] = textarea ? textarea.value.trim() : '';
   });
 
+  // Greatly & vous (étape 4, intervenants uniquement)
+  const step4 = document.querySelector('[data-step="4"]');
+  if (step4 && typeof GREATLY_SCALES !== 'undefined') {
+    result.greatly = {};
+    result.greatly_ouvertes = {};
+
+    const gCards = step4.querySelectorAll('.q');
+    let scaleIdx = 0;
+    GREATLY_SCALES.forEach(scale => {
+      // +1 pour sauter la carte titre
+      const card = gCards[scaleIdx + 1];
+      scaleIdx++;
+      if (!card) return;
+      const sel = card.querySelector('.nps button.sel');
+      result.greatly[scale.id] = sel ? +sel.dataset.n : null;
+    });
+
+    if (typeof GREATLY_OPENS !== 'undefined') {
+      GREATLY_OPENS.forEach((open, i) => {
+        const card = gCards[1 + GREATLY_SCALES.length + i];
+        const textarea = card?.querySelector('textarea');
+        result.greatly_ouvertes[open.t] = textarea ? textarea.value.trim() : '';
+      });
+    }
+  }
+
   return result;
 }
 
 /** Envoie le formulaire au relais */
 async function submitForm() {
-  const btn = document.getElementById('btn-send');
-  const originalText = btn.textContent;
+  // Trouver le bouton d'envoi actif (btn-send ou btn-send-greatly)
+  const btn = document.getElementById('btn-send-greatly') || document.getElementById('btn-send');
+  const originalText = btn ? btn.textContent : '';
 
   // État chargement
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Envoi en cours…';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Envoi en cours…';
+  }
 
   try {
     const data = serializeForm();
     await API.submit(data);
-    // Succès → écran merci
-    go(4);
+    // Succès → écran merci (dernière step)
+    const allSteps = document.querySelectorAll('.step[data-step]');
+    const lastStep = +allSteps[allSteps.length - 1].dataset.step;
+    go(lastStep);
   } catch (err) {
     // Erreur réseau → toast
-    btn.disabled = false;
-    btn.textContent = originalText;
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
     showToast('Erreur lors de l\'envoi. Vérifiez votre connexion et réessayez.');
     console.error('Erreur submit:', err);
   }

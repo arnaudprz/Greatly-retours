@@ -119,13 +119,22 @@ function buildOpens() {
     host.appendChild(card);
   });
 
-  // Navigation + envoi
-  host.insertAdjacentHTML('beforeend',
-    '<div class="nav"><button type="button" class="btn-ghost nav-back">Retour</button><button type="button" class="btn-solid nav-send" id="btn-send">Envoyer mon retour</button></div>');
+  // Navigation — si étape Greatly existe → continuer, sinon envoyer
+  const hasGreatly = !!document.querySelector('[data-step="4"]:not(.merci *)');
+  if (hasGreatly && state.role === 'intervenant') {
+    host.insertAdjacentHTML('beforeend',
+      '<div class="nav"><button type="button" class="btn-ghost nav-back">Retour</button><button type="button" class="btn-solid nav-next">Continuer</button></div>');
+  } else {
+    host.insertAdjacentHTML('beforeend',
+      '<div class="nav"><button type="button" class="btn-ghost nav-back">Retour</button><button type="button" class="btn-solid nav-send" id="btn-send">Envoyer mon retour</button></div>');
+  }
   bindNav(host);
 
-  // Bouton envoi
-  host.querySelector('.nav-send').addEventListener('click', () => {
-    if (validateStep(3)) submitForm();
-  });
+  // Bouton envoi (seulement si pas d'étape Greatly)
+  const sendBtn = host.querySelector('.nav-send');
+  if (sendBtn) {
+    sendBtn.addEventListener('click', () => {
+      if (validateStep(3)) submitForm();
+    });
+  }
 }

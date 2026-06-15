@@ -81,12 +81,15 @@
   <!-- ÉTAPE 3 : NPS + questions ouvertes (généré dynamiquement) -->
   <section class="step" data-step="3"></section>
 
-  <!-- ÉTAPE 4 : merci -->
-  <section class="step" data-step="4">
+  <!-- ÉTAPE 4 : Greatly & vous (généré dynamiquement) -->
+  <section class="step" data-step="4"></section>
+
+  <!-- ÉTAPE 5 : merci -->
+  <section class="step" data-step="5">
     <div class="merci">
       <div class="big">🧭</div>
       <h2>Merci d'avoir pris ce temps</h2>
-      <p>Votre regard rejoint ceux de l'équipe. Il nous aide à ajuster le programme au plus près des besoins du groupe.</p>
+      <p>Votre regard rejoint ceux de l'équipe. Il nous aide à ajuster le programme et notre collaboration au plus près de vos besoins.</p>
       <button type="button" class="btn-solid" style="max-width:260px" onclick="location.reload()">Déposer un autre retour</button>
     </div>
   </section>
@@ -103,8 +106,10 @@
 <script src="assets/js/form/steps.js?v=11"></script>
 <script src="assets/js/form/submit.js?v=11"></script>
 <script>
-// --- Rôle fixe : intervenant ---
+// --- Rôle fixe : intervenant, 5 étapes ---
 state.role = 'intervenant';
+// Override pour 5 étapes (séance + NPS + Greatly & vous)
+Object.defineProperty(window, 'TOTAL_STEPS', { value: 5, writable: true });
 
 // --- Étape 0 : sélection du type ---
 document.querySelectorAll('[data-type]').forEach(btn =>
@@ -121,8 +126,50 @@ document.getElementById('start').addEventListener('click', () => {
   buildContext();
   buildScales();
   buildOpens();
+  buildGreatly();
   go(1);
 });
+
+// --- Construction de l'étape 4 : Greatly & vous ---
+function buildGreatly() {
+  const host = document.querySelector('[data-step="4"]');
+  host.innerHTML = '';
+
+  // Titre
+  host.insertAdjacentHTML('beforeend',
+    `<div class="q" style="border:none;background:transparent;padding:0 0 8px">
+      <h3 style="font-family:'Playfair Display',Georgia,serif;font-size:1.3rem;font-weight:400">Greatly & vous</h3>
+      <div class="hint">Au-delà de la séance, comment vivez-vous la collaboration avec Greatly ? Votre ressenti nous aide à grandir ensemble.</div>
+    </div>`);
+
+  // Échelles 0-10
+  GREATLY_SCALES.forEach(scale => {
+    const card = document.createElement('div');
+    card.className = 'q';
+    card.innerHTML = `<h3>${scale.t}</h3>${scale.hint ? `<div class="hint">${scale.hint}</div>` : ''}`;
+    createNPS(card);
+    createScaleLabels(card, scale.labels);
+    host.appendChild(card);
+  });
+
+  // Questions ouvertes
+  GREATLY_OPENS.forEach(open => {
+    const card = document.createElement('div');
+    card.className = 'q';
+    card.innerHTML = `<h3>${open.t}</h3><div class="hint">${open.h}</div><textarea placeholder="Écrivez librement…"></textarea>`;
+    host.appendChild(card);
+  });
+
+  // Navigation
+  host.insertAdjacentHTML('beforeend',
+    '<div class="nav"><button type="button" class="btn-ghost nav-back">Retour</button><button type="button" class="btn-solid" id="btn-send-greatly">Envoyer mon retour</button></div>');
+  bindNav(host);
+
+  // Bouton envoi final
+  host.querySelector('#btn-send-greatly').addEventListener('click', () => {
+    if (validateStep(4)) submitForm();
+  });
+}
 
 // Sélection des chips statiques (Yoga / Padel)
 document.querySelectorAll('#q-sport .chip').forEach(c =>

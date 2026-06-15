@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=11">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=11">
+<link rel="stylesheet" href="assets/css/shared.css?v=12">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=12">
 </head>
 <body>
 
@@ -212,6 +212,7 @@
         <button data-v="energie">⛷️ Énergie</button>
         <button data-v="lucidite">🦉 Lucidité</button>
         <button data-v="lieux">📍 Lieux</button>
+        <button data-v="ivgreatly">🧭 Intervenants + Greatly</button>
         <button data-v="prospect">🌱 Futurs membres</button>
       </div>
       <div class="fgroup" id="f-act">
@@ -459,6 +460,86 @@
         </div>
       </div>
 
+      <!-- ============ VUE INTERVENANTS + GREATLY ============ -->
+      <div id="ivgreatly-section" style="display:none">
+
+        <!-- KPIs -->
+        <div class="kpis">
+          <div class="kpi k-nps">
+            <div class="lab">Satisfaction globale</div>
+            <div class="val" id="ig-satisfaction">—<span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
+            <div class="sub">moyenne des 6 dimensions</div>
+          </div>
+          <div class="kpi">
+            <div class="lab">Logistique</div>
+            <div class="val"><span id="ig-logistique">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
+            <div class="sub">planification, matériel, jour J</div>
+          </div>
+          <div class="kpi">
+            <div class="lab">Accompagnement pédagogique</div>
+            <div class="val"><span id="ig-pedagogie">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
+            <div class="sub">cadrage, soutien, échanges</div>
+          </div>
+          <div class="kpi">
+            <div class="lab">Relation avec l'équipe</div>
+            <div class="val"><span id="ig-relation">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
+            <div class="sub">confiance, écoute, plaisir</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <!-- Vue d'ensemble des 6 dimensions -->
+          <div class="card full">
+            <h3>Les 6 dimensions de la collaboration</h3>
+            <div class="sub">Note moyenne (0–10) · logistique, administratif, pédagogie, communication, cadre, relation</div>
+            <div class="chartbox" style="height:260px"><canvas id="c-ig-radar"></canvas></div>
+          </div>
+
+          <!-- Évolution dans le temps -->
+          <div class="card full">
+            <h3>Évolution de la satisfaction</h3>
+            <div class="sub">Moyenne des 6 dimensions par mois</div>
+            <div class="chartbox"><canvas id="c-ig-evol"></canvas></div>
+          </div>
+
+          <!-- Détail par dimension -->
+          <div class="card">
+            <h3>Suivi administratif</h3>
+            <div class="sub">Contrats, facturation, réactivité</div>
+            <div class="kpi" style="border:none;padding:8px 0"><div class="val" id="ig-admin">—<span style="font-size:1rem;color:var(--warm-grey)">/10</span></div></div>
+            <div class="chartbox" style="height:120px"><canvas id="c-ig-admin"></canvas></div>
+          </div>
+
+          <div class="card">
+            <h3>Communication interne</h3>
+            <div class="sub">Infos en amont, retours, clarté</div>
+            <div class="kpi" style="border:none;padding:8px 0"><div class="val" id="ig-comm">—<span style="font-size:1rem;color:var(--warm-grey)">/10</span></div></div>
+            <div class="chartbox" style="height:120px"><canvas id="c-ig-comm"></canvas></div>
+          </div>
+
+          <div class="card full">
+            <h3>Cadre & confort des lieux</h3>
+            <div class="sub">Greatly House + lieux sportifs — vu par les intervenants</div>
+            <div class="chartbox" style="height:180px"><canvas id="c-ig-cadre"></canvas></div>
+          </div>
+
+          <!-- Verbatims -->
+          <div class="card">
+            <h3>Ce qui faciliterait la vie</h3>
+            <div class="sub">Suggestions pratiques des intervenants</div>
+            <div id="ig-verbatims-facilite"></div>
+            <button type="button" class="btn-ghost" style="margin-top:12px;width:100%" onclick="openVerbatims()">Voir tous les retours</button>
+          </div>
+
+          <div class="card">
+            <h3>Pour que la collaboration grandisse</h3>
+            <div class="sub">Idées et ressentis partagés librement</div>
+            <div id="ig-verbatims-collab"></div>
+            <button type="button" class="btn-ghost" style="margin-top:12px;width:100%" onclick="openVerbatims()">Voir tous les retours</button>
+          </div>
+        </div>
+      </div>
+
       <div class="card" id="card-verbatims">
         <h3>Derniers retours</h3>
         <div class="sub">Ce que les membres emportent avec eux</div>
@@ -568,15 +649,15 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=11"></script>
-<script src="assets/js/api.js?v=11"></script>
-<script src="assets/js/dashboard/filters.js?v=11"></script>
-<script src="assets/js/dashboard/charts.js?v=11"></script>
-<script src="assets/js/dashboard/auth.js?v=11"></script>
-<script src="assets/js/dashboard/data.js?v=11"></script>
-<script src="assets/js/dashboard/admin.js?v=11"></script>
-<script src="assets/js/dashboard/alerts.js?v=11"></script>
-<script src="assets/js/dashboard/chat.js?v=11"></script>
+<script src="assets/js/config.js?v=12"></script>
+<script src="assets/js/api.js?v=12"></script>
+<script src="assets/js/dashboard/filters.js?v=12"></script>
+<script src="assets/js/dashboard/charts.js?v=12"></script>
+<script src="assets/js/dashboard/auth.js?v=12"></script>
+<script src="assets/js/dashboard/data.js?v=12"></script>
+<script src="assets/js/dashboard/admin.js?v=12"></script>
+<script src="assets/js/dashboard/alerts.js?v=12"></script>
+<script src="assets/js/dashboard/chat.js?v=12"></script>
 <script>
 // Onglets de vue
 document.querySelectorAll('#view-tabs button').forEach(btn => {

@@ -183,6 +183,39 @@ const OPENS = {
 
 
 // ============================================
+// GREATLY & VOUS — questions intervenants sur la relation avec Greatly
+// ============================================
+
+const GREATLY_SCALES = [
+  { id: 'logistique',    t: "Comment trouvez-vous la logistique autour de vos interventions ?",
+    hint: "La planification, les horaires, le matériel mis à disposition, la fluidité du jour J…",
+    labels: ['À revoir', 'Fluide et efficace'] },
+  { id: 'admin',         t: "Êtes-vous satisfait du suivi administratif ?",
+    hint: "Les contrats, la facturation, les échanges par email, la réactivité…",
+    labels: ['Laborieux', 'Impeccable'] },
+  { id: 'pedagogie',     t: "Comment vivez-vous l'accompagnement pédagogique ?",
+    hint: "Le cadrage des séances, les échanges sur le contenu, le soutien de l'équipe Greatly…",
+    labels: ['Insuffisant', 'Très soutenant'] },
+  { id: 'communication', t: "La communication interne vous convient-elle ?",
+    hint: "Les informations reçues en amont, les retours après les séances, la clarté des échanges…",
+    labels: ['Pas assez fluide', 'Très claire'] },
+  { id: 'cadre',         t: "Que pensez-vous du cadre et du confort des lieux où vous intervenez ?",
+    hint: "Greatly House, salles de sport — l'espace, l'ambiance, ce qu'il faudrait améliorer…",
+    labels: ['À améliorer', 'Très agréable'] },
+  { id: 'relation',      t: "Comment décririez-vous votre relation avec l'équipe Greatly ?",
+    hint: "La confiance, l'écoute, le respect de votre expertise, le plaisir de collaborer…",
+    labels: ['Distante', 'Très enrichissante'] },
+];
+
+const GREATLY_OPENS = [
+  { t: "Y a-t-il quelque chose qui vous faciliterait la vie au quotidien ?",
+    h: "Un outil, un process, une information, un changement d'organisation — même un petit détail…" },
+  { t: "Qu'aimeriez-vous nous partager pour que notre collaboration grandisse ?",
+    h: "Une idée, un besoin, un ressenti, quelque chose que vous n'avez pas encore eu l'occasion de dire…" },
+];
+
+
+// ============================================
 // ATELIERS LUCIDITÉ
 // ============================================
 

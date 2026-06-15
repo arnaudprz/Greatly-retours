@@ -139,6 +139,17 @@ const D = {
   // Attraits (prospect)
   attraitsLabels: ['Approche corps + esprit', 'Réseau de dirigeants', 'Cadre intimiste', 'Accompagnement sur-mesure', 'Greatly House'],
   attraitsData:   [48, 35, 30, 26, 22],
+
+  // --- Intervenants + Greatly ---
+  igLabels:    ['Logistique', 'Administratif', 'Pédagogie', 'Communication', 'Cadre & lieux', 'Relation équipe'],
+  igScores:    [8.1, 7.6, 8.4, 7.8, 8.7, 9.0],
+  igEvol:      [7.8, 7.9, 8.0, 8.0, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5],
+  igLogist:    [7.5, 7.6, 7.7, 7.8, 7.9, 7.9, 8.0, 8.0, 8.1, 8.0, 8.1, 8.1],
+  igAdmin:     [7.0, 7.1, 7.2, 7.3, 7.3, 7.4, 7.5, 7.5, 7.6, 7.6, 7.5, 7.6],
+  igPedag:     [8.0, 8.1, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.3, 8.4, 8.4, 8.4],
+  igComm:      [7.4, 7.5, 7.5, 7.6, 7.7, 7.7, 7.8, 7.8, 7.7, 7.8, 7.8, 7.8],
+  igCadre:     [8.3, 8.4, 8.4, 8.5, 8.6, 8.6, 8.7, 8.7, 8.7, 8.8, 8.7, 8.7],
+  igRelation:  [8.6, 8.7, 8.7, 8.8, 8.8, 8.9, 8.9, 9.0, 9.0, 9.0, 9.0, 9.0],
 };
 
 
@@ -183,6 +194,19 @@ const VERBATIMS = {
     { date: '4 juin 2026', lieu: 'Club Padel', text: 'Les terrains sont en bon état. L\'accès est facile depuis la métropole. Vestiaires corrects.' },
     { date: '28 mai 2026', lieu: 'Greatly House', text: 'L\'atmosphère de la maison met tout le monde à l\'aise. Le café d\'accueil est un vrai plus.' },
     { date: '21 mai 2026', lieu: 'Studio Yoga', text: 'Espace calme et lumineux. Idéal pour déconnecter. Un peu juste en places quand on est 10.' },
+  ],
+};
+
+const VERBATIMS_IG = {
+  facilite: [
+    { date: '14 juin 2026', text: 'Un récapitulatif mail la veille avec les infos clés (horaire, effectif, matériel dispo) serait très utile.' },
+    { date: '10 juin 2026', text: 'Pouvoir accéder à un espace partagé avec les retours des membres m\'aiderait à adapter mes séances.' },
+    { date: '3 juin 2026', text: 'La facturation est un peu lente — un process automatisé serait top.' },
+  ],
+  collab: [
+    { date: '12 juin 2026', text: 'La confiance que vous m\'accordez est vraiment appréciable. C\'est rare d\'avoir autant de liberté pédagogique.' },
+    { date: '8 juin 2026', text: 'J\'adorerais qu\'on ait un temps d\'échange entre intervenants une fois par trimestre. On ne se croise jamais.' },
+    { date: '1 juin 2026', text: 'La Greatly House est un lieu extraordinaire pour travailler. Ça change tout dans la qualité de l\'atelier.' },
   ],
 };
 
@@ -275,15 +299,17 @@ function sparkOpts() {
 function render() {
   const isLieux = F.type === 'lieux';
   const isProspect = F.type === 'prospect';
+  const isIvGreatly = F.type === 'ivgreatly';
   const isEnergie = F.type === 'energie';
   const isLucidite = F.type === 'lucidite';
   const isTous = F.type === 'tous';
-  const isStandard = !isLieux && !isProspect;
+  const isStandard = !isLieux && !isProspect && !isIvGreatly;
 
-  // Basculer entre les trois sections
+  // Basculer entre les sections
   show('standard-section', isStandard);
   show('lieux-section', isLieux);
   show('prospect-section', isProspect);
+  show('ivgreatly-section', isIvGreatly);
 
   // Filtres secondaires
   show('f-act', isStandard);
@@ -298,6 +324,7 @@ function render() {
   if (isStandard) renderStandard(isTous, isEnergie, isLucidite);
   if (isLieux) renderLieux();
   if (isProspect) renderProspect();
+  if (isIvGreatly) renderIvGreatly();
 }
 
 
@@ -983,6 +1010,110 @@ function renderProspect() {
   if (sugList) {
     sugList.innerHTML = VERBATIMS.prospect.suggestions.map(t => `
       <div class="verb"><p>« ${t} »</p></div>
+    `).join('');
+  }
+}
+
+
+/* =============================================
+   RENDER — Intervenants + Greatly
+   ============================================= */
+
+function renderIvGreatly() {
+  const m = F.period;
+  const mois = last(MOIS, m);
+
+  // KPIs
+  const avg = D.igScores.reduce((s, v) => s + v, 0) / D.igScores.length;
+  txt('ig-satisfaction', fr(avg));
+  txt('ig-logistique', fr(D.igScores[0]));
+  txt('ig-pedagogie', fr(D.igScores[2]));
+  txt('ig-relation', fr(D.igScores[5]));
+  txt('ig-admin', fr(D.igScores[1]));
+  txt('ig-comm', fr(D.igScores[3]));
+
+  // --- Radar / bar des 6 dimensions ---
+  mk('c-ig-radar', {
+    type: 'bar',
+    data: {
+      labels: D.igLabels,
+      datasets: [{
+        data: D.igScores,
+        backgroundColor: [C.sage + 'BB', C.grey + '99', C.lucidite + 'BB', C.energie + 'BB', '#7A6B5C' + 'BB', C.good + 'BB'],
+        borderRadius: 8,
+      }],
+    },
+    options: {
+      ...hbarOpts(10),
+      indexAxis: 'y',
+      scales: {
+        x: { min: 0, max: 10, grid: { color: C.line }, ticks: { font: { size: 11 } } },
+        y: { grid: { display: false }, ticks: { font: { size: 12 } } },
+      },
+    },
+  });
+
+  // --- Évolution satisfaction globale ---
+  mk('c-ig-evol', {
+    type: 'line',
+    data: {
+      labels: mois,
+      datasets: [lineds('Satisfaction moyenne', last(D.igEvol, m), C.sage)],
+    },
+    options: lineOpts(6, 10),
+  });
+
+  // --- Administratif sparkline ---
+  mk('c-ig-admin', {
+    type: 'line',
+    data: {
+      labels: mois,
+      datasets: [lineds('Administratif', last(D.igAdmin, m), C.grey)],
+    },
+    options: sparkOpts(6, 9),
+  });
+
+  // --- Communication sparkline ---
+  mk('c-ig-comm', {
+    type: 'line',
+    data: {
+      labels: mois,
+      datasets: [lineds('Communication', last(D.igComm, m), C.energie)],
+    },
+    options: sparkOpts(6, 9),
+  });
+
+  // --- Cadre & lieux (bar : Greatly House vs lieux sport) ---
+  mk('c-ig-cadre', {
+    type: 'line',
+    data: {
+      labels: mois,
+      datasets: [
+        lineds('Greatly House', last(D.igCadre, m), C.lucidite),
+        lineds('Lieux sportifs', last(D.lieuxSport, m), C.energie),
+      ],
+    },
+    options: lineOpts(6, 10),
+  });
+
+  // --- Verbatims ---
+  const facList = document.getElementById('ig-verbatims-facilite');
+  if (facList) {
+    facList.innerHTML = VERBATIMS_IG.facilite.map(v => `
+      <div class="verb">
+        <div class="meta"><span style="font-size:.74rem;color:var(--warm-grey)">${v.date}</span></div>
+        <p>« ${v.text} »</p>
+      </div>
+    `).join('');
+  }
+
+  const colList = document.getElementById('ig-verbatims-collab');
+  if (colList) {
+    colList.innerHTML = VERBATIMS_IG.collab.map(v => `
+      <div class="verb">
+        <div class="meta"><span style="font-size:.74rem;color:var(--warm-grey)">${v.date}</span></div>
+        <p>« ${v.text} »</p>
+      </div>
     `).join('');
   }
 }
