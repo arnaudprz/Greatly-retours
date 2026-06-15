@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Vos retours membres — GREATLY</title>
-<meta name="description" content="Partagez votre ressenti après une séance Énergie ou un atelier Lucidité. Anonyme, 2 minutes.">
+<title>Fiche d'observation — GREATLY</title>
+<meta name="description" content="Partagez votre observation après une séance ou un atelier. Réservé aux intervenants et coachs.">
 
 <!-- Open Graph (partage WhatsApp, LinkedIn, iMessage…) -->
-<meta property="og:title" content="Greatly — Vos retours">
-<meta property="og:description" content="Partagez votre ressenti après une séance. 100 % anonyme, 2 minutes.">
+<meta property="og:title" content="Greatly — Fiche d'observation">
+<meta property="og:description" content="Partagez votre observation après une séance ou un atelier.">
 <meta property="og:image" content="https://arnaudprz.github.io/Greatly-retours/assets/og-retours.svg">
-<meta property="og:url" content="https://arnaudprz.github.io/Greatly-retours/">
+<meta property="og:url" content="https://arnaudprz.github.io/Greatly-retours/intervenant.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="GREATLY">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Greatly — Vos retours">
-<meta name="twitter:description" content="Partagez votre ressenti après une séance. 100 % anonyme, 2 minutes.">
+<meta name="twitter:title" content="Greatly — Fiche d'observation">
+<meta name="twitter:description" content="Partagez votre observation après une séance ou un atelier.">
 <meta name="twitter:image" content="https://arnaudprz.github.io/Greatly-retours/assets/og-retours.svg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,9 +28,9 @@
 
   <header class="head">
     <div class="brand">Greatly</div>
-    <h1>Vos retours</h1>
-    <p>Quelques instants pour partager votre ressenti. Il n'y a pas de bonne réponse — juste la vôtre.</p>
-    <div class="anon">🤍 100&nbsp;% anonyme · 2 minutes</div>
+    <h1>Fiche d'observation</h1>
+    <p>Partagez votre observation après une séance ou un atelier.</p>
+    <div class="anon">🧭 Réservé aux intervenants · 2 minutes</div>
   </header>
 
   <div class="progress" id="progress"></div>
@@ -84,14 +84,14 @@
   <!-- ÉTAPE 4 : merci -->
   <section class="step" data-step="4">
     <div class="merci">
-      <div class="big">🤍</div>
-      <h2>Merci pour votre retour</h2>
-      <p>Il rejoint, de façon anonyme, les retours du groupe. Il nous aide à ajuster le programme, à votre rythme et au plus près de vos besoins.</p>
-      <button type="button" class="btn-solid" style="max-width:260px" onclick="location.reload()">Déposer un autre retour</button>
+      <div class="big">🧭</div>
+      <h2>Merci pour votre observation</h2>
+      <p>Elle rejoint, de façon confidentielle, les retours de l'équipe. Elle nous aide à ajuster le programme au plus près des besoins du groupe.</p>
+      <button type="button" class="btn-solid" style="max-width:260px" onclick="location.reload()">Déposer une autre observation</button>
     </div>
   </section>
 
-  <div class="foot">GREATLY · 10 rue de Lambersart, Verlinghem<br>Vos réponses sont anonymes et servent uniquement à améliorer le programme.</div>
+  <div class="foot">GREATLY · 10 rue de Lambersart, Verlinghem<br>Vos observations sont confidentielles et servent uniquement à améliorer le programme.</div>
 </div>
 
 <!-- Scripts -->
@@ -103,8 +103,8 @@
 <script src="assets/js/form/steps.js"></script>
 <script src="assets/js/form/submit.js"></script>
 <script>
-// --- Rôle fixe : membre ---
-state.role = 'membre';
+// --- Rôle fixe : intervenant ---
+state.role = 'intervenant';
 
 // --- Étape 0 : sélection du type ---
 document.querySelectorAll('[data-type]').forEach(btn =>
