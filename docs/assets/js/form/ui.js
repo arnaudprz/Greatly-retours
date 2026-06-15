@@ -106,9 +106,9 @@ function buildOpens() {
   const npsCard = document.createElement('div');
   npsCard.className = 'q';
   npsCard.innerHTML = `<h3>${NPS[scaleKey()]}</h3>
-    <div class="hint">0 = pas du tout probable · 10 = très probable</div>`;
+    <div class="hint">Répondez spontanément, avec le cœur.</div>`;
   createNPS(npsCard);
-  createScaleLabels(npsCard, ['Pas du tout', 'Très probable']);
+  createScaleLabels(npsCard, ['Je le garde pour moi', 'Oui, sans hésiter']);
   host.appendChild(npsCard);
 
   // Questions ouvertes
