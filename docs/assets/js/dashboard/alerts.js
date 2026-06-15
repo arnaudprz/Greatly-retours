@@ -1,24 +1,35 @@
 /* ============================================
-   Greatly — Vos retours · Popup points d'attention
+   Greatly — Vos retours · Popups (retours + alertes)
    ============================================ */
 
-/** Ouvrir la popup des points d'attention */
+/** Ouvrir/fermer la popup des retours */
+function openVerbatims() {
+  document.getElementById('verbatims-overlay').classList.add('open');
+}
+function closeVerbatims() {
+  document.getElementById('verbatims-overlay').classList.remove('open');
+}
+
+/** Ouvrir/fermer la popup des points d'attention */
 function openAlerts() {
-  const overlay = document.getElementById('alerts-overlay');
-  if (overlay) overlay.classList.add('open');
+  document.getElementById('alerts-overlay').classList.add('open');
 }
-
-/** Fermer la popup */
 function closeAlerts() {
-  const overlay = document.getElementById('alerts-overlay');
-  if (overlay) overlay.classList.remove('open');
+  document.getElementById('alerts-overlay').classList.remove('open');
 }
 
-// Fermeture par clic extérieur ou Échap
+// Fermeture par Échap (toutes les popups)
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeAlerts();
+  if (e.key === 'Escape') {
+    closeAlerts();
+    closeVerbatims();
+  }
 });
 
+// Fermeture par clic sur l'arrière-plan
 document.addEventListener('click', e => {
-  if (e.target.classList.contains('overlay')) closeAlerts();
+  if (e.target.classList.contains('overlay')) {
+    closeAlerts();
+    closeVerbatims();
+  }
 });
