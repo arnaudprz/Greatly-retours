@@ -161,18 +161,102 @@ async function requestAccess() {
   showPanel('request-confirm');
 }
 
+/** Vérifie si le profil est complet (onboarding terminé) */
+function isProfileComplete() {
+  const p = getProfile();
+  return !!(p.firstname && p.lastname && p.email);
+}
+
 /** Entrer dans le dashboard après authentification réussie */
 function enterDashboard(role) {
   document.getElementById('gate').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
 
   if (role === 'Super-admin') {
     document.body.classList.add('is-admin');
   }
 
+  // Première connexion → onboarding
+  if (!isProfileComplete()) {
+    document.getElementById('onboarding').style.display = 'block';
+    obGo(1);
+    return;
+  }
+
+  document.getElementById('app').style.display = 'block';
   renderProfile();
   initDashboard();
 }
+
+// ---- Onboarding ----
+let obStep = 1;
+
+function obGo(n) {
+  obStep = n;
+  document.querySelectorAll('.onboarding-step').forEach(s =>
+    s.classList.toggle('active', +s.dataset.ob === n)
+  );
+  const dots = document.querySelectorAll('.onboarding-progress span');
+  dots.forEach((dot, i) => dot.classList.toggle('on', i < n));
+}
+
+function obNext() {
+  if (obStep === 2) {
+    // Valider le formulaire profil
+    const firstname = document.getElementById('ob-firstname').value.trim();
+    const lastname = document.getElementById('ob-lastname').value.trim();
+    const email = document.getElementById('ob-email').value.trim();
+
+    let valid = true;
+    ['ob-firstname', 'ob-lastname', 'ob-email'].forEach(id => {
+      const input = document.getElementById(id);
+      const empty = !input.value.trim();
+      input.classList.toggle('ob-err', empty);
+      if (empty) valid = false;
+    });
+
+    // Validation email basique
+    const emailInput = document.getElementById('ob-email');
+    if (email && !email.includes('@')) {
+      emailInput.classList.add('ob-err');
+      valid = false;
+    }
+
+    if (!valid) {
+      document.getElementById('ob-error').textContent = 'Tous les champs sont requis.';
+      document.getElementById('ob-error').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('ob-error').style.display = 'none';
+
+    // Sauvegarder le profil
+    const profile = { firstname, lastname, email };
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+
+    // Pré-remplir l'étape 3
+    document.getElementById('ob-hello').textContent = firstname;
+  }
+
+  obGo(obStep + 1);
+}
+
+function obPrev() {
+  if (obStep > 1) obGo(obStep - 1);
+}
+
+function obFinish() {
+  document.getElementById('onboarding').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  renderProfile();
+  initDashboard();
+}
+
+// Retirer le style erreur quand on tape
+document.addEventListener('input', e => {
+  if (e.target.classList.contains('ob-err')) {
+    e.target.classList.remove('ob-err');
+  }
+});
 
 /** Vérifier si une session existe au chargement */
 function checkSession() {

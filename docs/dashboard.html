@@ -77,6 +77,79 @@
   </div>
 </div>
 
+<!-- ONBOARDING (première connexion) -->
+<div id="onboarding" style="display:none">
+  <div class="onboarding-wrap">
+    <div class="onboarding-progress">
+      <span class="on"></span><span></span><span></span>
+    </div>
+
+    <!-- Étape 1 : Bienvenue -->
+    <div class="onboarding-step active" data-ob="1">
+      <div class="onboarding-icon">🤍</div>
+      <h1>Bienvenue dans votre espace retours</h1>
+      <p class="onboarding-lead">Cet outil rassemble, de façon <b>100 % anonyme</b>, les ressentis partagés après chaque séance Énergie et chaque atelier Lucidité.</p>
+      <div class="onboarding-features">
+        <div class="onboarding-feature">
+          <span class="onboarding-feat-icon">📊</span>
+          <div>
+            <b>Suivre ce qui compte</b>
+            <small>NPS, énergie ressentie, qualité des échanges… tout est mesuré sur une échelle simple de 0 à 10.</small>
+          </div>
+        </div>
+        <div class="onboarding-feature">
+          <span class="onboarding-feat-icon">💬</span>
+          <div>
+            <b>Écouter les mots</b>
+            <small>Les verbatims vous donnent accès aux ressentis bruts, sans filtre, pour comprendre ce qui se vit vraiment.</small>
+          </div>
+        </div>
+        <div class="onboarding-feature">
+          <span class="onboarding-feat-icon">🎯</span>
+          <div>
+            <b>Ajuster le programme</b>
+            <small>Repérez les signaux faibles, identifiez ce qui fonctionne et faites évoluer le programme au bon rythme.</small>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn-solid" onclick="obNext()">Continuer</button>
+    </div>
+
+    <!-- Étape 2 : Votre profil -->
+    <div class="onboarding-step" data-ob="2">
+      <div class="onboarding-icon">🧑</div>
+      <h1>Faisons connaissance</h1>
+      <p class="onboarding-lead">Ces informations restent privées et permettent de personnaliser votre expérience.</p>
+      <div class="onboarding-form">
+        <label>Prénom <span style="color:var(--bad)">*</span></label>
+        <input type="text" id="ob-firstname" placeholder="Votre prénom" required>
+        <label>Nom <span style="color:var(--bad)">*</span></label>
+        <input type="text" id="ob-lastname" placeholder="Votre nom" required>
+        <label>Email <span style="color:var(--bad)">*</span></label>
+        <input type="email" id="ob-email" placeholder="votre@email.com" required>
+        <div id="ob-error" style="display:none;color:var(--bad);font-size:.82rem;margin-top:6px"></div>
+      </div>
+      <div class="onboarding-nav">
+        <button type="button" class="btn-ghost" onclick="obPrev()">Retour</button>
+        <button type="button" class="btn-solid" onclick="obNext()">Continuer</button>
+      </div>
+    </div>
+
+    <!-- Étape 3 : C'est parti -->
+    <div class="onboarding-step" data-ob="3">
+      <div class="onboarding-icon">🚀</div>
+      <h1>Tout est prêt, <span id="ob-hello"></span></h1>
+      <p class="onboarding-lead">Votre espace est configuré. Vous pouvez maintenant explorer les retours, suivre les indicateurs et consulter les verbatims du groupe.</p>
+      <div class="onboarding-tips">
+        <div class="onboarding-tip">🔍 <b>Filtrez</b> par parcours, activité ou période pour affiner la lecture</div>
+        <div class="onboarding-tip">📋 <b>Partagez le formulaire</b> aux membres et intervenants depuis l'onglet dédié</div>
+        <div class="onboarding-tip">👤 <b>Modifiez votre profil</b> à tout moment depuis l'avatar en haut à droite</div>
+      </div>
+      <button type="button" class="btn-solid" onclick="obFinish()">Accéder au tableau de bord</button>
+    </div>
+  </div>
+</div>
+
 <!-- DASHBOARD -->
 <div id="app">
 <div class="wrap">

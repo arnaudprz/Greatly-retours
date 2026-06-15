@@ -439,3 +439,173 @@ body.is-admin .tabs .admin-only { display: inline-flex; }
   padding: 0;
 }
 .profile-dropdown-footer button:hover { text-decoration: underline; }
+
+/* --- Onboarding --- */
+.onboarding-wrap {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+  text-align: center;
+}
+
+.onboarding-progress {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+.onboarding-progress span {
+  width: 48px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--line);
+  transition: background .3s;
+}
+.onboarding-progress span.on { background: var(--sage); }
+
+.onboarding-step {
+  display: none;
+  animation: obFade .4s ease;
+}
+.onboarding-step.active { display: block; }
+@keyframes obFade {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.onboarding-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--sage-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 20px;
+}
+
+.onboarding-step h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: 1.65rem;
+  letter-spacing: -.3px;
+  margin-bottom: 10px;
+}
+
+.onboarding-lead {
+  color: var(--warm-grey);
+  font-size: .95rem;
+  line-height: 1.55;
+  margin-bottom: 28px;
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Étape 1 — Features */
+.onboarding-features {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+  margin-bottom: 30px;
+}
+.onboarding-feature {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+}
+.onboarding-feat-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.onboarding-feature b {
+  display: block;
+  font-size: .9rem;
+  margin-bottom: 2px;
+}
+.onboarding-feature small {
+  font-size: .82rem;
+  color: var(--warm-grey);
+  line-height: 1.4;
+}
+
+/* Étape 2 — Formulaire profil */
+.onboarding-form {
+  text-align: left;
+  margin-bottom: 24px;
+}
+.onboarding-form label {
+  display: block;
+  font-size: .76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--warm-grey);
+  margin-bottom: 4px;
+  margin-top: 14px;
+}
+.onboarding-form label:first-child { margin-top: 0; }
+.onboarding-form input {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 16px;
+  background: #fff;
+  color: var(--ink);
+}
+.onboarding-form input:focus {
+  outline: none;
+  border-color: var(--sage);
+}
+.onboarding-form input.ob-err {
+  border-color: var(--bad);
+  background: #fdf8f6;
+}
+
+/* Étape 3 — Tips */
+.onboarding-tips {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  margin-bottom: 30px;
+}
+.onboarding-tip {
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: .88rem;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.onboarding-tip b { font-weight: 600; }
+
+/* Navigation onboarding */
+.onboarding-nav {
+  display: flex;
+  gap: 10px;
+}
+.onboarding-nav .btn-ghost { flex: 1; }
+.onboarding-nav .btn-solid { flex: 1.6; }
+
+.onboarding-step > .btn-solid {
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+}
