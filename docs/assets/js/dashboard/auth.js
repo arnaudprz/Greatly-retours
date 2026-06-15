@@ -29,12 +29,15 @@ async function login() {
     let role, token;
 
     if (CONFIG.DEMO_MODE) {
-      // Mode démo : vérification locale par hash
-      const hash = await sha256(pwd);
-      if (hash !== CONFIG.DEMO_PASSWORD_HASH) {
+      // Mode démo : vérification locale
+      // Deux mots de passe provisoires (remplacés par le relais en prod)
+      if (pwd === 'greatly2026') {
+        role = 'Lecture seule';
+      } else if (pwd === 'greatlyadmin2026') {
+        role = 'Super-admin';
+      } else {
         throw new Error('Mot de passe incorrect');
       }
-      role = pwd.includes('admin') ? 'Super-admin' : 'Lecture seule';
       token = 'demo_' + Date.now();
     } else {
       // Mode réel : appel au relais
