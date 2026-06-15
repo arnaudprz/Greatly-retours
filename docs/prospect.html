@@ -3,21 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Votre avis compte — GREATLY</title>
-<meta name="description" content="Aidez-nous à améliorer Greatly en partageant votre regard. Anonyme, 3 minutes.">
+<title>Votre regard — GREATLY</title>
+<meta name="description" content="Prenez 3 minutes pour nous partager votre ressenti sur Greatly. Anonyme, bienveillant, sans engagement.">
+
+<!-- Open Graph (partage WhatsApp, LinkedIn, iMessage…) -->
+<meta property="og:title" content="Greatly — Votre regard compte">
+<meta property="og:description" content="Vous avez découvert Greatly ? Prenez 3 minutes pour nous partager votre ressenti. 100 % anonyme, sans engagement.">
+<meta property="og:image" content="https://arnaudprz.github.io/Greatly-retours/assets/og-prospect.svg">
+<meta property="og:url" content="https://arnaudprz.github.io/Greatly-retours/prospect.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GREATLY">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Greatly — Votre regard compte">
+<meta name="twitter:description" content="3 minutes, anonyme, pour nous aider à nous améliorer.">
+<meta name="twitter:image" content="https://arnaudprz.github.io/Greatly-retours/assets/og-prospect.svg">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/shared.css?v=8">
-<link rel="stylesheet" href="assets/css/form.css?v=8">
+<link rel="stylesheet" href="assets/css/shared.css?v=9">
+<link rel="stylesheet" href="assets/css/form.css?v=9">
 </head>
 <body class="t-prospect">
 <div class="wrap">
 
   <header class="head">
     <div class="brand">Greatly</div>
-    <h1>Votre avis compte</h1>
-    <p>Vous avez découvert Greatly et vous vous posez des questions ? Votre regard nous aide à nous améliorer. Il n'y a pas de bonne réponse — juste la vôtre.</p>
-    <div class="anon">🤍 100&nbsp;% anonyme · 3 minutes</div>
+    <h1>Votre regard compte</h1>
+    <p>Vous avez croisé la route de Greatly — et c'est déjà beaucoup. Que vous soyez curieux, hésitant ou simplement de passage, votre ressenti nous est précieux. Pas de piège, pas de bonne réponse : juste votre regard, tel qu'il est.</p>
+    <div class="anon">🤍 100&nbsp;% anonyme · 3 minutes · sans engagement</div>
   </header>
 
   <div class="progress" id="progress"></div>
@@ -25,40 +40,41 @@
   <!-- ÉTAPE 0 : Comment vous nous avez connus -->
   <section class="step active" data-step="0">
     <div class="q">
-      <h3>Comment avez-vous découvert Greatly ?</h3>
+      <h3>Comment nos chemins se sont-ils croisés ?</h3>
+      <div class="hint">Pas besoin de vous souvenir du détail — l'idée générale suffit.</div>
       <div class="chips">
-        <button type="button" class="chip" data-v="Bouche-à-oreille">🗣️ Bouche-à-oreille</button>
+        <button type="button" class="chip" data-v="Bouche-à-oreille">🗣️ Quelqu'un m'en a parlé</button>
         <button type="button" class="chip" data-v="Réseaux sociaux">📱 Réseaux sociaux</button>
-        <button type="button" class="chip" data-v="Site web">🌐 Site web</button>
-        <button type="button" class="chip" data-v="Événement">🎪 Événement</button>
-        <button type="button" class="chip" data-v="Presse">📰 Presse / média</button>
+        <button type="button" class="chip" data-v="Site web">🌐 Le site Greatly</button>
+        <button type="button" class="chip" data-v="Événement">🎪 Un événement</button>
+        <button type="button" class="chip" data-v="Presse">📰 Un article / média</button>
         <button type="button" class="chip" data-v="Autre">💡 Autre</button>
       </div>
     </div>
     <div class="nav">
-      <button type="button" class="btn-solid" id="start" disabled>Commencer</button>
+      <button type="button" class="btn-solid" id="start" disabled>C'est parti</button>
     </div>
   </section>
 
-  <!-- ÉTAPE 1 : Première impression & clarté -->
+  <!-- ÉTAPE 1 : Ressenti & compréhension -->
   <section class="step" data-step="1">
     <div class="q">
-      <h3>Votre première impression de Greatly</h3>
-      <div class="hint">Ce que vous avez ressenti en découvrant le programme, le site ou un échange.</div>
+      <h3>Votre première impression en découvrant Greatly</h3>
+      <div class="hint">Ce que vous avez ressenti — en parcourant le site, en échangeant avec quelqu'un, ou simplement en entendant parler du programme. Il n'y a pas de mauvaise réponse.</div>
       <div class="nps" id="nps-impression"></div>
-      <div class="scale-labels"><span>Pas convaincant</span><span>Très enthousiasmant</span></div>
+      <div class="scale-labels"><span>Ça ne m'a pas parlé</span><span>J'ai été embarqué·e</span></div>
     </div>
     <div class="q">
-      <h3>La proposition de Greatly est claire pour vous</h3>
-      <div class="hint">Comprenez-vous ce que Greatly propose et à qui cela s'adresse ?</div>
+      <h3>Vous avez compris ce que Greatly propose</h3>
+      <div class="hint">C'est une vraie question, pas un test. Si c'est flou, c'est une information très utile pour nous.</div>
       <div class="nps" id="nps-clarte"></div>
-      <div class="scale-labels"><span>Pas du tout claire</span><span>Très claire</span></div>
+      <div class="scale-labels"><span>C'est encore flou</span><span>C'est très clair</span></div>
     </div>
     <div class="q">
-      <h3>Le programme vous semble adapté à vos besoins</h3>
-      <div class="hint">Par rapport à ce que vous vivez aujourd'hui dans votre quotidien professionnel.</div>
+      <h3>Ce que Greatly propose résonne avec ce que vous vivez</h3>
+      <div class="hint">Par rapport à votre quotidien, vos envies ou vos besoins du moment — même si c'est encore vague.</div>
       <div class="nps" id="nps-pertinence"></div>
-      <div class="scale-labels"><span>Pas du tout</span><span>Parfaitement</span></div>
+      <div class="scale-labels"><span>Pas vraiment</span><span>Tout à fait</span></div>
     </div>
     <div class="nav">
       <button type="button" class="btn-ghost nav-back">Retour</button>
@@ -66,37 +82,38 @@
     </div>
   </section>
 
-  <!-- ÉTAPE 2 : Freins & attentes -->
+  <!-- ÉTAPE 2 : Ce qui retient & ce qui attire -->
   <section class="step" data-step="2">
     <div class="q">
-      <h3>Qu'est-ce qui pourrait vous freiner ?</h3>
-      <div class="hint">Cochez tout ce qui s'applique.</div>
+      <h3>Y a-t-il des choses qui vous retiennent aujourd'hui ?</h3>
+      <div class="hint">C'est normal d'hésiter. Ce qui compte, c'est de pouvoir en tenir compte. Cochez tout ce qui vous parle — ou rien du tout.</div>
       <div class="chips multi">
-        <button type="button" class="chip" data-v="prix">💰 Le prix</button>
-        <button type="button" class="chip" data-v="temps">⏰ Le temps à y consacrer</button>
-        <button type="button" class="chip" data-v="distance">📍 La distance / le lieu</button>
-        <button type="button" class="chip" data-v="format">🔄 Le format (groupe, présentiel…)</button>
-        <button type="button" class="chip" data-v="comprehension">❓ Je ne comprends pas bien l'offre</button>
-        <button type="button" class="chip" data-v="sport">🏃 L'aspect sportif m'intimide</button>
-        <button type="button" class="chip" data-v="aucun">✅ Aucun frein particulier</button>
+        <button type="button" class="chip" data-v="prix">💰 L'investissement financier</button>
+        <button type="button" class="chip" data-v="temps">⏰ Trouver le temps</button>
+        <button type="button" class="chip" data-v="distance">📍 Le déplacement</button>
+        <button type="button" class="chip" data-v="format">👥 Le format en groupe</button>
+        <button type="button" class="chip" data-v="comprehension">🤔 Je ne cerne pas bien ce que c'est</button>
+        <button type="button" class="chip" data-v="sport">🏃 Le côté sportif m'impressionne</button>
+        <button type="button" class="chip" data-v="aucun">😊 Rien de particulier</button>
       </div>
     </div>
     <div class="q">
-      <h3>Ce qui vous attire le plus chez Greatly</h3>
-      <div class="hint">Cochez tout ce qui s'applique.</div>
+      <h3>Et à l'inverse, qu'est-ce qui vous a touché ou donné envie ?</h3>
+      <div class="hint">Ce qui a retenu votre attention, même furtivement. Cochez ce qui vous parle.</div>
       <div class="chips multi">
-        <button type="button" class="chip" data-v="sport">⛷️ L'activité physique adaptée</button>
-        <button type="button" class="chip" data-v="reflexion">🦉 Les ateliers de réflexion</button>
-        <button type="button" class="chip" data-v="groupe">👥 Le groupe de pairs (dirigeants)</button>
-        <button type="button" class="chip" data-v="lieu">🏡 Le lieu (Greatly House)</button>
-        <button type="button" class="chip" data-v="approche">🌱 L'approche globale corps-esprit</button>
-        <button type="button" class="chip" data-v="pause">☕ Un temps de pause dans le quotidien</button>
+        <button type="button" class="chip" data-v="sport">⛷️ Bouger, prendre soin de son corps</button>
+        <button type="button" class="chip" data-v="reflexion">🦉 Prendre du recul, réfléchir autrement</button>
+        <button type="button" class="chip" data-v="groupe">👥 Échanger entre pairs, sortir de l'isolement</button>
+        <button type="button" class="chip" data-v="lieu">🏡 Le cadre, la Greatly House</button>
+        <button type="button" class="chip" data-v="approche">🌱 L'approche globale, corps et esprit</button>
+        <button type="button" class="chip" data-v="pause">☕ S'accorder une vraie pause</button>
       </div>
     </div>
     <div class="q">
-      <h3>L'investissement vous semble justifié par rapport à la valeur perçue</h3>
+      <h3>Le programme vous semble à la hauteur de ce qu'il représente</h3>
+      <div class="hint">En termes de valeur, de contenu, d'accompagnement — par rapport à l'engagement que cela demande.</div>
       <div class="nps" id="nps-valeur"></div>
-      <div class="scale-labels"><span>Pas du tout</span><span>Totalement</span></div>
+      <div class="scale-labels"><span>Pas vraiment</span><span>Oui, largement</span></div>
     </div>
     <div class="nav">
       <button type="button" class="btn-ghost nav-back">Retour</button>
@@ -104,33 +121,33 @@
     </div>
   </section>
 
-  <!-- ÉTAPE 3 : Projection & ouvertes -->
+  <!-- ÉTAPE 3 : Se projeter & s'exprimer -->
   <section class="step" data-step="3">
     <div class="q">
-      <h3>Vous vous projetez dans le programme Greatly</h3>
-      <div class="hint">Vous imaginez-vous rejoindre un groupe dans les prochains mois ?</div>
+      <h3>Vous vous imaginez rejoindre un groupe Greatly ?</h3>
+      <div class="hint">Il ne s'agit pas de s'engager — juste de sentir si l'envie est là, même un peu.</div>
       <div class="nps" id="nps-projection"></div>
-      <div class="scale-labels"><span>Pas du tout</span><span>Certainement</span></div>
+      <div class="scale-labels"><span>Pas pour le moment</span><span>Oui, clairement</span></div>
     </div>
     <div class="q">
-      <h3>Recommanderiez-vous Greatly à un dirigeant de votre entourage ?</h3>
-      <div class="hint">0 = pas du tout probable · 10 = très probable</div>
+      <h3>Parleriez-vous de Greatly à un·e dirigeant·e de votre entourage ?</h3>
+      <div class="hint">Spontanément, si l'occasion se présentait.</div>
       <div class="nps" id="nps-reco"></div>
-      <div class="scale-labels"><span>Pas du tout</span><span>Très probable</span></div>
+      <div class="scale-labels"><span>Probablement pas</span><span>Sans hésiter</span></div>
     </div>
     <div class="q">
       <h3>Qu'est-ce qui vous ferait franchir le pas ?</h3>
-      <div class="hint">Un format, une offre, une garantie, une information qui manque…</div>
+      <div class="hint">Un élément manquant, une envie, un format, un déclic… tout est bon à partager. Et si rien ne manque, dites-le aussi.</div>
       <textarea placeholder="Écrivez librement…"></textarea>
     </div>
     <div class="q">
-      <h3>Un mot, une idée, une suggestion pour nous aider à nous améliorer ?</h3>
-      <div class="hint">Tout est bon à prendre — même ce qui pique.</div>
+      <h3>Un dernier mot, une idée, quelque chose que vous aimeriez nous dire ?</h3>
+      <div class="hint">Cet espace est le vôtre. Ce qui vous passe par la tête, même si ça semble anodin — c'est souvent là que se cachent les meilleures idées.</div>
       <textarea placeholder="Écrivez librement…"></textarea>
     </div>
     <div class="nav">
       <button type="button" class="btn-ghost nav-back">Retour</button>
-      <button type="button" class="btn-solid" id="btn-send-prospect">Envoyer mon avis</button>
+      <button type="button" class="btn-solid" id="btn-send-prospect">Envoyer</button>
     </div>
   </section>
 
@@ -138,18 +155,18 @@
   <section class="step" data-step="4">
     <div class="merci">
       <div class="big">🤍</div>
-      <h2>Merci pour votre regard</h2>
-      <p>Votre avis, anonyme, nous aide à construire un programme qui vous ressemble. Peut-être à bientôt chez Greatly.</p>
+      <h2>Merci d'avoir pris ce temps</h2>
+      <p>Votre regard, anonyme, rejoint ceux des autres personnes qui ont croisé notre chemin. Il nous aide à construire quelque chose de plus juste. Peut-être à bientôt chez Greatly.</p>
       <button type="button" class="btn-solid" style="max-width:260px" onclick="location.reload()">Déposer un autre avis</button>
     </div>
   </section>
 
-  <div class="foot">GREATLY · 10 rue de Lambersart, Verlinghem<br>Vos réponses sont anonymes et servent uniquement à améliorer le programme.</div>
+  <div class="foot">GREATLY · 10 rue de Lambersart, Verlinghem<br>Vos réponses sont anonymes et servent uniquement à nous améliorer.</div>
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=8"></script>
-<script src="assets/js/api.js?v=8"></script>
+<script src="assets/js/config.js?v=9"></script>
+<script src="assets/js/api.js?v=9"></script>
 <script>
 const TOTAL_STEPS = 4;
 const state = { step: 0, source: null };
@@ -188,11 +205,9 @@ document.querySelectorAll('[data-step="0"] .chip').forEach(btn => {
 
 document.getElementById('start').addEventListener('click', () => go(1));
 
-// --- Multi-select chips (freins & attraits) ---
+// --- Multi-select chips ---
 document.querySelectorAll('.chips.multi .chip').forEach(btn => {
-  btn.addEventListener('click', () => {
-    btn.classList.toggle('sel');
-  });
+  btn.addEventListener('click', () => btn.classList.toggle('sel'));
 });
 
 // --- Navigation ---
@@ -215,11 +230,10 @@ function validateStep(n) {
   document.querySelector(`[data-step="${n}"]`).querySelectorAll('.q').forEach(q => {
     if (q.offsetParent === null) return;
     let filled = true;
+    // Seules les notes 0-10 sont obligatoires (pas les multi-chips ni les textarea)
     if (q.querySelector('.nps') && !q.querySelector('.chips.multi')) {
       if (!q.querySelector('.nps button.sel')) filled = false;
     }
-    // Multi-chips et textarea sont facultatifs sur les étapes 2 et 3
-    if (n <= 1 && q.querySelector('.chips:not(.multi)') && !q.querySelector('.sel')) filled = false;
     q.classList.toggle('err', !filled);
     if (!filled) { ok = false; if (!first) first = q; }
   });
@@ -251,14 +265,6 @@ function serializeProspect() {
     const sel = document.querySelector(`#${id} button.sel`);
     return sel ? +sel.dataset.n : null;
   };
-  const getMulti = stepN => {
-    const chips = document.querySelectorAll(`[data-step="${stepN}"] .chips.multi`);
-    const result = [];
-    chips.forEach(group => {
-      group.querySelectorAll('.chip.sel').forEach(c => result.push(c.dataset.v));
-    });
-    return result;
-  };
   const textareas = document.querySelectorAll('[data-step="3"] textarea');
 
   return {
@@ -275,8 +281,8 @@ function serializeProspect() {
     projection: getNPS('nps-projection'),
     nps: getNPS('nps-reco'),
     ouvertes: {
-      "Qu'est-ce qui vous ferait franchir le pas ?": textareas[0] ? textareas[0].value.trim() : '',
-      "Suggestion pour nous améliorer": textareas[1] ? textareas[1].value.trim() : '',
+      "Ce qui ferait franchir le pas": textareas[0] ? textareas[0].value.trim() : '',
+      "Un dernier mot": textareas[1] ? textareas[1].value.trim() : '',
     },
   };
 }
@@ -295,7 +301,6 @@ document.getElementById('btn-send-prospect').addEventListener('click', async () 
   } catch (err) {
     btn.disabled = false;
     btn.textContent = original;
-    // Toast erreur
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.textContent = "Erreur lors de l'envoi. Vérifiez votre connexion et réessayez.";
