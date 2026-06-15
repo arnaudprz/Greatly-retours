@@ -86,9 +86,36 @@
       <div class="brand">Greatly · Espace équipe</div>
       <h1>Vos retours</h1>
     </div>
-    <div style="text-align:right">
-      <p><b id="count"></b> sur la période</p>
-      <span class="panel-link" onclick="logout()" style="font-size:.78rem">Déconnexion</span>
+    <div style="display:flex;align-items:center;gap:14px">
+      <p style="color:var(--warm-grey);font-size:.88rem"><b id="count"></b> sur la période</p>
+      <div class="profile-widget" id="profile-widget">
+        <button type="button" class="profile-trigger" onclick="toggleProfile()">
+          <span class="profile-avatar" id="profile-avatar"></span>
+          <span class="profile-name" id="profile-name"></span>
+          <span class="profile-chevron">▾</span>
+        </button>
+        <div class="profile-dropdown" id="profile-dropdown">
+          <div class="profile-dropdown-header">
+            <span class="profile-avatar lg" id="profile-avatar-lg"></span>
+            <div>
+              <div class="profile-fullname" id="profile-fullname"></div>
+              <div class="profile-role" id="profile-role"></div>
+            </div>
+          </div>
+          <div class="profile-form" id="profile-form">
+            <label>Prénom</label>
+            <input type="text" id="pf-firstname" placeholder="Prénom">
+            <label>Nom</label>
+            <input type="text" id="pf-lastname" placeholder="Nom">
+            <label>Email</label>
+            <input type="email" id="pf-email" placeholder="Email">
+            <button type="button" class="btn-solid" style="width:100%;margin-top:6px;padding:10px;font-size:.83rem" onclick="saveProfile()">Enregistrer</button>
+          </div>
+          <div class="profile-dropdown-footer">
+            <button type="button" onclick="logout()">Déconnexion</button>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 

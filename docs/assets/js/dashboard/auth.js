@@ -2,14 +2,83 @@
    Greatly — Vos retours · Authentification dashboard
    ============================================ */
 
-/** Hash SHA-256 d'une chaîne (Web Crypto API) */
-async function sha256(str) {
-  const buf = new TextEncoder().encode(str);
-  const hash = await crypto.subtle.digest('SHA-256', buf);
-  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+const PROFILE_KEY = 'greatly_retours_profile';
+
+/** Profil par défaut */
+function defaultProfile() {
+  return { firstname: '', lastname: '', email: '' };
 }
 
-/** Gestion des panneaux de la gate (connexion / mot de passe oublié / demande d'accès) */
+/** Lire le profil depuis localStorage */
+function getProfile() {
+  try {
+    return JSON.parse(localStorage.getItem(PROFILE_KEY)) || defaultProfile();
+  } catch (_) {
+    return defaultProfile();
+  }
+}
+
+/** Initiales pour l'avatar (2 lettres max) */
+function initials(profile) {
+  const f = (profile.firstname || '').trim();
+  const l = (profile.lastname || '').trim();
+  if (f && l) return (f[0] + l[0]).toUpperCase();
+  if (f) return f.slice(0, 2).toUpperCase();
+  if (l) return l.slice(0, 2).toUpperCase();
+  return '?';
+}
+
+/** Met à jour tous les éléments profil dans le header */
+function renderProfile() {
+  const profile = getProfile();
+  const role = localStorage.getItem(CONFIG.ROLE_KEY) || '';
+  const ini = initials(profile);
+  const displayName = [profile.firstname, profile.lastname].filter(Boolean).join(' ') || 'Mon profil';
+
+  // Avatar (petit + grand)
+  document.querySelectorAll('#profile-avatar, #profile-avatar-lg').forEach(el => {
+    el.textContent = ini;
+  });
+
+  // Nom dans le trigger
+  document.getElementById('profile-name').textContent = displayName;
+
+  // Header du dropdown
+  document.getElementById('profile-fullname').textContent = displayName;
+  document.getElementById('profile-role').textContent = role;
+
+  // Champs du formulaire
+  document.getElementById('pf-firstname').value = profile.firstname;
+  document.getElementById('pf-lastname').value = profile.lastname;
+  document.getElementById('pf-email').value = profile.email;
+}
+
+/** Sauvegarder le profil */
+function saveProfile() {
+  const profile = {
+    firstname: document.getElementById('pf-firstname').value.trim(),
+    lastname: document.getElementById('pf-lastname').value.trim(),
+    email: document.getElementById('pf-email').value.trim(),
+  };
+  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+  renderProfile();
+  toggleProfile(); // fermer le dropdown
+}
+
+/** Toggle du dropdown profil */
+function toggleProfile() {
+  document.getElementById('profile-dropdown').classList.toggle('open');
+}
+
+// Fermer le dropdown au clic en dehors
+document.addEventListener('click', e => {
+  const widget = document.getElementById('profile-widget');
+  if (widget && !widget.contains(e.target)) {
+    document.getElementById('profile-dropdown').classList.remove('open');
+  }
+});
+
+/** Gestion des panneaux de la gate */
 function showPanel(name) {
   document.querySelectorAll('#gate .panel').forEach(p => p.classList.remove('active'));
   const panel = document.getElementById('panel-' + name);
@@ -29,8 +98,6 @@ async function login() {
     let role, token;
 
     if (CONFIG.DEMO_MODE) {
-      // Mode démo : vérification locale
-      // Deux mots de passe provisoires (remplacés par le relais en prod)
       if (pwd === 'greatly2026') {
         role = 'Lecture seule';
       } else if (pwd === 'greatlyadmin2026') {
@@ -40,7 +107,6 @@ async function login() {
       }
       token = 'demo_' + Date.now();
     } else {
-      // Mode réel : appel au relais
       const res = await API.login(pwd);
       role = res.role;
       token = res.token;
@@ -96,6 +162,7 @@ function enterDashboard(role) {
     document.body.classList.add('is-admin');
   }
 
+  renderProfile();
   initDashboard();
 }
 
@@ -111,7 +178,6 @@ function checkSession() {
       enterDashboard(role);
       return;
     }
-    // Session expirée
     localStorage.removeItem(CONFIG.TOKEN_KEY);
     localStorage.removeItem(CONFIG.ROLE_KEY);
     localStorage.removeItem(CONFIG.SESSION_START_KEY);
