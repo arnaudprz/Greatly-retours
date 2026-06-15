@@ -62,8 +62,8 @@ function buildScales() {
   // Déroulé étape par étape
   const phCard = document.createElement('div');
   phCard.className = 'q';
-  phCard.innerHTML = `<h3>${state.type === 'energie' ? 'La séance' : 'La rencontre'}, étape par étape</h3>
-    <div class="hint">Comment avez-vous vécu chaque temps ? (0 = à revoir · 10 = excellent)</div>`;
+  phCard.innerHTML = `<h3>Comment avez-vous vécu ${state.type === 'energie' ? 'la séance' : 'la rencontre'} ?</h3>
+    <div class="hint">Étape par étape, partagez votre ressenti. (0 = à revoir · 10 = excellent)</div>`;
 
   PHASES[state.type].forEach(phase => {
     const row = document.createElement('div');

@@ -8,66 +8,66 @@
 // Déroulé complet de la rencontre, étape par étape
 const PHASES = {
   energie: [
-    { n: 'Accueil & cadre',       d: 'intention, déconnexion, mise en confiance' },
-    { n: 'Échauffement',          d: 'mobilisation progressive, corps-souffle' },
-    { n: 'Cœur de séance',        d: 'exercices, variantes, ajustements' },
-    { n: 'Récupération',          d: 'retour au calme, respiration, ancrage' },
-    { n: 'Clôture & échanges',    d: 'partage des ressentis, micro-rituel' },
+    { n: 'Comment avez-vous vécu l\'accueil ?',       d: 'L\'intention posée, la déconnexion du quotidien, la mise en confiance…' },
+    { n: 'Que pensez-vous de l\'échauffement ?',       d: 'La montée en mouvement, le souffle, la préparation du corps…' },
+    { n: 'Comment avez-vous vécu le cœur de séance ?', d: 'Les exercices, les variantes proposées, les ajustements à votre rythme…' },
+    { n: 'Que pensez-vous du temps de récupération ?', d: 'Le retour au calme, la respiration, l\'ancrage…' },
+    { n: 'Comment avez-vous vécu la clôture ?',        d: 'Le partage des ressentis, le micro-rituel de fin…' },
   ],
   lucidite: [
-    { n: 'Accueil',               d: 'arrivée, déconnexion, mise en confiance' },
-    { n: 'Brunch',                d: 'convivialité, qualité des échanges' },
-    { n: 'Atelier',               d: 'contenu, animation, outils proposés' },
-    { n: 'Debrief & clôture',     d: 'bilan, défi d\'intersession' },
+    { n: 'Comment avez-vous vécu l\'accueil ?',        d: 'L\'arrivée, la déconnexion, la mise en confiance…' },
+    { n: 'Que pensez-vous du brunch ?',                d: 'La convivialité, la qualité des échanges informels…' },
+    { n: 'Comment avez-vous vécu l\'atelier ?',        d: 'Le contenu, l\'animation, les outils proposés…' },
+    { n: 'Que pensez-vous du debrief et de la clôture ?', d: 'Le bilan, le défi d\'intersession, ce que vous en gardez…' },
   ],
 };
 
 // Échelles spécifiques par clé (role × type)
 const SCALES = {
   membre_energie: [
-    { id: 'avant',   t: "Mon niveau d'énergie avant la séance",    labels: ['Épuisé·e', 'Plein·e d\'élan'] },
-    { id: 'apres',   t: "Mon niveau d'énergie après la séance",    labels: ['Épuisé·e', 'Plein·e d\'élan'] },
-    { id: 'rythme',  t: "La séance était à mon rythme",            hint: "Variantes, intensité, écoute de mes besoins…", labels: ['Pas du tout', 'Totalement'] },
-    { id: 'plaisir', t: "J'ai pris du plaisir à bouger",           labels: ['Pas vraiment', 'Beaucoup'] },
-    { id: 'lieu',    t: "Le lieu de la séance",                    hint: "Accès, équipements, vestiaires, confort, ambiance…", labels: ['À revoir', 'Excellent'] },
+    { id: 'avant',   t: "Comment vous sentiez-vous en arrivant ?",          hint: "Votre niveau d'énergie avant la séance.", labels: ['Épuisé·e', 'Plein·e d\'élan'] },
+    { id: 'apres',   t: "Et maintenant, comment vous sentez-vous ?",        hint: "Votre niveau d'énergie après la séance.", labels: ['Épuisé·e', 'Plein·e d\'élan'] },
+    { id: 'rythme',  t: "La séance était-elle à votre rythme ?",            hint: "Les variantes, l'intensité, l'écoute de vos besoins…", labels: ['Pas du tout', 'Totalement'] },
+    { id: 'plaisir', t: "Avez-vous pris du plaisir à bouger ?",             labels: ['Pas vraiment', 'Beaucoup'] },
+    { id: 'lieu',    t: "Que pensez-vous du lieu de la séance ?",            hint: "L'accès, les équipements, les vestiaires, le confort, l'ambiance…", labels: ['À revoir', 'Excellent'] },
   ],
   membre_lucidite: [
-    { id: 'clarte',   t: "L'atelier m'a aidé·e à prendre du recul",                        labels: ['Pas vraiment', 'Beaucoup'] },
-    { id: 'echanges', t: "La qualité des échanges dans le groupe",                          labels: ['Faible', 'Très riche'] },
-    { id: 'outils',   t: "Je repars avec quelque chose d'activable",                        hint: "Un outil, un déclic, une pratique à expérimenter…", labels: ['Pas vraiment', 'Clairement'] },
-    { id: 'elan',     t: "Cet atelier a créé un mouvement, une envie d'évolution",          hint: "L'envie de faire bouger les choses dans mon quotidien…", labels: ['Pas du tout', 'Très fort'] },
-    { id: 'lieu',     t: "La Greatly House",                                                 hint: "Accueil, confort, cadre, atmosphère du lieu…", labels: ['À revoir', 'Excellente'] },
+    { id: 'clarte',   t: "L'atelier vous a-t-il aidé à prendre du recul ?",                     labels: ['Pas vraiment', 'Beaucoup'] },
+    { id: 'echanges', t: "Comment avez-vous trouvé la qualité des échanges ?",                   labels: ['Faible', 'Très riche'] },
+    { id: 'outils',   t: "Repartez-vous avec quelque chose d'activable ?",                       hint: "Un outil, un déclic, une pratique à expérimenter…", labels: ['Pas vraiment', 'Clairement'] },
+    { id: 'elan',     t: "Cet atelier a-t-il créé une envie de faire bouger les choses ?",       hint: "Un mouvement, une envie d'évolution dans votre quotidien…", labels: ['Pas du tout', 'Très fort'] },
+    { id: 'lieu',     t: "Que pensez-vous de la Greatly House ?",                                 hint: "L'accueil, le confort, le cadre, l'atmosphère du lieu…", labels: ['À revoir', 'Excellente'] },
   ],
   intervenant: [
-    { id: 'groupe', t: "Le ressenti général du groupe",          labels: ['En difficulté', 'Très engagé'] },
-    { id: 'cadre',  t: "Les conditions de la séance",            hint: "Matériel, logistique, coordination…", labels: ['À améliorer', 'Idéales'] },
-    { id: 'lieu',   t: "Le lieu de l'intervention",              hint: "Greatly House ou lieu extérieur : accès, équipements, adéquation à l'activité…", labels: ['À revoir', 'Excellent'] },
-    { id: 'moi',    t: "Mon propre ressenti d'animation",        labels: ['Inconfortable', 'Très à l\'aise'] },
+    { id: 'groupe', t: "Comment avez-vous senti le groupe ?",               labels: ['En difficulté', 'Très engagé'] },
+    { id: 'cadre',  t: "Que pensez-vous des conditions de la séance ?",     hint: "Le matériel, la logistique, la coordination…", labels: ['À améliorer', 'Idéales'] },
+    { id: 'lieu',   t: "Que pensez-vous du lieu de l'intervention ?",       hint: "Greatly House ou lieu extérieur : accès, équipements, adéquation à l'activité…", labels: ['À revoir', 'Excellent'] },
+    { id: 'moi',    t: "Comment vous êtes-vous senti dans l'animation ?",   labels: ['Inconfortable', 'Très à l\'aise'] },
   ],
 };
 
 // Question NPS par clé
 const NPS = {
-  membre_energie:  "Recommanderiez-vous l'expérience vécue lors de cette séance à un membre de votre entourage ?",
-  membre_lucidite: "Recommanderiez-vous l'expérience vécue lors de cet atelier à un membre de votre entourage ?",
-  intervenant:     "Recommanderiez-vous l'expérience d'intervenant·e chez Greatly à un·e professionnel·le de votre réseau ?",
+  membre_energie:  "Si un proche vous demandait, parleriez-vous de cette expérience ?",
+  membre_lucidite: "Si un proche vous demandait, parleriez-vous de cette expérience ?",
+  intervenant:     "Parleriez-vous de votre expérience chez Greatly à un confrère ?",
 };
 
 // Questions ouvertes par clé
 const OPENS = {
   membre_energie: [
-    { t: "Ce que j'emporte avec moi",                 h: "Une sensation, un repère, un micro-rituel à refaire…" },
-    { t: "Un moment qui m'a marqué·e",                h: "Facile, difficile, surprenant…" },
-    { t: "Une envie ou une suggestion pour la suite",  h: "Discipline, format, rythme…" },
+    { t: "Qu'emportez-vous avec vous après cette séance ?",       h: "Une sensation, un repère, un micro-rituel à refaire…" },
+    { t: "Y a-t-il un moment qui vous a particulièrement marqué ?", h: "Quelque chose de facile, de difficile, de surprenant…" },
+    { t: "Avez-vous une envie ou une suggestion pour la suite ?",  h: "Une discipline, un format, un rythme…" },
   ],
   membre_lucidite: [
-    { t: "Ce qui m'a surpris·e ou que j'ai aimé",     h: "Un échange, une idée, un déclic…" },
-    { t: "Une envie ou une suggestion pour la suite",  h: "Thème, format…" },
+    { t: "Qu'est-ce qui vous a surpris ou touché ?",               h: "Un échange, une idée, un déclic…" },
+    { t: "Avez-vous une envie ou une suggestion pour la suite ?",  h: "Un thème, un format, une idée…" },
   ],
   intervenant: [
-    { t: "Ce qui a bien fonctionné",                                    h: "Dynamique, exercices, moments clés…" },
-    { t: "Points d'attention ou besoins spécifiques observés",          h: "Signaux faibles, fatigue, demandes particulières… (sans nommer les membres)" },
-    { t: "Ajustements proposés pour la suite",                          h: "Format, progression, coordination…" },
+    { t: "Qu'est-ce qui a bien fonctionné selon vous ?",                          h: "La dynamique, les exercices, les moments clés…" },
+    { t: "Avez-vous repéré des points d'attention ?",                             h: "Des signaux faibles, de la fatigue, des demandes particulières… (sans nommer les membres)" },
+    { t: "Quels ajustements proposeriez-vous pour la suite ?",                    h: "Le format, la progression, la coordination…" },
   ],
 };
 
