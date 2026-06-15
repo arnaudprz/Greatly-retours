@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+._*
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environnement
+.env
+.env.local
+
+# Node (si jamais)
+node_modules/
+
+# Apps Script local
+.clasp.json

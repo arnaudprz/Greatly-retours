@@ -1,0 +1,180 @@
+/* ============================================
+   Greatly — Vos retours · Formulaire
+   ============================================ */
+
+.wrap { max-width: 520px; margin: 0 auto; padding: 28px 20px 90px; }
+
+/* --- Header --- */
+.head { text-align: center; margin-bottom: 26px; }
+.head h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: 1.85rem;
+  letter-spacing: -.3px;
+  margin: 6px 0 8px;
+}
+.head p {
+  color: var(--warm-grey);
+  font-size: .92rem;
+  max-width: 380px;
+  margin: 0 auto;
+}
+.anon {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 99px;
+  padding: 7px 14px;
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--sage-dark);
+}
+
+/* --- Barre de progression --- */
+.progress { display: flex; gap: 6px; margin: 22px 0 24px; }
+.progress span {
+  flex: 1;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--line);
+  transition: background .25s;
+}
+.progress span.on { background: var(--accent, var(--sage)); }
+
+/* --- Steps --- */
+.step { display: none; animation: fade .3s ease; }
+.step.active { display: block; }
+@keyframes fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* --- Questions (carte) --- */
+.q {
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  padding: 20px 18px;
+  margin-bottom: 14px;
+}
+.q h3 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+.q .hint { font-size: .82rem; color: var(--warm-grey); margin-bottom: 14px; }
+.q.err { border-color: #b05f4a; background: #fdf8f6; }
+.q.err h3::after {
+  content: " · réponse requise";
+  color: #b05f4a;
+  font-size: .78rem;
+  font-weight: 600;
+}
+
+/* --- Chips layout --- */
+.chips { display: flex; flex-wrap: wrap; gap: 9px; }
+.chips.grid2 { display: grid; grid-template-columns: 1fr 1fr; }
+
+/* --- Big choice (rôle / type) --- */
+.bigchoice { display: grid; gap: 12px; }
+.bigbtn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  padding: 18px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: all .13s;
+}
+.bigbtn:hover { border-color: var(--sage); }
+.bigbtn .ico {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+.bigbtn b { display: block; font-size: 1rem; }
+.bigbtn small { color: var(--warm-grey); font-size: .83rem; }
+.bigbtn.sel {
+  border-color: var(--accent, var(--sage));
+  background: var(--accent-pale, var(--sage-pale));
+}
+
+/* --- Phases (déroulé de la séance) --- */
+.phase { padding: 13px 0; border-bottom: 1px solid var(--line); }
+.phase:last-of-type { border-bottom: none; padding-bottom: 4px; }
+.phase .pname { font-size: .9rem; font-weight: 600; margin-bottom: 9px; }
+.phase .pname small {
+  display: block;
+  font-weight: 400;
+  font-size: .76rem;
+  color: var(--warm-grey);
+}
+
+/* --- Navigation --- */
+.nav { display: flex; gap: 10px; margin-top: 20px; }
+.nav .btn-ghost { flex: 1; }
+.nav .btn-solid { flex: 1.6; }
+
+/* --- Écran merci --- */
+.merci { text-align: center; padding: 46px 10px; }
+.merci .big {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: var(--sage-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 18px;
+}
+.merci h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+.merci p {
+  color: var(--warm-grey);
+  font-size: .95rem;
+  max-width: 340px;
+  margin: 0 auto 26px;
+}
+
+/* --- Spinner d'envoi --- */
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255,255,255,.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .6s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- Erreur réseau --- */
+.toast {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bad);
+  color: #fff;
+  font-size: .85rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 12px;
+  z-index: 100;
+  animation: fade .3s ease;
+}

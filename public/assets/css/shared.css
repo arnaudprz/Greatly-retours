@@ -1,0 +1,232 @@
+/* ============================================
+   Greatly — Vos retours · Styles partagés
+   ============================================ */
+
+:root {
+  /* Marque / principal */
+  --sage: #6B7D5C;
+  --sage-dark: #4f5e42;
+  --sage-pale: #CDD8BE;
+
+  /* Parcours Énergie */
+  --energie: #C0814E;
+  --energie-pale: #F0DFCC;
+  --energie-dark: #9a6235;
+
+  /* Parcours Lucidité */
+  --lucidite: #4F7C82;
+  --lucidite-pale: #D3E2E4;
+  --lucidite-dark: #3b6166;
+
+  /* Neutres */
+  --cream: #F7F4EF;
+  --ink: #1A1A1A;
+  --warm-grey: #6B6460;
+  --line: #E7E1D7;
+
+  /* Sémantique */
+  --good: #5d7d50;
+  --mid: #c0974e;
+  --bad: #b05f4a;
+
+  /* Accent dynamique (piloté par la classe body) */
+  --accent: var(--sage);
+  --accent-pale: var(--sage-pale);
+  --accent-dark: var(--sage-dark);
+}
+
+/* --- Reset --- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Thèmes parcours --- */
+body.t-energie {
+  --accent: var(--energie);
+  --accent-pale: var(--energie-pale);
+  --accent-dark: var(--energie-dark);
+}
+body.t-lucidite {
+  --accent: var(--lucidite);
+  --accent-pale: var(--lucidite-pale);
+  --accent-dark: var(--lucidite-dark);
+}
+
+/* --- Typographie --- */
+.brand {
+  font-size: .78rem;
+  letter-spacing: .18em;
+  font-weight: 700;
+  color: var(--sage-dark);
+  text-transform: uppercase;
+}
+
+/* --- Boutons --- */
+.btn-solid {
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: var(--accent, var(--sage));
+  color: #fff;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: .95rem;
+  cursor: pointer;
+  transition: filter .12s;
+}
+.btn-solid:hover { filter: brightness(.95); }
+.btn-solid:disabled { opacity: .45; cursor: not-allowed; }
+
+.btn-ghost {
+  padding: 14px;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  border-radius: 12px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: .95rem;
+  color: var(--warm-grey);
+  cursor: pointer;
+}
+
+.btn-danger {
+  padding: 14px;
+  border: 1.5px solid var(--bad);
+  background: #fff;
+  border-radius: 12px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: .95rem;
+  color: var(--bad);
+  cursor: pointer;
+  transition: background .12s;
+}
+.btn-danger:hover { background: #FBF0EC; }
+
+/* --- Cartes --- */
+.card {
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  padding: 20px;
+}
+
+/* --- Chips --- */
+.chip {
+  border: 1.5px solid var(--line);
+  background: #fff;
+  border-radius: 12px;
+  padding: 11px 15px;
+  font-weight: 600;
+  font-size: .9rem;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--ink);
+  transition: all .12s;
+}
+.chip:hover { border-color: var(--accent, var(--sage)); }
+.chip.sel {
+  background: var(--accent-pale, var(--sage-pale));
+  border-color: var(--accent, var(--sage));
+  color: var(--accent-dark, var(--sage-dark));
+}
+
+/* --- Grille NPS 0–10 --- */
+.nps {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 5px;
+}
+.nps button {
+  aspect-ratio: .9;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--warm-grey);
+  cursor: pointer;
+  transition: all .12s;
+  padding: 0;
+}
+.nps button.sel {
+  background: var(--accent, var(--sage));
+  border-color: var(--accent, var(--sage));
+  color: #fff;
+  transform: scale(1.1);
+}
+@media (max-width: 380px) {
+  .nps { gap: 3px; }
+  .nps button { font-size: .78rem; border-radius: 7px; }
+}
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: .74rem;
+  color: var(--warm-grey);
+  margin-top: 7px;
+}
+
+/* --- Tags / pills --- */
+.tag {
+  font-size: .7rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 99px;
+}
+.tag.energie { background: var(--energie-pale); color: #8a5a30; }
+.tag.lucidite { background: var(--lucidite-pale); color: #39626a; }
+.tag.coach { background: #EFEBE3; color: var(--warm-grey); }
+
+/* --- Pied de page --- */
+.foot {
+  text-align: center;
+  margin-top: 34px;
+  font-size: .78rem;
+  color: var(--warm-grey);
+}
+.foot a { color: var(--sage-dark); }
+
+/* --- Textarea --- */
+textarea {
+  width: 100%;
+  min-height: 88px;
+  padding: 13px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 16px;
+  background: #fff;
+  resize: vertical;
+  color: var(--ink);
+}
+textarea:focus {
+  outline: none;
+  border-color: var(--accent, var(--sage));
+}
+
+/* --- Input --- */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 14px 15px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 16px;
+  background: #fff;
+  color: var(--ink);
+}
+input:focus {
+  outline: none;
+  border-color: var(--accent, var(--sage));
+}
