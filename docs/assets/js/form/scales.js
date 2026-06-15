@@ -130,10 +130,10 @@ const SCALES = {
 // ============================================
 
 const NPS = {
-  membre_energie:       "Si un proche vous demandait, lui parleriez-vous de cette séance ?",
-  membre_lucidite:      "Si un proche vous demandait, lui parleriez-vous de cet atelier ?",
-  intervenant_energie:  "Recommanderiez-vous l'expérience d'intervenant chez Greatly à un confrère ?",
-  intervenant_lucidite: "Recommanderiez-vous l'expérience d'intervenant chez Greatly à un confrère ?",
+  membre_energie:       "Imaginez qu'un proche traverse une période intense — lui conseilleriez-vous de vivre cette expérience ?",
+  membre_lucidite:      "Imaginez qu'un proche cherche à prendre du recul — lui conseilleriez-vous de vivre cette expérience ?",
+  intervenant_energie:  "Si un confrère cherchait une expérience d'accompagnement enrichissante, lui parleriez-vous de Greatly ?",
+  intervenant_lucidite: "Si un confrère cherchait une expérience d'accompagnement enrichissante, lui parleriez-vous de Greatly ?",
 };
 
 
