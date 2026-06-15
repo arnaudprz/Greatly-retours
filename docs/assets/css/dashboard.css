@@ -619,8 +619,8 @@ body.is-admin .tabs .admin-only { display: inline-flex; }
   border-radius: 18px;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 240px);
-  min-height: 400px;
+  height: min(500px, calc(100vh - 280px));
+  min-height: 320px;
   overflow: hidden;
 }
 
