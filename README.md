@@ -5,7 +5,7 @@ Outil de recueil de feedback anonyme pour les programmes Greatly (Énergie et Lu
 ## Architecture
 
 ```
-public/          → Front (GitHub Pages)
+docs/            → Front (GitHub Pages, servi depuis /docs)
   index.html     → Formulaire de feedback (anonyme, mobile-first)
   dashboard.html → Dashboard équipe + console super-admin
   assets/        → CSS et JS modulaires
