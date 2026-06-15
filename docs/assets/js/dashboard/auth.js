@@ -51,6 +51,14 @@ function renderProfile() {
   document.getElementById('pf-firstname').value = profile.firstname;
   document.getElementById('pf-lastname').value = profile.lastname;
   document.getElementById('pf-email').value = profile.email;
+
+  // Message d'accueil
+  const welcome = document.getElementById('head-welcome');
+  if (welcome) {
+    const firstname = profile.firstname ? profile.firstname : '';
+    const greeting = firstname ? `Bonjour ${firstname}.` : 'Bonjour.';
+    welcome.textContent = `${greeting} Cet espace rassemble les ressentis partagés par les membres et les intervenants après chaque séance. Il vous aide à suivre ce qui fonctionne, repérer ce qui peut évoluer, et ajuster le programme au plus près des besoins du groupe.`;
+  }
 }
 
 /** Sauvegarder le profil */
