@@ -142,6 +142,12 @@ const D = {
   attraitsLabels: ['Bouger, prendre soin de son corps', 'Prendre du recul, réfléchir autrement', 'Échanger entre pairs', 'Le cadre, la Greatly House', 'L\'approche globale', 'S\'accorder une vraie pause'],
   attraitsData:   [48, 42, 35, 30, 26, 22],
 
+  // --- Phases intervenants (déroulé vu par l'intervenant) ---
+  phasesIvENoms:  ['Accueil du groupe', 'Échauffement', 'Cœur de séance', 'Récupération', 'Clôture', 'Lieu'],
+  phasesIvENote:  [8.4, 8.0, 8.3, 8.6, 8.1, 7.6],
+  phasesIvLNoms:  ['Accueil', 'Brunch', 'Atelier', 'Greatly House'],
+  phasesIvLNote:  [8.7, 7.9, 8.5, 9.0],
+
   // --- Échelles intervenants (retours de séance) ---
   qIntervenantEnergie: [
     { label: 'Ressenti du groupe',          val: 8.3, delta: +0.3, data: [7.8, 7.9, 8.0, 8.0, 8.1, 8.1, 8.2, 8.2, 8.2, 8.3, 8.2, 8.3] },
@@ -1117,6 +1123,33 @@ function renderIvGreatly() {
       ],
     },
     options: lineOpts(6, 10),
+  });
+
+  // --- Phases intervenants : étape par étape ---
+  mk('c-phases-iv-e', {
+    type: 'bar',
+    data: {
+      labels: D.phasesIvENoms,
+      datasets: [{
+        data: D.phasesIvENote,
+        backgroundColor: C.energie + 'AA',
+        borderRadius: 6,
+      }],
+    },
+    options: hbarOpts(10),
+  });
+
+  mk('c-phases-iv-l', {
+    type: 'bar',
+    data: {
+      labels: D.phasesIvLNoms,
+      datasets: [{
+        data: D.phasesIvLNote,
+        backgroundColor: C.lucidite + 'AA',
+        borderRadius: 6,
+      }],
+    },
+    options: hbarOpts(10),
   });
 
   // --- Retours de séance des intervenants (détail par question) ---

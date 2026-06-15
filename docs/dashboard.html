@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=14">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=14">
+<link rel="stylesheet" href="assets/css/shared.css?v=15">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=15">
 </head>
 <body>
 
@@ -543,7 +543,20 @@
             <div class="chartbox" style="height:180px"><canvas id="c-ig-cadre"></canvas></div>
           </div>
 
-          <!-- Retours de séance des intervenants -->
+          <!-- Phases intervenants : étape par étape -->
+          <div class="card" id="card-phases-iv-e">
+            <h3>Séance Énergie, étape par étape</h3>
+            <div class="sub">Note moyenne par temps de séance (0–10) · vue intervenants</div>
+            <div class="chartbox"><canvas id="c-phases-iv-e"></canvas></div>
+          </div>
+
+          <div class="card" id="card-phases-iv-l">
+            <h3>Rencontre Lucidité, étape par étape</h3>
+            <div class="sub">Note moyenne par temps de rencontre (0–10) · vue intervenants</div>
+            <div class="chartbox"><canvas id="c-phases-iv-l"></canvas></div>
+          </div>
+
+          <!-- Retours de séance des intervenants : échelles -->
           <div class="card full">
             <h3>Retours de séance — vue intervenants</h3>
             <div class="sub">Échelles remplies par les intervenants après chaque séance ou atelier · note 0–10 · par parcours</div>
@@ -676,15 +689,15 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=14"></script>
-<script src="assets/js/api.js?v=14"></script>
-<script src="assets/js/dashboard/filters.js?v=14"></script>
-<script src="assets/js/dashboard/charts.js?v=14"></script>
-<script src="assets/js/dashboard/auth.js?v=14"></script>
-<script src="assets/js/dashboard/data.js?v=14"></script>
-<script src="assets/js/dashboard/admin.js?v=14"></script>
-<script src="assets/js/dashboard/alerts.js?v=14"></script>
-<script src="assets/js/dashboard/chat.js?v=14"></script>
+<script src="assets/js/config.js?v=15"></script>
+<script src="assets/js/api.js?v=15"></script>
+<script src="assets/js/dashboard/filters.js?v=15"></script>
+<script src="assets/js/dashboard/charts.js?v=15"></script>
+<script src="assets/js/dashboard/auth.js?v=15"></script>
+<script src="assets/js/dashboard/data.js?v=15"></script>
+<script src="assets/js/dashboard/admin.js?v=15"></script>
+<script src="assets/js/dashboard/alerts.js?v=15"></script>
+<script src="assets/js/dashboard/chat.js?v=15"></script>
 <script>
 // Navigation principale (navbar)
 document.querySelectorAll('.navbar-item[data-view]').forEach(btn => {
