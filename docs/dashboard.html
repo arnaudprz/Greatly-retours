@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=12">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=12">
+<link rel="stylesheet" href="assets/css/shared.css?v=13">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=13">
 </head>
 <body>
 
@@ -152,54 +152,69 @@
 
 <!-- DASHBOARD -->
 <div id="app">
-<div class="wrap">
 
-  <header class="head">
-    <div>
-      <div class="brand">Greatly · Espace équipe</div>
-      <h1>Vos retours</h1>
-      <p id="head-welcome" style="color:var(--warm-grey);font-size:.92rem;margin-top:6px;max-width:520px;line-height:1.45"></p>
+<!-- ============ NAVBAR ============ -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <!-- Logo -->
+    <div class="navbar-brand">GREATLY</div>
+
+    <!-- Menu principal -->
+    <div class="navbar-menu">
+      <button class="navbar-item on" data-view="dashboard">📊 Tableau de bord</button>
+
+      <!-- Formulaires (dropdown) -->
+      <div class="navbar-dropdown-wrap">
+        <button class="navbar-item navbar-has-dropdown">📋 Formulaires ▾</button>
+        <div class="navbar-dropdown">
+          <a href="index.html" target="_blank">🌱 Formulaire membres</a>
+          <a href="intervenant.html" target="_blank">🧭 Formulaire intervenants</a>
+          <a href="prospect.html" target="_blank">🌿 Formulaire futurs membres</a>
+        </div>
+      </div>
+
+      <button class="navbar-item" data-view="community">💬 Communauté</button>
+      <button class="navbar-item admin-only" data-view="admin">🔒 Administration</button>
     </div>
-    <div style="display:flex;align-items:center;gap:14px">
-      <div class="profile-widget" id="profile-widget">
-        <button type="button" class="profile-trigger" onclick="toggleProfile()">
-          <span class="profile-avatar" id="profile-avatar"></span>
-          <span class="profile-name" id="profile-name"></span>
-          <span class="profile-chevron">▾</span>
-        </button>
-        <div class="profile-dropdown" id="profile-dropdown">
-          <div class="profile-dropdown-header">
-            <span class="profile-avatar lg" id="profile-avatar-lg"></span>
-            <div>
-              <div class="profile-fullname" id="profile-fullname"></div>
-              <div class="profile-role" id="profile-role"></div>
-            </div>
+
+    <!-- Profil (droite) -->
+    <div class="profile-widget" id="profile-widget">
+      <button type="button" class="profile-trigger" onclick="toggleProfile()">
+        <span class="profile-avatar" id="profile-avatar"></span>
+        <span class="profile-name" id="profile-name"></span>
+        <span class="profile-chevron">▾</span>
+      </button>
+      <div class="profile-dropdown" id="profile-dropdown">
+        <div class="profile-dropdown-header">
+          <span class="profile-avatar lg" id="profile-avatar-lg"></span>
+          <div>
+            <div class="profile-fullname" id="profile-fullname"></div>
+            <div class="profile-role" id="profile-role"></div>
           </div>
-          <div class="profile-form" id="profile-form">
-            <label>Prénom</label>
-            <input type="text" id="pf-firstname" placeholder="Prénom">
-            <label>Nom</label>
-            <input type="text" id="pf-lastname" placeholder="Nom">
-            <label>Email</label>
-            <input type="email" id="pf-email" placeholder="Email">
-            <button type="button" class="btn-solid" style="width:100%;margin-top:6px;padding:10px;font-size:.83rem" onclick="saveProfile()">Enregistrer</button>
-          </div>
-          <div class="profile-dropdown-footer">
-            <button type="button" onclick="logout()">Déconnexion</button>
-          </div>
+        </div>
+        <div class="profile-form" id="profile-form">
+          <label>Prénom</label>
+          <input type="text" id="pf-firstname" placeholder="Prénom">
+          <label>Nom</label>
+          <input type="text" id="pf-lastname" placeholder="Nom">
+          <label>Email</label>
+          <input type="email" id="pf-email" placeholder="Email">
+          <button type="button" class="btn-solid" style="width:100%;margin-top:6px;padding:10px;font-size:.83rem" onclick="saveProfile()">Enregistrer</button>
+        </div>
+        <div class="profile-dropdown-footer">
+          <button type="button" onclick="logout()">Déconnexion</button>
         </div>
       </div>
     </div>
-  </header>
+  </div>
+</nav>
 
-  <!-- Onglets -->
-  <div class="tabs" id="view-tabs">
-    <button class="on" data-view="dashboard">📊 Tableau de bord</button>
-    <a href="index.html" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:9px;font-size:.88rem;font-weight:600;color:var(--warm-grey);text-decoration:none;transition:all .12s">📋 Formulaire membres</a>
-    <a href="intervenant.html" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:9px;font-size:.88rem;font-weight:600;color:var(--warm-grey);text-decoration:none;transition:all .12s">🧭 Formulaire intervenants</a>
-    <a href="prospect.html" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:9px;font-size:.88rem;font-weight:600;color:var(--warm-grey);text-decoration:none;transition:all .12s">🌱 Formulaire futurs membres</a>
-    <button data-view="community">💬 Communauté</button>
-    <button class="admin-only" data-view="admin">🔒 Administration</button>
+<div class="wrap" style="padding-top:70px">
+
+  <!-- Welcome -->
+  <div style="margin-bottom:20px">
+    <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:1.9rem;letter-spacing:-.3px">Vos retours</h1>
+    <p id="head-welcome" style="color:var(--warm-grey);font-size:.92rem;margin-top:6px;max-width:520px;line-height:1.45"></p>
   </div>
 
   <!-- ============ VUE TABLEAU DE BORD ============ -->
@@ -649,26 +664,40 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=12"></script>
-<script src="assets/js/api.js?v=12"></script>
-<script src="assets/js/dashboard/filters.js?v=12"></script>
-<script src="assets/js/dashboard/charts.js?v=12"></script>
-<script src="assets/js/dashboard/auth.js?v=12"></script>
-<script src="assets/js/dashboard/data.js?v=12"></script>
-<script src="assets/js/dashboard/admin.js?v=12"></script>
-<script src="assets/js/dashboard/alerts.js?v=12"></script>
-<script src="assets/js/dashboard/chat.js?v=12"></script>
+<script src="assets/js/config.js?v=13"></script>
+<script src="assets/js/api.js?v=13"></script>
+<script src="assets/js/dashboard/filters.js?v=13"></script>
+<script src="assets/js/dashboard/charts.js?v=13"></script>
+<script src="assets/js/dashboard/auth.js?v=13"></script>
+<script src="assets/js/dashboard/data.js?v=13"></script>
+<script src="assets/js/dashboard/admin.js?v=13"></script>
+<script src="assets/js/dashboard/alerts.js?v=13"></script>
+<script src="assets/js/dashboard/chat.js?v=13"></script>
 <script>
-// Onglets de vue
-document.querySelectorAll('#view-tabs button').forEach(btn => {
+// Navigation principale (navbar)
+document.querySelectorAll('.navbar-item[data-view]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('#view-tabs button').forEach(x => x.classList.remove('on'));
+    document.querySelectorAll('.navbar-item').forEach(x => x.classList.remove('on'));
     btn.classList.add('on');
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById('view-' + btn.dataset.view).classList.add('active');
     if (btn.dataset.view === 'admin') loadPeople();
     if (btn.dataset.view === 'community') renderChat();
   });
+});
+
+// Dropdowns navbar
+document.querySelectorAll('.navbar-has-dropdown').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const wrap = btn.closest('.navbar-dropdown-wrap');
+    const wasOpen = wrap.classList.contains('open');
+    document.querySelectorAll('.navbar-dropdown-wrap').forEach(w => w.classList.remove('open'));
+    if (!wasOpen) wrap.classList.add('open');
+  });
+});
+document.addEventListener('click', () => {
+  document.querySelectorAll('.navbar-dropdown-wrap').forEach(w => w.classList.remove('open'));
 });
 
 // Filtres
