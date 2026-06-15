@@ -90,8 +90,8 @@ const D = {
   phasesENote:  [8.6, 7.9, 8.5, 8.8, 8.2],
 
   // --- Rencontre Lucidité étape par étape ---
-  phasesLNoms:  ['Accueil Greatly House', 'Ice-breaker', 'Contenu / atelier', 'Échanges en groupe', 'Clôture & élan'],
-  phasesLNote:  [9.0, 7.8, 8.4, 8.7, 8.1],
+  phasesLNoms:  ['Accueil', 'Brunch', 'Atelier', 'Greatly House'],
+  phasesLNote:  [9.0, 7.8, 8.4, 8.9],
 
   // --- Détail par question Énergie ---
   qEnergie: [

@@ -42,7 +42,6 @@ const PHASES_INTERVENANT = {
     { n: 'Comment s\'est passé l\'accueil ?',                 d: 'L\'état d\'esprit des membres, la qualité de la déconnexion, l\'ambiance…' },
     { n: 'Que pensez-vous du temps de brunch ?',              d: 'Les échanges entre membres, l\'énergie du groupe avant l\'atelier…' },
     { n: 'Comment s\'est déroulé l\'atelier ?',               d: 'La réceptivité, les réactions, les moments forts, les difficultés éventuelles…' },
-    { n: 'Comment s\'est passé le debrief ?',                 d: 'La qualité des prises de parole, l\'adhésion au défi d\'intersession…' },
     { n: 'Que pensez-vous de la Greatly House ?',             d: 'L\'accueil, le confort, le cadre, l\'atmosphère — ce lieu est-il à la hauteur de ce qu\'on y vit ?' },
   ],
 };
