@@ -29,8 +29,8 @@
   <header class="head">
     <div class="brand">Greatly</div>
     <h1>Vos retours intervenants</h1>
-    <p>Partagez votre ressenti après une séance ou un atelier.</p>
-    <div class="anon">🧭 Réservé aux intervenants · 2 minutes</div>
+    <p>Quelques instants pour partager votre regard sur la séance ou l'atelier que vous venez d'animer. Votre ressenti nous est précieux.</p>
+    <div class="anon">🧭 Espace intervenants · 2 minutes</div>
   </header>
 
   <div class="progress" id="progress"></div>
@@ -38,7 +38,7 @@
   <!-- ÉTAPE 0 : type de séance -->
   <section class="step active" data-step="0">
     <div class="q">
-      <h3>Votre retour concerne…</h3>
+      <h3>Quelle séance venez-vous d'animer ?</h3>
       <div class="bigchoice">
         <button type="button" class="bigbtn" data-type="energie">
           <span class="ico" style="background:var(--energie-pale)">⛷️</span>
@@ -58,15 +58,15 @@
   <!-- ÉTAPE 1 : contexte -->
   <section class="step" data-step="1">
     <div class="q" id="q-sport">
-      <h3>L'activité de la séance</h3>
+      <h3>Quelle activité avez-vous animée ?</h3>
       <div class="chips">
         <button type="button" class="chip" data-v="Yoga">🧘 Yoga</button>
         <button type="button" class="chip" data-v="Padel">🎾 Padel</button>
       </div>
     </div>
     <div class="q" id="q-atelier" style="display:none">
-      <h3>L'atelier concerné</h3>
-      <div class="hint">Le programme : 6 ateliers de juin à décembre 2026, puis le bilan en janvier 2027.</div>
+      <h3>Quel atelier avez-vous animé ?</h3>
+      <div class="hint">Le programme compte 6 ateliers de juin à décembre 2026, puis le bilan en janvier 2027.</div>
       <div class="chips" id="ateliers"></div>
     </div>
     <div class="nav">
@@ -85,13 +85,13 @@
   <section class="step" data-step="4">
     <div class="merci">
       <div class="big">🧭</div>
-      <h2>Merci pour votre observation</h2>
-      <p>Elle rejoint, de façon confidentielle, les retours de l'équipe. Elle nous aide à ajuster le programme au plus près des besoins du groupe.</p>
-      <button type="button" class="btn-solid" style="max-width:260px" onclick="location.reload()">Déposer une autre observation</button>
+      <h2>Merci d'avoir pris ce temps</h2>
+      <p>Votre regard rejoint ceux de l'équipe. Il nous aide à ajuster le programme au plus près des besoins du groupe.</p>
+      <button type="button" class="btn-solid" style="max-width:260px" onclick="location.reload()">Déposer un autre retour</button>
     </div>
   </section>
 
-  <div class="foot">GREATLY · 10 rue de Lambersart, Verlinghem<br>Vos observations sont confidentielles et servent uniquement à améliorer le programme.</div>
+  <div class="foot">GREATLY · 10 rue de Lambersart, Verlinghem<br>Vos retours sont confidentiels et servent uniquement à améliorer le programme.</div>
 </div>
 
 <!-- Scripts -->
