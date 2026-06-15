@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=7">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=7">
+<link rel="stylesheet" href="assets/css/shared.css?v=10">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=10">
 </head>
 <body>
 
@@ -322,7 +322,8 @@
         <div class="chartbox" style="height:180px"><canvas id="c-lieux"></canvas></div>
       </div>
 
-    </div><!-- /standard-section -->
+    </div><!-- /.grid -->
+    </div><!-- /standard-section (also closes .grid) -->
 
       <!-- ============ VUE LIEUX (filtre 📍 Lieux) ============ -->
       <div id="lieux-section" style="display:none">
@@ -466,7 +467,6 @@
         <div id="alerts-list"></div>
         <button type="button" class="btn-ghost" style="margin-top:12px;width:100%" onclick="openAlerts()">Voir tous les retours</button>
       </div>
-    </div>
 
   </div>
 
@@ -547,14 +547,14 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=7"></script>
-<script src="assets/js/api.js?v=7"></script>
-<script src="assets/js/dashboard/filters.js?v=7"></script>
-<script src="assets/js/dashboard/charts.js?v=7"></script>
-<script src="assets/js/dashboard/auth.js?v=7"></script>
-<script src="assets/js/dashboard/data.js?v=7"></script>
-<script src="assets/js/dashboard/admin.js?v=7"></script>
-<script src="assets/js/dashboard/alerts.js?v=7"></script>
+<script src="assets/js/config.js?v=10"></script>
+<script src="assets/js/api.js?v=10"></script>
+<script src="assets/js/dashboard/filters.js?v=10"></script>
+<script src="assets/js/dashboard/charts.js?v=10"></script>
+<script src="assets/js/dashboard/auth.js?v=10"></script>
+<script src="assets/js/dashboard/data.js?v=10"></script>
+<script src="assets/js/dashboard/admin.js?v=10"></script>
+<script src="assets/js/dashboard/alerts.js?v=10"></script>
 <script>
 // Onglets de vue
 document.querySelectorAll('#view-tabs button').forEach(btn => {
