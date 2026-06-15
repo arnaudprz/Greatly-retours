@@ -10,7 +10,7 @@ const state = {
   step: 0,
 };
 
-/** Clé d'échelle : 'intervenant' ou 'membre_energie' / 'membre_lucidite' */
+/** Clé d'échelle : 'membre_energie', 'membre_lucidite', 'intervenant_energie', 'intervenant_lucidite' */
 function scaleKey() {
-  return state.role === 'intervenant' ? 'intervenant' : 'membre_' + state.type;
+  return state.role + '_' + state.type;
 }

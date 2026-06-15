@@ -62,10 +62,17 @@ function buildScales() {
   // Déroulé étape par étape
   const phCard = document.createElement('div');
   phCard.className = 'q';
-  phCard.innerHTML = `<h3>Comment avez-vous vécu ${state.type === 'energie' ? 'la séance' : 'la rencontre'} ?</h3>
+  const isIntervenant = state.role === 'intervenant';
+  const phasesTitle = isIntervenant
+    ? `Comment s'est déroulé${state.type === 'energie' ? 'e la séance' : ' l\'atelier'} de votre point de vue ?`
+    : `Comment avez-vous vécu ${state.type === 'energie' ? 'la séance' : 'la rencontre'} ?`;
+  phCard.innerHTML = `<h3>${phasesTitle}</h3>
     <div class="hint">Étape par étape, partagez votre ressenti. (0 = à revoir · 10 = excellent)</div>`;
 
-  PHASES[state.type].forEach(phase => {
+  const phasesData = (isIntervenant && typeof PHASES_INTERVENANT !== 'undefined')
+    ? PHASES_INTERVENANT[state.type]
+    : PHASES[state.type];
+  phasesData.forEach(phase => {
     const row = document.createElement('div');
     row.className = 'phase';
     row.innerHTML = `<div class="pname">${phase.n}<small>${phase.d}</small></div>`;
