@@ -47,10 +47,10 @@ function aggregateData() {
   const allIntervenants = [...intervenants_e, ...intervenants_l];
   const all = [...allMembres, ...allIntervenants];
 
-  // --- NPS par mois ---
-  D.npsEnergie = monthlyAvg(membres_e, r => r.nps);
-  D.npsLucidite = monthlyAvg(membres_l, r => r.nps);
-  D.npsGlobal = monthlyAvg(allMembres, r => r.nps);
+  // --- NPS par mois (score NPS calculé, pas la note brute) ---
+  D.npsEnergie = monthlyNPS(membres_e);
+  D.npsLucidite = monthlyNPS(membres_l);
+  D.npsGlobal = monthlyNPS(allMembres);
 
   // NPS répartition (dernier mois)
   const allNps = all.map(r => r.nps).filter(n => n !== null && n !== undefined);
@@ -333,6 +333,25 @@ function npsScore(notes) {
   const promo = notes.filter(n => n >= 9).length;
   const detrac = notes.filter(n => n < 7).length;
   return Math.round((promo - detrac) / notes.length * 100);
+}
+
+/** Score NPS par mois — retourne un tableau aligné sur les 12 derniers mois */
+function monthlyNPS(responses) {
+  const buckets = {};
+  responses.forEach(r => {
+    if (r.nps === null || r.nps === undefined) return;
+    const ts = r.ts || r.ts_server;
+    if (!ts) return;
+    const d = new Date(ts);
+    const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+    if (!buckets[key]) buckets[key] = [];
+    buckets[key].push(r.nps);
+  });
+  const months = getLast12MonthKeys();
+  return months.map(k => {
+    if (!buckets[k] || buckets[k].length === 0) return null;
+    return npsScore(buckets[k]);
+  });
 }
 
 /** Génère les clés YYYY-MM des 12 derniers mois */

@@ -279,14 +279,17 @@ function hbarOpts(max) {
 
 /** Dataset pour une ligne */
 function lineds(label, data, color, dashed) {
+  // Si un seul point non-null, augmenter le radius pour le rendre visible
+  const nonNull = data ? data.filter(v => v !== null) : [];
+  const singlePoint = nonNull.length === 1;
   return {
     label,
     data,
     borderColor: color,
     backgroundColor: color + '18',
     borderWidth: 2.5,
-    pointRadius: 3,
-    pointHoverRadius: 5,
+    pointRadius: singlePoint ? 6 : 3,
+    pointHoverRadius: singlePoint ? 8 : 5,
     tension: 0.35,
     fill: false,
     spanGaps: true,
