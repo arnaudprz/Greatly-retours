@@ -93,55 +93,41 @@ function showPanel(name) {
   if (panel) panel.classList.add('active');
 }
 
-/** Connexion au dashboard */
+/** Connexion au dashboard (magic link) */
 async function login() {
-  const pwd = document.getElementById('pwd').value;
-  if (!pwd) return;
+  const email = document.getElementById('login-email').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('login-error').textContent = 'Veuillez entrer une adresse email valide.';
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
 
   const btn = document.getElementById('btn-login');
   btn.disabled = true;
-  btn.textContent = 'Connexion…';
+  btn.textContent = 'Envoi en cours…';
+  document.getElementById('login-error').style.display = 'none';
 
   try {
-    let role, token;
-
     if (CONFIG.DEMO_MODE) {
-      if (pwd === 'greatly2026') {
-        role = 'Membre';
-      } else if (pwd === 'greatlyadmin2026') {
-        role = 'Super-admin';
-      } else {
-        throw new Error('Mot de passe incorrect');
-      }
-      token = 'demo_' + Date.now();
+      // En démo : connexion directe
+      const role = email.toLowerCase().includes('admin') ? 'Super-admin' : 'Membre';
+      const token = 'demo_' + Date.now();
+      localStorage.setItem(CONFIG.TOKEN_KEY, token);
+      localStorage.setItem(CONFIG.ROLE_KEY, role);
+      localStorage.setItem(CONFIG.SESSION_START_KEY, Date.now().toString());
+      enterDashboard(role);
     } else {
-      const res = await API.login(pwd);
-      role = res.role;
-      token = res.token;
+      await API.call('magic-link', { email });
+      showPanel('magic-sent');
     }
-
-    localStorage.setItem(CONFIG.TOKEN_KEY, token);
-    localStorage.setItem(CONFIG.ROLE_KEY, role);
-    localStorage.setItem(CONFIG.SESSION_START_KEY, Date.now().toString());
-    enterDashboard(role);
   } catch (err) {
     console.error('Login error:', err);
-    btn.disabled = false;
-    btn.textContent = 'Entrer';
-    document.getElementById('login-error').textContent = 'Mot de passe incorrect.';
+    document.getElementById('login-error').textContent = 'Une erreur est survenue. Réessayez.';
     document.getElementById('login-error').style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Recevoir mon lien de connexion';
   }
-}
-
-/** Demande de réinitialisation */
-async function forgotPassword() {
-  const email = document.getElementById('forgot-email').value;
-  if (!email) return;
-
-  if (!CONFIG.DEMO_MODE) {
-    try { await API.forgot(email); } catch (_) {}
-  }
-  showPanel('forgot-confirm');
 }
 
 /** Demande d'accès */
