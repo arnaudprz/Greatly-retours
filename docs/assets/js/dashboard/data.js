@@ -161,13 +161,38 @@ function aggregateData() {
   D.coachYoga = monthlyAvg(yoga, r => r.echelles && r.echelles.coach);
   D.coachPadel = monthlyAvg(padel, r => r.echelles && r.echelles.coach);
 
-  // --- Lieux ---
-  const houseNotes = membres_l.map(r => phaseValue(r, 'Greatly House')).filter(n => n != null);
-  const sportNotes = membres_e.map(r => phaseValue(r, 'Lieu')).filter(n => n != null);
-  if (houseNotes.length > 0 || sportNotes.length > 0) {
+  // --- Lieux (agrégation croisée : phases membres + formulaire dédié GH) ---
+
+  // Greatly House : combiner les notes de la phase "Greatly House" des ateliers Lucidité
+  // + la moyenne globale du formulaire dédié (9 questions)
+  const houseFromPhases = membres_l.map(r => phaseValue(r, 'Greatly House')).filter(n => n != null);
+  const houseFromForm = ghResponses.map(r => {
+    // Moyenne des 9 notes du formulaire dédié pour avoir une note globale par réponse
+    if (!r.echelles) return null;
+    const vals = Object.values(r.echelles).filter(v => v !== null && v !== undefined);
+    return vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+  }).filter(n => n != null);
+  const allHouseNotes = [...houseFromPhases, ...houseFromForm];
+
+  // Lieux sportifs : phase "Lieu" des séances Énergie
+  const yogaLieu = yoga.map(r => phaseValue(r, 'Lieu')).filter(n => n != null);
+  const padelLieu = padel.map(r => phaseValue(r, 'Lieu')).filter(n => n != null);
+  const allSportNotes = [...yogaLieu, ...padelLieu];
+
+  if (allHouseNotes.length > 0 || allSportNotes.length > 0) {
     D.lieuxNoms = ['Greatly House', 'Lieu Yoga', 'Lieu Padel'];
-    D.lieuxNotes = [avg(houseNotes), avg(yoga.map(r => phaseValue(r, 'Lieu')).filter(n => n != null)), avg(padel.map(r => phaseValue(r, 'Lieu')).filter(n => n != null))];
-    D.lieuxHouse = monthlyAvg(membres_l, r => phaseValue(r, 'Greatly House'));
+    D.lieuxNotes = [avg(allHouseNotes), avg(yogaLieu), avg(padelLieu)];
+
+    // Évolution mensuelle : combiner les deux sources pour Greatly House
+    const houseMonthly = monthlyAvgMulti([
+      { responses: membres_l, getter: r => phaseValue(r, 'Greatly House') },
+      { responses: ghResponses, getter: r => {
+        if (!r.echelles) return null;
+        const vals = Object.values(r.echelles).filter(v => v !== null && v !== undefined);
+        return vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+      }},
+    ]);
+    D.lieuxHouse = houseMonthly;
     D.lieuxSport = monthlyAvg(membres_e, r => phaseValue(r, 'Lieu'));
   }
 
@@ -322,6 +347,25 @@ function monthlyAvg(responses, getter) {
     const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
     if (!buckets[key]) buckets[key] = [];
     buckets[key].push(val);
+  });
+  const sorted = Object.keys(buckets).sort();
+  return sorted.map(k => +(buckets[k].reduce((a, b) => a + b, 0) / buckets[k].length).toFixed(1));
+}
+
+/** Moyenne par mois combinant plusieurs sources de réponses */
+function monthlyAvgMulti(sources) {
+  const buckets = {};
+  sources.forEach(src => {
+    src.responses.forEach(r => {
+      const val = src.getter(r);
+      if (val === null || val === undefined) return;
+      const ts = r.ts || r.ts_server;
+      if (!ts) return;
+      const d = new Date(ts);
+      const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+      if (!buckets[key]) buckets[key] = [];
+      buckets[key].push(val);
+    });
   });
   const sorted = Object.keys(buckets).sort();
   return sorted.map(k => +(buckets[k].reduce((a, b) => a + b, 0) / buckets[k].length).toFixed(1));
