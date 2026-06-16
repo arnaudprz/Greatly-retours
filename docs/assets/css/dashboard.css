@@ -110,11 +110,11 @@
   margin-top: 4px;
   padding: 15px 20px;
   font-size: .95rem;
-  background: var(--ink);
+  background: var(--sage);
   border-radius: 10px;
 }
 #gate .btn-solid:hover {
-  background: #333;
+  background: var(--sage-dark);
 }
 .gate-hint {
   font-size: .78rem;
