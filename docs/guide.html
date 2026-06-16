@@ -116,7 +116,7 @@ if (!localStorage.getItem('greatly_retours_token')) {
   });
 }
 </script>
-<!-- NAVBAR (identique au dashboard) -->
+<!-- NAVBAR (même structure que le dashboard) -->
 <nav id="guide-navbar" class="guide-nav" style="display:none">
   <div class="guide-nav-inner">
     <a href="dashboard.html" class="guide-nav-brand">GREATLY</a>
@@ -128,17 +128,37 @@ if (!localStorage.getItem('greatly_retours_token')) {
       <a href="dashboard.html" class="guide-nav-item">📊 Résultats</a>
       <a href="dashboard.html" class="guide-nav-item">🏃 Activités</a>
       <a href="dashboard.html" class="guide-nav-item">📋 Formulaires</a>
+      <a href="dashboard.html" class="guide-nav-item">🔒 Administration</a>
     </div>
+
+    <a href="dashboard.html" class="guide-nav-profile">
+      <span id="guide-avatar" style="width:30px;height:30px;border-radius:50%;background:var(--sage-pale);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--sage-dark)"></span>
+    </a>
   </div>
 </nav>
+<script>
+// Afficher les initiales dans la navbar du guide
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    const p = JSON.parse(localStorage.getItem('greatly_retours_profile') || '{}');
+    const f = (p.firstname || '').trim();
+    const l = (p.lastname || '').trim();
+    const ini = f && l ? (f[0]+l[0]).toUpperCase() : f ? f.slice(0,2).toUpperCase() : '?';
+    const el = document.getElementById('guide-avatar');
+    if (el) el.textContent = ini;
+  } catch(e) {}
+});
+</script>
 <style>
   .guide-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#fff;border-bottom:1.5px solid var(--line);height:56px}
   .guide-nav-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;height:100%;padding:0 20px;gap:8px}
   .guide-nav-brand{font-size:.72rem;letter-spacing:.22em;font-weight:700;color:var(--sage-dark);text-transform:uppercase;text-decoration:none;margin-right:8px;flex-shrink:0}
   .guide-nav-badge{display:inline-flex;align-items:center;gap:4px;color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.03em;padding:5px 12px;border-radius:99px;text-decoration:none;flex-shrink:0}
-  .guide-nav-menu{display:flex;align-items:center;gap:2px;background:var(--cream);border-radius:12px;padding:3px 4px;flex:1}
-  .guide-nav-item{font-size:.84rem;font-weight:500;padding:8px 14px;border-radius:10px;color:var(--warm-grey);text-decoration:none;display:inline-flex;align-items:center;transition:all .12s}
+  .guide-nav-menu{display:flex;align-items:center;gap:2px;background:var(--cream);border-radius:12px;padding:3px 4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+  .guide-nav-menu::-webkit-scrollbar{display:none}
+  .guide-nav-item{font-size:.84rem;font-weight:500;padding:8px 14px;border-radius:10px;color:var(--warm-grey);text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap;transition:all .12s}
   .guide-nav-item:hover{background:#fff;color:var(--ink)}
+  .guide-nav-profile{text-decoration:none;flex-shrink:0;margin-left:6px}
   @media(max-width:700px){.guide-nav-menu{display:none}.guide-nav-badge:nth-child(3){display:none}}
 </style>
 
