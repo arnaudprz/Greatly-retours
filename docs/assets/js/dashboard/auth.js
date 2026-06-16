@@ -86,11 +86,36 @@ document.addEventListener('click', e => {
   }
 });
 
-/** Gestion des panneaux de la gate */
+/** Ouvrir la modale gate sur un panneau */
+function openGateModal(panelName) {
+  const modal = document.getElementById('gate-modal');
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  showPanel(panelName || 'login');
+  // Focus le premier input du panneau actif
+  setTimeout(() => {
+    const input = modal.querySelector('.panel.active input');
+    if (input) input.focus();
+  }, 100);
+}
+
+/** Fermer la modale gate */
+function closeGateModal() {
+  document.getElementById('gate-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/** Gestion des panneaux */
 function showPanel(name) {
-  document.querySelectorAll('#gate .panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.gate-modal-card .panel, #gate .panel').forEach(p => p.classList.remove('active'));
   const panel = document.getElementById('panel-' + name);
   if (panel) panel.classList.add('active');
+  // S'assurer que la modale est ouverte
+  const modal = document.getElementById('gate-modal');
+  if (modal && !modal.classList.contains('open')) {
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
 }
 
 /** Connexion au dashboard (magic link) */

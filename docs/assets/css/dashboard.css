@@ -43,26 +43,51 @@
   color: var(--warm-grey);
   line-height: 1.65;
   max-width: 440px;
-  margin: 0 auto;
+  margin: 0 auto 28px;
+}
+.gate-ctas {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.gate-ctas .btn-solid, .gate-ctas .btn-ghost {
+  padding: 14px 32px;
+  width: auto;
+  font-size: .95rem;
 }
 
-/* Panels card */
-.gate-panels {
-  width: 100%;
-  max-width: 440px;
-  margin: 36px auto 0;
-  padding: 0 20px;
-  text-align: center;
+/* Gate modal overlay */
+.gate-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(26,26,26,.35);
+  backdrop-filter: blur(6px);
+  align-items: center; justify-content: center;
+  padding: 20px;
 }
-#gate .panels {
+.gate-overlay.open { display: flex; }
+.gate-modal-card {
   position: relative;
   background: #fff;
   border-radius: 22px;
-  box-shadow: 0 4px 24px rgba(26,26,26,.06), 0 1px 4px rgba(26,26,26,.04);
-  padding: 36px 32px 32px;
+  box-shadow: 0 16px 48px rgba(26,26,26,.12);
+  padding: 40px 36px 36px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  animation: gateFadeIn .3s ease;
 }
-#gate .panel { display: none; animation: gateFadeIn .35s ease; }
-#gate .panel.active { display: block; }
+.gate-modal-close {
+  position: absolute; top: 14px; right: 16px;
+  border: none; background: none;
+  font-size: 1.2rem; color: var(--warm-grey);
+  cursor: pointer; padding: 4px 8px;
+  border-radius: 8px; transition: background .12s;
+}
+.gate-modal-close:hover { background: var(--cream); }
+
+.gate-modal-card .panel { display: none; animation: gateFadeIn .35s ease; }
+.gate-modal-card .panel.active { display: block; }
 @keyframes gateFadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: none; }
@@ -128,7 +153,9 @@
   line-height: 1.55;
 }
 #gate input,
-#gate textarea {
+#gate textarea,
+.gate-modal-card input,
+.gate-modal-card textarea {
   margin-bottom: 10px;
   width: 100%;
   padding: 13px 16px;
@@ -141,7 +168,9 @@
   transition: border-color .15s, background .15s;
 }
 #gate input:focus,
-#gate textarea:focus {
+#gate textarea:focus,
+.gate-modal-card input:focus,
+.gate-modal-card textarea:focus {
   outline: none;
   border-color: var(--sage);
   background: #fff;
@@ -162,14 +191,97 @@
   font-size: .92rem;
 }
 
+/* Sections */
+.gate-section {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 24px 0;
+}
+.gate-section h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 28px;
+  color: var(--ink);
+}
+
+/* Steps (comment ça marche) */
+.gate-steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.gate-step {
+  flex: 1;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+}
+.gate-step-num {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--sage);
+  color: #fff;
+  font-weight: 700;
+  font-size: .9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+.gate-step h3 {
+  font-size: .88rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+.gate-step p {
+  font-size: .8rem;
+  color: var(--warm-grey);
+  line-height: 1.45;
+}
+.gate-step-arrow {
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem;
+  color: var(--sage-pale);
+  font-weight: 700;
+  padding-top: 40px;
+}
+@media (max-width: 700px) {
+  .gate-steps { flex-direction: column; }
+  .gate-step-arrow { display: none; }
+}
+
+/* Anonymat */
+.gate-anon-section { padding-bottom: 20px; }
+.gate-anon {
+  max-width: 520px;
+  margin: 0 auto;
+  text-align: center;
+  background: #fff;
+  border: 1.5px solid var(--sage-pale);
+  border-radius: 20px;
+  padding: 32px 28px;
+}
+.gate-anon-icon { font-size: 2rem; margin-bottom: 12px; }
+.gate-anon h2 { margin-bottom: 12px; }
+.gate-anon p {
+  font-size: .88rem;
+  color: var(--warm-grey);
+  line-height: 1.55;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
 /* Features */
 .gate-features {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  max-width: 720px;
-  margin: 48px auto 0;
-  padding: 0 20px;
 }
 .gate-feat {
   background: rgba(255,255,255,.65);
@@ -203,7 +315,9 @@
   .gate-features { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 480px) {
-  .gate-features { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .gate-features { grid-template-columns: 1fr; gap: 8px; }
+  .gate-ctas { flex-direction: column; }
+  .gate-ctas .btn-solid, .gate-ctas .btn-ghost { width: 100%; }
   .gate-hero h1 { font-size: 2rem; }
   #gate .panels { padding: 28px 20px 24px; }
   #gate .gate-row { flex-direction: column; gap: 0; }

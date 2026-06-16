@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=40">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=40">
+<link rel="stylesheet" href="assets/css/shared.css?v=41">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=41">
 </head>
 <body>
 
@@ -20,87 +20,139 @@
     <div class="gate-brand">GREATLY</div>
     <h1>Vos retours</h1>
     <p class="gate-lead">Un espace pour écouter ce qui se vit, comprendre ce qui compte, et ajuster le programme au plus près de vos besoins.</p>
+    <div class="gate-ctas">
+      <button class="btn-solid" onclick="openGateModal('login')">Se connecter</button>
+      <button class="btn-ghost" onclick="openGateModal('request')">Demander un accès</button>
+    </div>
   </div>
 
-  <!-- Card centrale -->
-  <div class="gate-panels">
-    <div class="panels">
-      <!-- Panneau connexion (magic link) -->
-      <div class="panel active" id="panel-login">
-        <div class="panel-icon">✉️</div>
-        <h3>Se connecter</h3>
-        <p class="panel-sub">Entrez votre adresse email. Vous recevrez un lien de connexion instantané.</p>
-        <input type="email" placeholder="votre@email.com" id="login-email" autocomplete="email">
-        <div id="login-error" style="display:none;color:var(--bad);font-size:.82rem;margin-bottom:8px"></div>
-        <button class="btn-solid" id="btn-login" onclick="login()">Recevoir mon lien de connexion</button>
-        <div class="panel-links">
-          <span class="panel-link" onclick="showPanel('request')">Pas encore d'accès ? Faire une demande</span>
-        </div>
+  <!-- Section : Comment ça marche -->
+  <div class="gate-section">
+    <h2>Comment ça fonctionne</h2>
+    <div class="gate-steps">
+      <div class="gate-step">
+        <div class="gate-step-num">1</div>
+        <h3>Les membres et intervenants partagent leur ressenti</h3>
+        <p>Après chaque séance Énergie ou atelier Lucidité, un formulaire anonyme de 2 minutes recueille les notes et les mots de chacun.</p>
       </div>
-
-      <!-- Confirmation magic link envoyé -->
-      <div class="panel" id="panel-magic-sent">
-        <div class="confirm-msg">
-          <div class="ico">✉️</div>
-          <h3>Lien envoyé</h3>
-          <p>Un lien de connexion vient de vous être envoyé par email. Vérifiez votre boîte de réception et cliquez sur le lien pour accéder à votre espace.</p>
-          <span class="panel-link" onclick="showPanel('login')">Renvoyer un lien</span>
-        </div>
+      <div class="gate-step-arrow">→</div>
+      <div class="gate-step">
+        <div class="gate-step-num">2</div>
+        <h3>Les retours sont agrégés automatiquement</h3>
+        <p>Les réponses alimentent un tableau de bord en temps réel : indicateurs, graphiques, verbatims. Tout est anonyme.</p>
       </div>
-
-      <!-- Panneau demande d'accès -->
-      <div class="panel" id="panel-request">
-        <div class="panel-icon">🤍</div>
-        <h3>Demander un accès</h3>
-        <p class="panel-sub">L'accès est réservé à l'équipe Greatly et aux intervenants. Remplissez ce formulaire et nous reviendrons vers vous rapidement.</p>
-        <div class="gate-row">
-          <input type="text" placeholder="Prénom" id="req-firstname">
-          <input type="text" placeholder="Nom" id="req-lastname">
-        </div>
-        <input type="email" placeholder="Email" id="req-email">
-        <input type="text" placeholder="Votre fonction (coach, coordinatrice, équipe Greatly...)" id="req-role">
-        <textarea id="req-message" placeholder="Quelques mots sur votre demande (facultatif)"></textarea>
-        <button class="btn-solid" onclick="requestAccess()">Envoyer ma demande</button>
-        <span class="panel-link" onclick="showPanel('login')">J'ai déjà un accès</span>
-      </div>
-
-      <!-- Confirmation demande d'accès -->
-      <div class="panel" id="panel-request-confirm">
-        <div class="confirm-msg">
-          <div class="ico">🤍</div>
-          <h3>Demande envoyée</h3>
-          <p>Votre demande a été transmise à l'équipe Greatly. Vous recevrez un email dès que votre accès sera validé.</p>
-          <span class="panel-link" onclick="showPanel('login')">Retour</span>
-        </div>
+      <div class="gate-step-arrow">→</div>
+      <div class="gate-step">
+        <div class="gate-step-num">3</div>
+        <h3>L'équipe ajuste le programme</h3>
+        <p>Séance après séance, les signaux nous aident à comprendre ce qui se vit et à faire évoluer le programme avec justesse.</p>
       </div>
     </div>
   </div>
 
-  <!-- Features preview -->
-  <div class="gate-features">
-    <div class="gate-feat">
-      <div class="gate-feat-icon">📊</div>
-      <h3>Suivre</h3>
-      <p>Recommandation, énergie, qualité des échanges — chaque dimension mesurée et suivie dans le temps.</p>
+  <!-- Section : Ce que vous trouverez -->
+  <div class="gate-section">
+    <h2>Ce que vous trouverez à l'intérieur</h2>
+    <div class="gate-features">
+      <div class="gate-feat">
+        <div class="gate-feat-icon">📊</div>
+        <h3>Score de recommandation</h3>
+        <p>L'indicateur clé : est-ce que cette expérience donne envie d'en parler autour de soi ? Suivi global, par parcours et par activité.</p>
+      </div>
+      <div class="gate-feat">
+        <div class="gate-feat-icon">⚡</div>
+        <h3>Énergie avant / après</h3>
+        <p>L'écart entre l'énergie en arrivant et en repartant. Le marqueur le plus direct de l'impact d'une séance.</p>
+      </div>
+      <div class="gate-feat">
+        <div class="gate-feat-icon">💬</div>
+        <h3>Verbatims & feedbacks</h3>
+        <p>Les mots des membres et des intervenants, sans filtre. Ce qu'ils emportent, ce qui les a marqués, ce qu'ils changeraient.</p>
+      </div>
+      <div class="gate-feat">
+        <div class="gate-feat-icon">🔍</div>
+        <h3>Détail par question</h3>
+        <p>Chaque question du formulaire a sa carte : note actuelle, progression, évolution mensuelle. Pour aller au plus fin.</p>
+      </div>
+      <div class="gate-feat">
+        <div class="gate-feat-icon">🏡</div>
+        <h3>La Greatly House</h3>
+        <p>9 questions dédiées au lieu : atmosphère, confort, accueil, envie de rester. Parce que le cadre fait partie de l'expérience.</p>
+      </div>
+      <div class="gate-feat">
+        <div class="gate-feat-icon">🧭</div>
+        <h3>Vue intervenants</h3>
+        <p>Comment les coachs vivent la collaboration avec Greatly : 6 dimensions, retours de séance, suggestions pratiques.</p>
+      </div>
     </div>
-    <div class="gate-feat">
-      <div class="gate-feat-icon">💬</div>
-      <h3>Écouter</h3>
-      <p>Les verbatims donnent accès aux ressentis bruts, sans filtre, pour comprendre ce qui se vit.</p>
-    </div>
-    <div class="gate-feat">
-      <div class="gate-feat-icon">🎯</div>
-      <h3>Ajuster</h3>
-      <p>Repérer les signaux faibles, identifier ce qui fonctionne, faire évoluer le programme.</p>
-    </div>
-    <div class="gate-feat">
-      <div class="gate-feat-icon">🤍</div>
-      <h3>Anonyme</h3>
-      <p>Aucun nom, aucune réponse rattachée à une personne. Les retours restent agrégés.</p>
+  </div>
+
+  <!-- Section : Anonymat -->
+  <div class="gate-section gate-anon-section">
+    <div class="gate-anon">
+      <div class="gate-anon-icon">🤍</div>
+      <h2>100 % anonyme</h2>
+      <p>Aucun nom n'est demandé. Aucune réponse n'est rattachée à une personne. Les retours sont agrégés pour donner une vision d'ensemble — jamais pour identifier quelqu'un. C'est ce qui permet à chacun de s'exprimer librement.</p>
     </div>
   </div>
 
   <div class="gate-foot">GREATLY · 10 rue de Lambersart, Verlinghem</div>
+</div>
+
+<!-- MODALE CONNEXION -->
+<div class="gate-overlay" id="gate-modal">
+  <div class="gate-modal-card">
+    <button type="button" class="gate-modal-close" onclick="closeGateModal()">✕</button>
+
+    <!-- Panneau connexion (magic link) -->
+    <div class="panel active" id="panel-login">
+      <div class="panel-icon">✉️</div>
+      <h3>Se connecter</h3>
+      <p class="panel-sub">Entrez votre adresse email. Vous recevrez un lien de connexion instantané.</p>
+      <input type="email" placeholder="votre@email.com" id="login-email" autocomplete="email">
+      <div id="login-error" style="display:none;color:var(--bad);font-size:.82rem;margin-bottom:8px"></div>
+      <button class="btn-solid" id="btn-login" onclick="login()">Recevoir mon lien de connexion</button>
+      <div class="panel-links">
+        <span class="panel-link" onclick="showPanel('request')">Pas encore d'accès ? Faire une demande</span>
+      </div>
+    </div>
+
+    <!-- Confirmation magic link envoyé -->
+    <div class="panel" id="panel-magic-sent">
+      <div class="confirm-msg">
+        <div class="ico">✉️</div>
+        <h3>Lien envoyé</h3>
+        <p>Un lien de connexion vient de vous être envoyé par email. Vérifiez votre boîte de réception et cliquez sur le lien pour accéder à votre espace.</p>
+        <span class="panel-link" onclick="showPanel('login')">Renvoyer un lien</span>
+      </div>
+    </div>
+
+    <!-- Panneau demande d'accès -->
+    <div class="panel" id="panel-request">
+      <div class="panel-icon">🤍</div>
+      <h3>Demander un accès</h3>
+      <p class="panel-sub">L'accès est réservé à l'équipe Greatly et aux intervenants. Remplissez ce formulaire et nous reviendrons vers vous rapidement.</p>
+      <div class="gate-row">
+        <input type="text" placeholder="Prénom" id="req-firstname">
+        <input type="text" placeholder="Nom" id="req-lastname">
+      </div>
+      <input type="email" placeholder="Email" id="req-email">
+      <input type="text" placeholder="Votre fonction (coach, coordinatrice, équipe Greatly...)" id="req-role">
+      <textarea id="req-message" placeholder="Quelques mots sur votre demande (facultatif)"></textarea>
+      <button class="btn-solid" onclick="requestAccess()">Envoyer ma demande</button>
+      <span class="panel-link" onclick="showPanel('login')">J'ai déjà un accès</span>
+    </div>
+
+    <!-- Confirmation demande d'accès -->
+    <div class="panel" id="panel-request-confirm">
+      <div class="confirm-msg">
+        <div class="ico">🤍</div>
+        <h3>Demande envoyée</h3>
+        <p>Votre demande a été transmise à l'équipe Greatly. Vous recevrez un email dès que votre accès sera validé.</p>
+        <span class="panel-link" onclick="closeGateModal()">Fermer</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ONBOARDING (première connexion) -->
@@ -771,15 +823,15 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=40"></script>
-<script src="assets/js/api.js?v=40"></script>
-<script src="assets/js/dashboard/filters.js?v=40"></script>
-<script src="assets/js/dashboard/charts.js?v=40"></script>
-<script src="assets/js/dashboard/auth.js?v=40"></script>
-<script src="assets/js/dashboard/data.js?v=40"></script>
-<script src="assets/js/dashboard/admin.js?v=40"></script>
-<script src="assets/js/dashboard/alerts.js?v=40"></script>
-<script src="assets/js/dashboard/chat.js?v=40"></script>
+<script src="assets/js/config.js?v=41"></script>
+<script src="assets/js/api.js?v=41"></script>
+<script src="assets/js/dashboard/filters.js?v=41"></script>
+<script src="assets/js/dashboard/charts.js?v=41"></script>
+<script src="assets/js/dashboard/auth.js?v=41"></script>
+<script src="assets/js/dashboard/data.js?v=41"></script>
+<script src="assets/js/dashboard/admin.js?v=41"></script>
+<script src="assets/js/dashboard/alerts.js?v=41"></script>
+<script src="assets/js/dashboard/chat.js?v=41"></script>
 <script>
 // Navigation principale (navbar)
 // Navigation principale (navbar views)
