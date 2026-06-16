@@ -807,12 +807,14 @@ function renderCoach(mois, m) {
   }
   const color = F.coach === 'padel' ? C.energie : C.lucidite;
   const label = F.coach === 'padel' ? 'Coach Padel — Note moyenne' : 'Coach Yoga — Note moyenne';
+  const coachData = last(data, m);
+  const t = trimToData(mois, coachData);
 
   mk('c-coach', {
     type: 'line',
     data: {
-      labels: mois,
-      datasets: [lineds(label, last(data, m), color)],
+      labels: t.labels,
+      datasets: [lineds(label, trimData(coachData, t.start), color)],
     },
     options: lineOpts(6, 10),
   });
@@ -1025,12 +1027,14 @@ function renderLieux() {
   if (D.lieuxHouse.length === 0) {
     emptyStateCanvas('c-lieux-house', 'Pas encore de retours sur la Greatly House.');
   } else {
+    const houseData = last(D.lieuxHouse, m);
+    const tH = trimToData(mois, houseData);
     mk('c-lieux-house', {
       type: 'line',
       data: {
-        labels: mois,
+        labels: tH.labels,
         datasets: [{
-          data: last(D.lieuxHouse, m),
+          data: trimData(houseData, tH.start),
           borderColor: C.sage,
           backgroundColor: C.sage + '18',
           borderWidth: 2,
@@ -1050,12 +1054,14 @@ function renderLieux() {
   if (D.lieuxSport.length === 0) {
     emptyStateCanvas('c-lieux-sport', 'Pas encore de retours sur les lieux sportifs.');
   } else {
+    const sportData = last(D.lieuxSport, m);
+    const tS = trimToData(mois, sportData);
     mk('c-lieux-sport', {
       type: 'line',
       data: {
-        labels: mois,
+        labels: tS.labels,
         datasets: [{
-          data: last(D.lieuxSport, m),
+          data: trimData(sportData, tS.start),
           borderColor: C.energie,
           backgroundColor: C.energie + '18',
           borderWidth: 2,
@@ -1075,13 +1081,16 @@ function renderLieux() {
   if (D.lieuxHouse.length === 0 && D.lieuxSport.length === 0) {
     emptyStateCanvas('c-lieux-evol', 'Pas encore de données d\'évolution.');
   } else {
+    const evolHouse = D.lieuxHouse.length > 0 ? last(D.lieuxHouse, m) : [];
+    const evolSport = D.lieuxSport.length > 0 ? last(D.lieuxSport, m) : [];
+    const tE = trimToData(mois, evolHouse, evolSport);
     mk('c-lieux-evol', {
       type: 'line',
       data: {
-        labels: mois,
+        labels: tE.labels,
         datasets: [
-          ...(D.lieuxHouse.length > 0 ? [lineds('Greatly House', last(D.lieuxHouse, m), C.sage)] : []),
-          ...(D.lieuxSport.length > 0 ? [lineds('Lieux sportifs', last(D.lieuxSport, m), C.energie)] : []),
+          ...(D.lieuxHouse.length > 0 ? [lineds('Greatly House', trimData(evolHouse, tE.start), C.sage)] : []),
+          ...(D.lieuxSport.length > 0 ? [lineds('Lieux sportifs', trimData(evolSport, tE.start), C.energie)] : []),
         ],
       },
       options: lineOpts(6, 10),
@@ -1172,11 +1181,13 @@ function renderProspect() {
   if (D.prospectValeur.length === 0) {
     emptyStateCanvas('c-prospect-valeur', 'Les données apparaîtront ici dès les premiers retours.');
   } else {
+    const valData = last(D.prospectValeur, m);
+    const tVal = trimToData(mois, valData);
     mk('c-prospect-valeur', {
       type: 'line',
       data: {
-        labels: mois,
-        datasets: [lineds('Perception valeur', last(D.prospectValeur, m), C.sage)],
+        labels: tVal.labels,
+        datasets: [lineds('Perception valeur', trimData(valData, tVal.start), C.sage)],
       },
       options: lineOpts(5, 10),
     });
@@ -1234,11 +1245,13 @@ function renderProspect() {
   if (D.prospectNPS.length === 0) {
     emptyStateCanvas('c-prospect-nps', 'Les données apparaîtront ici dès les premiers retours.');
   } else {
+    const npsData = last(D.prospectNPS, m);
+    const tNps = trimToData(mois, npsData);
     mk('c-prospect-nps', {
       type: 'line',
       data: {
-        labels: mois,
-        datasets: [lineds('Recommandation prospect', last(D.prospectNPS, m), '#8B6E4E')],
+        labels: tNps.labels,
+        datasets: [lineds('Recommandation prospect', trimData(npsData, tNps.start), '#8B6E4E')],
       },
       options: lineOpts(20, 90),
     });
@@ -1248,13 +1261,16 @@ function renderProspect() {
   if (D.prospectPertinence.length === 0 && D.prospectProjection.length === 0) {
     emptyStateCanvas('c-prospect-pertproj', 'Les données apparaîtront ici dès les premiers retours.');
   } else {
+    const pertData = D.prospectPertinence.length > 0 ? last(D.prospectPertinence, m) : [];
+    const projData = D.prospectProjection.length > 0 ? last(D.prospectProjection, m) : [];
+    const tPP = trimToData(mois, pertData, projData);
     mk('c-prospect-pertproj', {
       type: 'line',
       data: {
-        labels: mois,
+        labels: tPP.labels,
         datasets: [
-          ...(D.prospectPertinence.length > 0 ? [lineds('Pertinence perçue', last(D.prospectPertinence, m), C.sage)] : []),
-          ...(D.prospectProjection.length > 0 ? [lineds('Projection', last(D.prospectProjection, m), '#8B6E4E')] : []),
+          ...(D.prospectPertinence.length > 0 ? [lineds('Pertinence perçue', trimData(pertData, tPP.start), C.sage)] : []),
+          ...(D.prospectProjection.length > 0 ? [lineds('Projection', trimData(projData, tPP.start), '#8B6E4E')] : []),
         ],
       },
       options: lineOpts(4, 10),
@@ -1345,11 +1361,13 @@ function renderIvGreatly() {
   if (D.igEvol.length === 0) {
     emptyStateCanvas('c-ig-evol', 'Les données apparaîtront ici dès les premiers retours.');
   } else {
+    const evolData = last(D.igEvol, m);
+    const tEvol = trimToData(mois, evolData);
     mk('c-ig-evol', {
       type: 'line',
       data: {
-        labels: mois,
-        datasets: [lineds('Satisfaction moyenne', last(D.igEvol, m), C.sage)],
+        labels: tEvol.labels,
+        datasets: [lineds('Satisfaction moyenne', trimData(evolData, tEvol.start), C.sage)],
       },
       options: lineOpts(6, 10),
     });
@@ -1359,11 +1377,13 @@ function renderIvGreatly() {
   if (D.igAdmin.length === 0) {
     emptyStateCanvas('c-ig-admin', 'Pas encore de données.');
   } else {
+    const adminData = last(D.igAdmin, m);
+    const tAdmin = trimToData(mois, adminData);
     mk('c-ig-admin', {
       type: 'line',
       data: {
-        labels: mois,
-        datasets: [lineds('Administratif', last(D.igAdmin, m), C.grey)],
+        labels: tAdmin.labels,
+        datasets: [lineds('Administratif', trimData(adminData, tAdmin.start), C.grey)],
       },
       options: sparkOpts(6, 9),
     });
@@ -1373,11 +1393,13 @@ function renderIvGreatly() {
   if (D.igComm.length === 0) {
     emptyStateCanvas('c-ig-comm', 'Pas encore de données.');
   } else {
+    const commData = last(D.igComm, m);
+    const tComm = trimToData(mois, commData);
     mk('c-ig-comm', {
       type: 'line',
       data: {
-        labels: mois,
-        datasets: [lineds('Communication', last(D.igComm, m), C.energie)],
+        labels: tComm.labels,
+        datasets: [lineds('Communication', trimData(commData, tComm.start), C.energie)],
       },
       options: sparkOpts(6, 9),
     });
@@ -1387,13 +1409,16 @@ function renderIvGreatly() {
   if (D.igCadre.length === 0 && D.lieuxSport.length === 0) {
     emptyStateCanvas('c-ig-cadre', 'Pas encore de données sur le cadre et les lieux.');
   } else {
+    const cadreData = D.igCadre.length > 0 ? last(D.igCadre, m) : [];
+    const sportIgData = D.lieuxSport.length > 0 ? last(D.lieuxSport, m) : [];
+    const tCadre = trimToData(mois, cadreData, sportIgData);
     mk('c-ig-cadre', {
       type: 'line',
       data: {
-        labels: mois,
+        labels: tCadre.labels,
         datasets: [
-          ...(D.igCadre.length > 0 ? [lineds('Greatly House', last(D.igCadre, m), C.lucidite)] : []),
-          ...(D.lieuxSport.length > 0 ? [lineds('Lieux sportifs', last(D.lieuxSport, m), C.energie)] : []),
+          ...(D.igCadre.length > 0 ? [lineds('Greatly House', trimData(cadreData, tCadre.start), C.lucidite)] : []),
+          ...(D.lieuxSport.length > 0 ? [lineds('Lieux sportifs', trimData(sportIgData, tCadre.start), C.energie)] : []),
         ],
       },
       options: lineOpts(6, 10),
