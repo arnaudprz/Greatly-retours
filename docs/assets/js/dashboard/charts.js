@@ -734,26 +734,10 @@ function renderDetail(isTous, isEnergie, isLucidite, mois, m) {
       `;
       grid.appendChild(card);
 
-      // Sparkline
-      if (q.data && q.data.length > 0) {
-        requestAnimationFrame(() => {
-          mk(id, {
-            type: 'line',
-            data: {
-              labels: mois,
-              datasets: [{
-                data: last(q.data, m),
-                borderColor: sec.color,
-                backgroundColor: sec.color + '15',
-                borderWidth: 2,
-                fill: true,
-                tension: 0.4,
-              }],
-            },
-            options: sparkOpts(),
-          });
-        });
-      }
+      // Sparkline ou barre
+      requestAnimationFrame(() => {
+        renderQChart(id, q, mois, m, sec.color);
+      });
     });
   });
 }
@@ -1480,25 +1464,9 @@ function renderIvSeance(mois, m) {
       `;
       grid.appendChild(card);
 
-      if (q.data && q.data.length > 0) {
-        requestAnimationFrame(() => {
-          mk(id, {
-            type: 'line',
-            data: {
-              labels: mois,
-              datasets: [{
-                data: last(q.data, m),
-                borderColor: sec.color,
-                backgroundColor: sec.color + '15',
-                borderWidth: 2,
-                fill: true,
-                tension: 0.4,
-              }],
-            },
-            options: sparkOpts(),
-          });
-        });
-      }
+      requestAnimationFrame(() => {
+        renderQChart(id, q, mois, m, sec.color);
+      });
     });
   });
 }
@@ -1507,6 +1475,59 @@ function renderIvSeance(mois, m) {
 /* =============================================
    DÉTAIL GREATLY HOUSE (vue Lieux)
    ============================================= */
+
+/** Affiche un mini-graphique adapté au nombre de points de données */
+function renderQChart(canvasId, q, mois, m, color) {
+  const data = q.data && q.data.length > 0 ? last(q.data, m) : [q.val];
+
+  if (data.length <= 1 && q.val > 0) {
+    // 1 seul point → barre horizontale avec la note
+    mk(canvasId, {
+      type: 'bar',
+      data: {
+        labels: [''],
+        datasets: [{
+          data: [q.val],
+          backgroundColor: color + '55',
+          borderColor: color,
+          borderWidth: 1.5,
+          borderRadius: 6,
+          barPercentage: 0.5,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ctx.raw.toFixed(1) + '/10' } },
+        },
+        scales: {
+          x: { min: 0, max: 10, grid: { color: '#E7E1D720' }, ticks: { display: false } },
+          y: { display: false },
+        },
+      },
+    });
+  } else if (data.length > 1) {
+    // 2+ points → sparkline
+    mk(canvasId, {
+      type: 'line',
+      data: {
+        labels: last(mois, data.length),
+        datasets: [{
+          data: data,
+          borderColor: color,
+          backgroundColor: color + '15',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4,
+        }],
+      },
+      options: sparkOpts(),
+    });
+  }
+}
 
 function renderGHDetail(mois, m) {
   const grid = document.getElementById('gh-detail-grid');
@@ -1540,24 +1561,8 @@ function renderGHDetail(mois, m) {
     `;
     grid.appendChild(card);
 
-    if (q.data && q.data.length > 0) {
-      requestAnimationFrame(() => {
-        mk(id, {
-          type: 'line',
-          data: {
-            labels: mois,
-            datasets: [{
-              data: last(q.data, m),
-              borderColor: C.sage,
-              backgroundColor: C.sage + '15',
-              borderWidth: 2,
-              fill: true,
-              tension: 0.4,
-            }],
-          },
-          options: sparkOpts(),
-        });
-      });
-    }
+    requestAnimationFrame(() => {
+      renderQChart(id, q, mois, m, C.sage);
+    });
   });
 }
