@@ -191,91 +191,26 @@
   font-size: .92rem;
 }
 
-/* Sections */
-.gate-section {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 48px 24px 0;
-}
-.gate-section h2 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-weight: 400;
-  font-size: 1.5rem;
-  text-align: center;
-  margin-bottom: 28px;
-  color: var(--ink);
-}
-
-/* Steps (comment ça marche) */
-.gate-steps {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-.gate-step {
-  flex: 1;
-  background: #fff;
-  border: 1.5px solid var(--line);
-  border-radius: 16px;
-  padding: 24px 20px;
-  text-align: center;
-}
-.gate-step-num {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: var(--sage);
-  color: #fff;
-  font-weight: 700;
-  font-size: .9rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 12px;
-}
-.gate-step h3 {
-  font-size: .88rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-  line-height: 1.35;
-}
-.gate-step p {
-  font-size: .8rem;
-  color: var(--warm-grey);
-  line-height: 1.45;
-}
-.gate-step-arrow {
-  display: flex;
-  align-items: center;
-  font-size: 1.4rem;
-  color: var(--sage-pale);
-  font-weight: 700;
-  padding-top: 40px;
-}
-@media (max-width: 700px) {
-  .gate-steps { flex-direction: column; }
-  .gate-step-arrow { display: none; }
-}
-
-/* Anonymat */
-.gate-anon-section { padding-bottom: 20px; }
-.gate-anon {
+/* Anonymat (inline) */
+.gate-anon-section {
   max-width: 520px;
   margin: 0 auto;
-  text-align: center;
+  padding: 40px 24px 0;
+}
+.gate-anon {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   background: #fff;
   border: 1.5px solid var(--sage-pale);
-  border-radius: 20px;
-  padding: 32px 28px;
-}
-.gate-anon-icon { font-size: 2rem; margin-bottom: 12px; }
-.gate-anon h2 { margin-bottom: 12px; }
-.gate-anon p {
-  font-size: .88rem;
+  border-radius: 16px;
+  padding: 18px 22px;
+  font-size: .86rem;
   color: var(--warm-grey);
-  line-height: 1.55;
-  max-width: 420px;
-  margin: 0 auto;
+  line-height: 1.5;
 }
+.gate-anon span { font-size: 1.3rem; flex-shrink: 0; }
+.gate-anon p { margin: 0; }
 
 /* Features */
 .gate-features {
