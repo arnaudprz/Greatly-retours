@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=18">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=18">
+<link rel="stylesheet" href="assets/css/shared.css?v=19">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=19">
 </head>
 <body>
 
@@ -638,16 +638,8 @@
     <!-- Inviter -->
     <div class="card" style="margin-bottom:14px">
       <h3>Inviter une personne</h3>
-      <div class="sub">Un email d'invitation sera envoyé automatiquement.</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-        <input type="email" placeholder="Email" id="invite-email" style="flex:2;min-width:200px">
-        <select id="invite-role" style="flex:1;min-width:140px;padding:12px;border:1.5px solid var(--line);border-radius:12px;font-family:inherit;font-size:.9rem;background:#fff">
-          <option value="Lecture seule">Lecture seule</option>
-          <option value="Énergie">Énergie</option>
-          <option value="Lucidité">Lucidité</option>
-        </select>
-        <button class="btn-solid" style="flex:0 0 auto" onclick="adminAction('invite', document.getElementById('invite-email').value)">Inviter</button>
-      </div>
+      <div class="sub">Un email d'invitation sera envoyé avec un lien d'accès au dashboard.</div>
+      <button class="btn-solid" style="margin-top:12px" onclick="openInvitePopup()">+ Inviter</button>
     </div>
 
     <!-- Liste des personnes -->
@@ -706,16 +698,48 @@
   </div>
 </div>
 
+<!-- Popup invitation -->
+<div class="overlay" id="invite-overlay">
+  <div class="popup" style="max-width:440px">
+    <button type="button" class="close" onclick="closeInvitePopup()">✕</button>
+    <h3 style="margin-bottom:4px">Inviter une personne</h3>
+    <div class="sub" style="margin-bottom:16px">Un email d'invitation sera envoyé automatiquement.</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;gap:8px">
+        <input type="text" id="invite-firstname" placeholder="Prénom" style="flex:1">
+        <input type="text" id="invite-lastname" placeholder="Nom" style="flex:1">
+      </div>
+      <input type="email" id="invite-email" placeholder="Email">
+      <div>
+        <label style="font-size:.82rem;font-weight:600;color:var(--warm-grey);display:block;margin-bottom:6px">Rôle</label>
+        <div style="display:flex;gap:8px">
+          <button type="button" class="chip invite-role-btn" data-role="Membre" style="flex:1;text-align:center" onclick="selectInviteRole(this)">
+            🌱 Membre
+          </button>
+          <button type="button" class="chip invite-role-btn" data-role="Super-admin" style="flex:1;text-align:center" onclick="selectInviteRole(this)">
+            🔒 Super-admin
+          </button>
+        </div>
+        <div style="font-size:.74rem;color:var(--warm-grey);margin-top:6px" id="invite-role-hint">
+          Choisissez un rôle pour cette personne.
+        </div>
+      </div>
+      <div id="invite-error" style="display:none;color:var(--bad);font-size:.82rem"></div>
+      <button class="btn-solid" style="width:100%;margin-top:4px" id="invite-submit" onclick="submitInvite()">Envoyer l'invitation</button>
+    </div>
+  </div>
+</div>
+
 <!-- Scripts -->
-<script src="assets/js/config.js?v=18"></script>
-<script src="assets/js/api.js?v=18"></script>
-<script src="assets/js/dashboard/filters.js?v=18"></script>
-<script src="assets/js/dashboard/charts.js?v=18"></script>
-<script src="assets/js/dashboard/auth.js?v=18"></script>
-<script src="assets/js/dashboard/data.js?v=18"></script>
-<script src="assets/js/dashboard/admin.js?v=18"></script>
-<script src="assets/js/dashboard/alerts.js?v=18"></script>
-<script src="assets/js/dashboard/chat.js?v=18"></script>
+<script src="assets/js/config.js?v=19"></script>
+<script src="assets/js/api.js?v=19"></script>
+<script src="assets/js/dashboard/filters.js?v=19"></script>
+<script src="assets/js/dashboard/charts.js?v=19"></script>
+<script src="assets/js/dashboard/auth.js?v=19"></script>
+<script src="assets/js/dashboard/data.js?v=19"></script>
+<script src="assets/js/dashboard/admin.js?v=19"></script>
+<script src="assets/js/dashboard/alerts.js?v=19"></script>
+<script src="assets/js/dashboard/chat.js?v=19"></script>
 <script>
 // Navigation principale (navbar)
 document.querySelectorAll('.navbar-item[data-view]').forEach(btn => {

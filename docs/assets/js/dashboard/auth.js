@@ -107,7 +107,7 @@ async function login() {
 
     if (CONFIG.DEMO_MODE) {
       if (pwd === 'greatly2026') {
-        role = 'Lecture seule';
+        role = 'Membre';
       } else if (pwd === 'greatlyadmin2026') {
         role = 'Super-admin';
       } else {
