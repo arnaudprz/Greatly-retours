@@ -107,6 +107,9 @@
   align-items: center;
   gap: 2px;
   flex: 1;
+  background: var(--cream);
+  border-radius: 12px;
+  padding: 3px 4px;
 }
 .navbar-item {
   border: none;
