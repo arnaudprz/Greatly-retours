@@ -946,10 +946,17 @@ function renderLieux() {
   const m = F.period;
   const mois = last(MOIS, m);
 
-  // KPIs
+  // KPIs — utiliser les données du formulaire dédié Greatly House si disponibles
+  const ghAvg = D.qGreatlyHouse.length > 0
+    ? +(D.qGreatlyHouse.reduce((s, q) => s + q.val, 0) / D.qGreatlyHouse.length).toFixed(1)
+    : null;
+
   if (D.lieuxNotes.length >= 3) {
     txt('lx-house', fr(D.lieuxNotes[0]));
     txt('lx-sport', fr((D.lieuxNotes[1] + D.lieuxNotes[2]) / 2));
+  } else if (ghAvg !== null) {
+    txt('lx-house', fr(ghAvg));
+    txt('lx-sport', '—');
   } else {
     txt('lx-house', '—');
     txt('lx-sport', '—');
