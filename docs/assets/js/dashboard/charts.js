@@ -1115,34 +1115,30 @@ const ATTRAITS_OPTIONS = [
   "S'accorder une pause",
 ];
 
-/** Histogramme vertical 0-10 par mois. Affiche les barres vides si pas de données. */
+/** Histogramme vertical 0-10 par mois. Empty state propre si aucune donnée. */
 function renderRatingHist(canvasId, _moisAll, m, dataArr, label, color) {
-  const len = MOIS.length;
-  let data;
-  if (dataArr && dataArr.length > 0) {
-    data = last(dataArr, m);
-    if (data.length < len) data = new Array(len - data.length).fill(null).concat(data);
-  } else {
-    data = new Array(len).fill(null);
+  const hasAny = dataArr && dataArr.length > 0 && dataArr.some(v => v !== null && v !== undefined);
+  if (!hasAny) {
+    emptyStateCanvas(canvasId, 'Les notes apparaîtront ici dès les premiers retours.');
+    return;
   }
+  let data = last(dataArr, m);
+  const len = MOIS.length;
+  if (data.length < len) data = new Array(len - data.length).fill(null).concat(data);
   mk(canvasId, {
     type: 'bar',
     data: {
       labels: MOIS,
       datasets: [{
-        label,
-        data,
-        backgroundColor: color + '88',
-        borderColor: color,
-        borderWidth: 1,
-        borderRadius: 4,
+        label, data,
+        backgroundColor: color + '88', borderColor: color, borderWidth: 1, borderRadius: 4,
       }],
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ctx.raw == null ? 'Pas encore de données' : ctx.raw.toFixed(1) + '/10' } },
+        tooltip: { callbacks: { label: ctx => ctx.raw == null ? '—' : ctx.raw.toFixed(1) + '/10' } },
       },
       scales: {
         x: { grid: { display: false } },
@@ -1152,21 +1148,20 @@ function renderRatingHist(canvasId, _moisAll, m, dataArr, label, color) {
   });
 }
 
-/** Histogramme horizontal multi-choix (%). Garde toutes les options visibles même sans data. */
-function renderChoiceHist(canvasId, dataLabels, dataValues, fallbackOptions, color) {
-  const hasData = dataValues && dataValues.length > 0;
-  const labels = hasData ? dataLabels : fallbackOptions;
-  const values = hasData ? dataValues : new Array(fallbackOptions.length).fill(0);
+/** Histogramme horizontal multi-choix. Empty state propre si aucune réponse. */
+function renderChoiceHist(canvasId, dataLabels, dataValues, _fallbackOptions, color) {
+  const hasData = dataValues && dataValues.length > 0 && dataValues.some(v => v > 0);
+  if (!hasData) {
+    emptyStateCanvas(canvasId, 'Pas encore de réponses — les options choisies apparaîtront ici, classées de la plus citée à la moins citée.');
+    return;
+  }
   mk(canvasId, {
     type: 'bar',
     data: {
-      labels,
+      labels: dataLabels,
       datasets: [{
-        data: values,
-        backgroundColor: color + 'AA',
-        borderColor: color,
-        borderWidth: 1,
-        borderRadius: 6,
+        data: dataValues,
+        backgroundColor: color + 'AA', borderColor: color, borderWidth: 1, borderRadius: 6,
       }],
     },
     options: {
@@ -1184,8 +1179,14 @@ function renderChoiceHist(canvasId, dataLabels, dataValues, fallbackOptions, col
   });
 }
 
-/** Histogramme groupé 0-10 (2 séries) par mois. */
+/** Histogramme groupé 0-10 (2 séries) par mois. Empty state propre si aucune donnée. */
 function renderDualRatingHist(canvasId, _moisAll, m, data1, label1, color1, data2, label2, color2) {
+  const has1 = data1 && data1.length > 0 && data1.some(v => v !== null && v !== undefined);
+  const has2 = data2 && data2.length > 0 && data2.some(v => v !== null && v !== undefined);
+  if (!has1 && !has2) {
+    emptyStateCanvas(canvasId, 'Les notes apparaîtront ici dès les premiers retours.');
+    return;
+  }
   const len = MOIS.length;
   const get = (arr) => {
     if (!arr || arr.length === 0) return new Array(len).fill(null);
@@ -1233,6 +1234,12 @@ function renderProspect() {
 
   const clArr = last(D.prospectClarte, m);
   txt('pk-clarte', clArr.length > 0 ? fr(clArr[clArr.length - 1]) : '—');
+
+  const pertArr = last(D.prospectPertinence, m);
+  txt('pk-pertinence', pertArr.length > 0 ? fr(pertArr[pertArr.length - 1]) : '—');
+
+  const valArr = last(D.prospectValeur, m);
+  txt('pk-valeur', valArr.length > 0 ? fr(valArr[valArr.length - 1]) : '—');
 
   const prArr = last(D.prospectProjection, m);
   txt('pk-projection', prArr.length > 0 ? fr(prArr[prArr.length - 1]) : '—');
