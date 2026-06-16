@@ -130,9 +130,9 @@ const D = {
   prospectPertinence: [7.0, 7.2, 7.3, 7.5, 7.6, 7.8, 7.9, 8.0, 8.1, 8.0, 8.2, 8.3],
 
   // Sources de découverte (prospect)
-  sourcesLabels: ['Bouche-à-oreille', 'Réseaux sociaux', 'Site web', 'Événement', 'Presse', 'Autre'],
-  sourcesData:   [38, 20, 18, 14, 4, 6],
-  sourcesColors: ['#6B7D5C', '#C0814E', '#4F7C82', '#8B6E4E', '#9B8B7A', '#E7E1D7'],
+  sourcesLabels: ['Bouche-à-oreille', 'Réseaux sociaux', 'Site web', 'Événement', 'Presse', 'On m\'a contacté', 'Autre'],
+  sourcesData:   [34, 18, 16, 12, 4, 10, 6],
+  sourcesColors: ['#6B7D5C', '#C0814E', '#4F7C82', '#8B6E4E', '#9B8B7A', '#7A6B8C', '#E7E1D7'],
 
   // Freins (prospect) — alignés sur prospect.html data-v
   freinsLabels: ['L\'investissement financier', 'Trouver le temps', 'Le déplacement', 'Le format en groupe', 'Je ne cerne pas bien ce que c\'est', 'Le côté sportif m\'impressionne', 'Rien de particulier'],
@@ -234,25 +234,25 @@ const VERBATIMS_IG = {
 
 const FEEDBACKS_ECRITS = [
   {
-    date: '14 juin 2026', role: 'membre', tags: ['Programme', 'Atelier Lucidité'],
+    date: '14 juin 2026',
     titre: 'Ce que je retiens après 3 mois',
     html: '<p>Je suis arrivé chez Greatly un peu par hasard, sur la recommandation d\'un ami. <b>Trois mois plus tard, je mesure à quel point ce programme a changé ma façon d\'aborder mes semaines.</b></p><p>Le yoga du mardi matin est devenu un rituel. Je ne pensais pas dire ça un jour. L\'atelier Lucidité sur les décisions m\'a aidé à débloquer une situation que je repoussais depuis des mois.</p><p>Ce qui fait la différence : <b>le groupe</b>. On est entre pairs, on se comprend sans avoir à tout expliquer.</p>',
     texte: 'Je suis arrivé chez Greatly un peu par hasard… Trois mois plus tard, je mesure à quel point ce programme a changé ma façon d\'aborder mes semaines.',
   },
   {
-    date: '10 juin 2026', role: 'intervenant', tags: ['Équipe & organisation'],
+    date: '10 juin 2026',
     titre: 'Retour sur la coordination des séances',
     html: '<p>Quelques réflexions après 4 mois d\'intervention :</p><ul><li><b>La communication en amont fonctionne bien</b> — je reçois toujours les infos à temps.</li><li>Le matériel est parfois un peu juste quand on est 10+ (tapis de yoga).</li><li>La Greatly House est un lieu formidable pour travailler.</li></ul><p>Une suggestion : <b>un brief trimestriel entre intervenants</b> pour partager nos observations croisées.</p>',
     texte: 'Quelques réflexions après 4 mois d\'intervention. La communication en amont fonctionne bien. Le matériel est parfois un peu juste.',
   },
   {
-    date: '5 juin 2026', role: 'membre', tags: ['Séance Énergie', 'Greatly House'],
+    date: '5 juin 2026',
     titre: null,
     html: '<p>J\'ai hésité longtemps avant d\'écrire ce retour. <b>Le padel m\'a réconcilié avec le sport.</b> Je n\'avais pas bougé depuis des années. L\'approche progressive du coach et la bienveillance du groupe font qu\'on ne se sent jamais jugé.</p><blockquote>Le plus beau compliment que je puisse faire : j\'ai recommencé à courir le week-end, seul. Le déclic est venu d\'ici.</blockquote>',
     texte: 'J\'ai hésité longtemps avant d\'écrire ce retour. Le padel m\'a réconcilié avec le sport.',
   },
   {
-    date: '28 mai 2026', role: 'membre', tags: ['Programme'],
+    date: '28 mai 2026',
     titre: 'Un format qui respecte notre temps',
     html: '<p>En tant que dirigeante, mon agenda est une guerre de tranchées. <b>Greatly a trouvé le bon dosage :</b> des formats courts, un lieu accessible, une équipe qui comprend nos contraintes.</p><p>Je n\'ai manqué qu\'une seule séance en 4 mois. Pour moi, c\'est le meilleur indicateur.</p>',
     texte: 'En tant que dirigeante, mon agenda est une guerre de tranchées. Greatly a trouvé le bon dosage.',
@@ -844,17 +844,12 @@ function renderAlertes() {
 
 /* ---- Feedbacks écrits ---- */
 function feedbackCard(fb, truncate) {
-  const tagClass = fb.role === 'intervenant' ? 'coach' : 'lucidite';
-  const roleLabel = fb.role === 'intervenant' ? '🧭 Intervenant' : '🌱 Membre';
-  const tagsHtml = fb.tags.map(t => `<span class="tag energie" style="background:var(--sage-pale);color:var(--sage-dark)">${t}</span>`).join(' ');
-  const content = truncate ? `<p style="font-size:.88rem;color:var(--warm-grey);margin-top:6px">${fb.texte}</p>` : `<div style="font-size:.92rem;margin-top:8px;line-height:1.6">${fb.html}</div>`;
+  const content = truncate
+    ? `<p style="font-size:.88rem;color:var(--warm-grey);margin-top:6px">${fb.texte}</p>`
+    : `<div style="font-size:.92rem;margin-top:8px;line-height:1.6">${fb.html}</div>`;
   return `
     <div class="verb" style="padding:16px 0">
-      <div class="meta" style="flex-wrap:wrap;gap:6px">
-        <span class="tag ${tagClass}">${roleLabel}</span>
-        ${tagsHtml}
-        <span>${fb.date}</span>
-      </div>
+      <div class="meta"><span>${fb.date}</span></div>
       ${fb.titre ? `<div style="font-weight:600;font-size:.95rem;margin-top:6px">${fb.titre}</div>` : ''}
       ${content}
     </div>

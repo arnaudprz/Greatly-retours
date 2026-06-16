@@ -36,8 +36,9 @@
   .toolbar button:hover { background: var(--cream); border-color: var(--line); }
   .toolbar button.active { background: var(--sage-pale); border-color: var(--sage); color: var(--sage-dark); }
   .toolbar .sep { width: 1px; background: var(--line); margin: 4px 4px; }
+  .wrap { max-width: 680px; }
   .editor {
-    min-height: 220px; padding: 16px 18px;
+    min-height: 320px; padding: 18px 20px;
     border: 1.5px solid var(--line); border-top: none;
     border-radius: 0 0 12px 12px; background: #fff;
     font-family: inherit; font-size: 1rem; line-height: 1.65;
@@ -88,43 +89,8 @@
     <div class="anon">🤍 100&nbsp;% anonyme · sans limite de temps</div>
   </header>
 
-  <div class="progress" id="progress"></div>
-
-  <!-- ÉTAPE 0 : qui + sujet -->
-  <section class="step active" data-step="0">
-    <div class="q">
-      <h3>Vous êtes…</h3>
-      <div class="hint">Votre retour est anonyme dans tous les cas.</div>
-      <div class="bigchoice">
-        <button type="button" class="bigbtn" data-role="membre">
-          <span class="ico" style="background:var(--sage-pale)">🌱</span>
-          <span><b>Membre</b><small>Je participe au programme Greatly</small></span>
-        </button>
-        <button type="button" class="bigbtn" data-role="intervenant">
-          <span class="ico" style="background:#EFEBE3">🧭</span>
-          <span><b>Intervenant·e / Coach</b><small>J'anime des séances ou ateliers</small></span>
-        </button>
-      </div>
-    </div>
-    <div class="q">
-      <h3>Votre retour concerne…</h3>
-      <div class="hint">Choisissez un ou plusieurs sujets, ou passez directement à l'écriture.</div>
-      <div class="subject-chips">
-        <button type="button" class="chip" data-tag="Programme">📋 Le programme</button>
-        <button type="button" class="chip" data-tag="Séance Énergie">⛷️ Une séance Énergie</button>
-        <button type="button" class="chip" data-tag="Atelier Lucidité">🦉 Un atelier Lucidité</button>
-        <button type="button" class="chip" data-tag="Greatly House">🏡 La Greatly House</button>
-        <button type="button" class="chip" data-tag="Équipe & organisation">🤝 L'équipe & l'organisation</button>
-        <button type="button" class="chip" data-tag="Autre">💡 Autre</button>
-      </div>
-    </div>
-    <div class="nav">
-      <button type="button" class="btn-solid" id="start" disabled>Continuer</button>
-    </div>
-  </section>
-
-  <!-- ÉTAPE 1 : titre + éditeur -->
-  <section class="step" data-step="1">
+  <!-- Formulaire direct (pas d'étapes) -->
+  <section class="step active" data-step="1">
     <div class="q">
       <h3>Un titre pour votre retour <span style="font-weight:400;color:var(--warm-grey);font-size:.82rem">(facultatif)</span></h3>
       <input type="text" id="fb-title" placeholder="Ex : Ce que je retiens après 3 mois…" style="margin-top:8px">
@@ -149,8 +115,7 @@
       <div class="char-count"><span id="char-count">0</span> caractères</div>
     </div>
     <div class="nav">
-      <button type="button" class="btn-ghost" id="nav-back-1">Retour</button>
-      <button type="button" class="btn-solid" id="btn-send" disabled>Envoyer mon retour</button>
+      <button type="button" class="btn-solid" id="btn-send" disabled style="flex:1">Envoyer mon retour</button>
     </div>
   </section>
 
@@ -182,46 +147,6 @@
 <script src="assets/js/api.js?v=16"></script>
 <script>
 // --- État ---
-const state = { role: null, tags: [], step: 0 };
-
-// --- Navigation ---
-function go(n) {
-  state.step = n;
-  document.querySelectorAll('.step').forEach(s => s.classList.toggle('active', +s.dataset.step === n));
-  const p = document.getElementById('progress');
-  p.innerHTML = '';
-  for (let i = 1; i <= 2; i++) {
-    const sp = document.createElement('span');
-    if (i <= n) sp.classList.add('on');
-    p.appendChild(sp);
-  }
-  p.style.display = n === 0 ? 'none' : 'flex';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// --- Étape 0 : rôle ---
-document.querySelectorAll('[data-role]').forEach(btn =>
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-role]').forEach(x => x.classList.remove('sel'));
-    btn.classList.add('sel');
-    state.role = btn.dataset.role;
-    document.getElementById('start').disabled = false;
-  })
-);
-
-// --- Étape 0 : tags (multi-sélection) ---
-document.querySelectorAll('[data-tag]').forEach(btn =>
-  btn.addEventListener('click', () => {
-    btn.classList.toggle('sel');
-    const tag = btn.dataset.tag;
-    if (state.tags.includes(tag)) state.tags = state.tags.filter(t => t !== tag);
-    else state.tags.push(tag);
-  })
-);
-
-// --- Start ---
-document.getElementById('start').addEventListener('click', () => go(1));
-document.getElementById('nav-back-1').addEventListener('click', () => go(0));
 
 // --- Toolbar ---
 document.querySelectorAll('#toolbar button[data-cmd]').forEach(btn =>
@@ -288,8 +213,6 @@ sendBtn.addEventListener('click', async () => {
     await API.submit({
       type: 'feedback_ecrit',
       ts: new Date().toISOString(),
-      role: state.role,
-      tags: state.tags,
       titre: document.getElementById('fb-title').value.trim() || null,
       contenu_html: content,
       contenu_texte: editor.innerText.trim(),
@@ -307,8 +230,6 @@ function closeMerci() {
   document.getElementById('merci-overlay').classList.remove('open');
   document.body.style.overflow = '';
 }
-
-go(0);
 </script>
 </body>
 </html>
