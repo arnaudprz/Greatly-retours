@@ -375,7 +375,7 @@ function render() {
 
   // Filtres secondaires
   show('nav-act-wrap', isStandard);
-  show('f-who', isStandard);
+  show('f-who', true);
   show('f-period', true);
 
   // Masquer verbatims/alertes/feedbacks hors vue standard
