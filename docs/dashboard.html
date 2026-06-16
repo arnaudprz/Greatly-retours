@@ -7,88 +7,80 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=42">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=42">
+<link rel="stylesheet" href="assets/css/shared.css?v=43">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=43">
 </head>
 <body>
 
-<!-- ÉCRAN D'ACCUEIL -->
+<!-- ÉCRAN D'ACCUEIL (split screen) -->
 <div id="gate">
-
-  <!-- Hero -->
-  <div class="gate-hero">
-    <div class="gate-brand">GREATLY</div>
-    <h1>Vos retours</h1>
-    <p class="gate-lead">Un espace pour écouter ce qui se vit, comprendre ce qui compte, et ajuster le programme au plus près de vos besoins.</p>
-    <div class="gate-ctas">
-      <button class="btn-solid" onclick="openGateModal('login')">Se connecter</button>
-      <button class="btn-ghost" onclick="openGateModal('request')">Demander un accès</button>
-    </div>
+  <!-- Photo gauche -->
+  <div class="gate-photo">
+    <img src="assets/img/house.jpg" alt="Greatly House" id="gate-img">
   </div>
 
-  <!-- Anonymat -->
-  <div class="gate-section gate-anon-section">
-    <div class="gate-anon">
-      <span>🤍</span>
-      <p><strong>100 % anonyme.</strong> Aucun nom n'est demandé, aucune réponse n'est rattachée à une personne. C'est ce qui permet à chacun de s'exprimer librement.</p>
-    </div>
-  </div>
+  <!-- Contenu droite -->
+  <div class="gate-right">
+    <div class="gate-right-inner">
 
-  <div class="gate-foot">GREATLY · 10 rue de Lambersart, Verlinghem</div>
-</div>
+      <div class="gate-brand">GREATLY</div>
+      <h1>Vos retours</h1>
+      <p class="gate-lead">Un espace pour écouter ce qui se vit, comprendre ce qui compte, et faire évoluer le programme ensemble.</p>
 
-<!-- MODALE CONNEXION -->
-<div class="gate-overlay" id="gate-modal">
-  <div class="gate-modal-card">
-    <button type="button" class="gate-modal-close" onclick="closeGateModal()">✕</button>
+      <!-- Panneaux -->
+      <div class="gate-panels">
+        <!-- Connexion (magic link) -->
+        <div class="panel active" id="panel-login">
+          <label class="gate-label">Email</label>
+          <input type="email" placeholder="votre@email.com" id="login-email" autocomplete="email">
+          <div id="login-error" style="display:none;color:var(--bad);font-size:.82rem;margin-bottom:8px"></div>
+          <button class="btn-solid" id="btn-login" onclick="login()">Se connecter →</button>
+          <p class="gate-hint">Nous vous enverrons un lien de connexion par email.</p>
+          <div class="panel-links">
+            <span class="panel-link" onclick="showPanel('request')">Pas encore d'accès ? Faire une demande</span>
+          </div>
+        </div>
 
-    <!-- Panneau connexion (magic link) -->
-    <div class="panel active" id="panel-login">
-      <div class="panel-icon">✉️</div>
-      <h3>Se connecter</h3>
-      <p class="panel-sub">Entrez votre adresse email. Vous recevrez un lien de connexion instantané.</p>
-      <input type="email" placeholder="votre@email.com" id="login-email" autocomplete="email">
-      <div id="login-error" style="display:none;color:var(--bad);font-size:.82rem;margin-bottom:8px"></div>
-      <button class="btn-solid" id="btn-login" onclick="login()">Recevoir mon lien de connexion</button>
-      <div class="panel-links">
-        <span class="panel-link" onclick="showPanel('request')">Pas encore d'accès ? Faire une demande</span>
+        <!-- Confirmation magic link -->
+        <div class="panel" id="panel-magic-sent">
+          <div class="confirm-msg">
+            <div class="ico">✉️</div>
+            <h3>Lien envoyé</h3>
+            <p>Vérifiez votre boîte de réception et cliquez sur le lien pour accéder à votre espace.</p>
+            <span class="panel-link" onclick="showPanel('login')">Renvoyer un lien</span>
+          </div>
+        </div>
+
+        <!-- Demande d'accès -->
+        <div class="panel" id="panel-request">
+          <div class="gate-row">
+            <div><label class="gate-label">Prénom</label><input type="text" placeholder="Prénom" id="req-firstname"></div>
+            <div><label class="gate-label">Nom</label><input type="text" placeholder="Nom" id="req-lastname"></div>
+          </div>
+          <label class="gate-label">Email</label>
+          <input type="email" placeholder="votre@email.com" id="req-email">
+          <label class="gate-label">Fonction</label>
+          <input type="text" placeholder="Coach, coordinatrice, équipe Greatly…" id="req-role">
+          <label class="gate-label">Message <span style="font-weight:400;color:var(--warm-grey)">(facultatif)</span></label>
+          <textarea id="req-message" placeholder="Quelques mots sur votre demande…"></textarea>
+          <button class="btn-solid" onclick="requestAccess()">Envoyer ma demande →</button>
+          <div class="panel-links">
+            <span class="panel-link" onclick="showPanel('login')">← J'ai déjà un accès</span>
+          </div>
+        </div>
+
+        <!-- Confirmation demande -->
+        <div class="panel" id="panel-request-confirm">
+          <div class="confirm-msg">
+            <div class="ico">🤍</div>
+            <h3>Demande envoyée</h3>
+            <p>Vous recevrez un email dès que votre accès sera validé par l'équipe Greatly.</p>
+            <span class="panel-link" onclick="showPanel('login')">Retour</span>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- Confirmation magic link envoyé -->
-    <div class="panel" id="panel-magic-sent">
-      <div class="confirm-msg">
-        <div class="ico">✉️</div>
-        <h3>Lien envoyé</h3>
-        <p>Un lien de connexion vient de vous être envoyé par email. Vérifiez votre boîte de réception et cliquez sur le lien pour accéder à votre espace.</p>
-        <span class="panel-link" onclick="showPanel('login')">Renvoyer un lien</span>
-      </div>
-    </div>
-
-    <!-- Panneau demande d'accès -->
-    <div class="panel" id="panel-request">
-      <div class="panel-icon">🤍</div>
-      <h3>Demander un accès</h3>
-      <p class="panel-sub">L'accès est réservé à l'équipe Greatly et aux intervenants. Remplissez ce formulaire et nous reviendrons vers vous rapidement.</p>
-      <div class="gate-row">
-        <input type="text" placeholder="Prénom" id="req-firstname">
-        <input type="text" placeholder="Nom" id="req-lastname">
-      </div>
-      <input type="email" placeholder="Email" id="req-email">
-      <input type="text" placeholder="Votre fonction (coach, coordinatrice, équipe Greatly...)" id="req-role">
-      <textarea id="req-message" placeholder="Quelques mots sur votre demande (facultatif)"></textarea>
-      <button class="btn-solid" onclick="requestAccess()">Envoyer ma demande</button>
-      <span class="panel-link" onclick="showPanel('login')">J'ai déjà un accès</span>
-    </div>
-
-    <!-- Confirmation demande d'accès -->
-    <div class="panel" id="panel-request-confirm">
-      <div class="confirm-msg">
-        <div class="ico">🤍</div>
-        <h3>Demande envoyée</h3>
-        <p>Votre demande a été transmise à l'équipe Greatly. Vous recevrez un email dès que votre accès sera validé.</p>
-        <span class="panel-link" onclick="closeGateModal()">Fermer</span>
-      </div>
+      <div class="gate-foot">🤍 100 % anonyme · GREATLY · Verlinghem</div>
     </div>
   </div>
 </div>
@@ -761,15 +753,15 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=42"></script>
-<script src="assets/js/api.js?v=42"></script>
-<script src="assets/js/dashboard/filters.js?v=42"></script>
-<script src="assets/js/dashboard/charts.js?v=42"></script>
-<script src="assets/js/dashboard/auth.js?v=42"></script>
-<script src="assets/js/dashboard/data.js?v=42"></script>
-<script src="assets/js/dashboard/admin.js?v=42"></script>
-<script src="assets/js/dashboard/alerts.js?v=42"></script>
-<script src="assets/js/dashboard/chat.js?v=42"></script>
+<script src="assets/js/config.js?v=43"></script>
+<script src="assets/js/api.js?v=43"></script>
+<script src="assets/js/dashboard/filters.js?v=43"></script>
+<script src="assets/js/dashboard/charts.js?v=43"></script>
+<script src="assets/js/dashboard/auth.js?v=43"></script>
+<script src="assets/js/dashboard/data.js?v=43"></script>
+<script src="assets/js/dashboard/admin.js?v=43"></script>
+<script src="assets/js/dashboard/alerts.js?v=43"></script>
+<script src="assets/js/dashboard/chat.js?v=43"></script>
 <script>
 // Navigation principale (navbar)
 // Navigation principale (navbar views)
