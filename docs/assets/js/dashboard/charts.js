@@ -1,6 +1,6 @@
 /* ============================================
    Greatly — Vos retours · Graphiques Chart.js
-   Données de démonstration + render complet
+   Données vides + empty states + render complet
    ============================================ */
 
 const C = {
@@ -32,13 +32,15 @@ function show(id, on) {
   if (el) el.style.display = on ? '' : 'none';
 }
 
-/** Formater un nombre avec virgule */
+/** Formater un nombre avec virgule — gère NaN gracieusement */
 function fr(n) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
   return String(n.toFixed(1)).replace('.', ',');
 }
 
 /** Extraire les m derniers éléments d'un tableau */
 function last(arr, m) {
+  if (!arr || arr.length === 0) return [];
   return arr.slice(arr.length - m);
 }
 
@@ -54,230 +56,155 @@ function htm(id, v) {
   if (el) el.innerHTML = v;
 }
 
+/** Affiche un état vide dans un conteneur */
+function emptyState(containerId, message) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--warm-grey)">
+    <div style="font-size:1.5rem;margin-bottom:8px">📊</div>
+    <p style="font-size:.88rem;line-height:1.5">${message}</p>
+  </div>`;
+}
+
+/** Affiche un état vide sur le parent d'un canvas */
+function emptyStateCanvas(canvasId, message) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const parent = canvas.parentElement;
+  if (!parent) return;
+  canvas.style.display = 'none';
+  // Avoid duplicating empty state
+  if (!parent.querySelector('.empty-state')) {
+    const div = document.createElement('div');
+    div.className = 'empty-state';
+    div.style.cssText = 'text-align:center;padding:40px 20px;color:var(--warm-grey)';
+    div.innerHTML = `<div style="font-size:1.5rem;margin-bottom:8px">📊</div>
+      <p style="font-size:.88rem;line-height:1.5">${message}</p>`;
+    parent.appendChild(div);
+  }
+}
+
 
 /* =============================================
-   DONNÉES FICTIVES (12 mois : Juil. 2025 → Juin 2026)
+   DONNÉES (vides — alimentées par l'API)
    ============================================= */
 
 const MOIS = ['Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.', 'Janv.', 'Févr.', 'Mars', 'Avr.', 'Mai', 'Juin'];
 
 const D = {
   // --- NPS par mois ---
-  npsEnergie:   [62, 58, 65, 68, 72, 70, 74, 71, 76, 78, 80, 82],
-  npsLucidite:  [55, 60, 58, 63, 66, 64, 68, 70, 72, 75, 73, 77],
-  npsGlobal:    [58, 59, 62, 66, 69, 67, 71, 71, 74, 77, 77, 80],
+  npsEnergie:   [],
+  npsLucidite:  [],
+  npsGlobal:    [],
 
   // --- Énergie avant/après (0-10) ---
-  energieAvant: [4.2, 4.5, 4.1, 4.8, 4.3, 4.6, 4.4, 4.7, 4.2, 4.5, 4.3, 4.6],
-  energieApres: [7.8, 8.0, 7.6, 8.2, 8.1, 8.3, 8.0, 8.4, 8.2, 8.5, 8.3, 8.6],
+  energieAvant: [],
+  energieApres: [],
 
   // --- Répartition NPS par mois (promoteurs, passifs, détracteurs) ---
-  npsPromo:     [52, 50, 55, 58, 62, 60, 64, 62, 66, 68, 70, 72],
-  npsPassif:    [30, 32, 28, 27, 25, 28, 24, 26, 23, 22, 20, 20],
-  npsDetrac:    [18, 18, 17, 15, 13, 12, 12, 12, 11, 10, 10,  8],
+  npsPromo:     [],
+  npsPassif:    [],
+  npsDetrac:    [],
 
   // --- NPS par atelier Lucidité ---
-  ateliersNoms: ['1 · Le cadre', '2 · Les décisions', '3 · L\'énergie', '4 · Les émotions', '5 · Le temps', '6 · Le collectif', 'Bilan'],
-  ateliersNPS:  [72, 78, 68, 80, 74, 82, 85],
+  ateliersNoms: [],
+  ateliersNPS:  [],
 
   // --- Yoga vs Padel ---
-  sportsNoms: ['Yoga', 'Padel'],
-  sportsNPS:  [78, 74],
-  sportsNote: [8.4, 8.1],
+  sportsNoms: [],
+  sportsNPS:  [],
+  sportsNote: [],
 
   // --- Séance Énergie étape par étape ---
-  phasesENoms:  ['Accueil', 'Échauffement', 'Cœur de séance', 'Récupération', 'Clôture', 'Lieu'],
-  phasesENote:  [8.6, 7.9, 8.5, 8.8, 8.2, 7.8],
+  phasesENoms:  [],
+  phasesENote:  [],
 
   // --- Rencontre Lucidité étape par étape ---
-  phasesLNoms:  ['Accueil', 'Brunch', 'Atelier', 'Debrief & clôture', 'Greatly House'],
-  phasesLNote:  [9.0, 7.8, 8.4, 8.1, 8.9],
+  phasesLNoms:  [],
+  phasesLNote:  [],
 
   // --- Détail par question Énergie ---
-  qEnergie: [
-    { label: 'Énergie avant la séance',    q: 'Comment vous sentiez-vous en arrivant ?', val: 4.6, delta: +0.2, data: [4.2, 4.5, 4.1, 4.8, 4.3, 4.6, 4.4, 4.7, 4.2, 4.5, 4.3, 4.6] },
-    { label: 'Énergie après la séance',    q: 'Et maintenant, comment vous sentez-vous ?', val: 8.6, delta: +0.4, data: [7.8, 8.0, 7.6, 8.2, 8.1, 8.3, 8.0, 8.4, 8.2, 8.5, 8.3, 8.6] },
-    { label: 'Séance à mon rythme',        q: 'La séance était-elle à votre rythme ?', val: 8.3, delta: +0.4, data: [7.5, 7.8, 7.9, 8.0, 8.1, 8.0, 8.2, 8.1, 8.2, 8.3, 8.2, 8.3] },
-    { label: 'Plaisir à bouger',           q: 'Avez-vous pris du plaisir à bouger ?', val: 8.6, delta: +0.2, data: [8.0, 8.1, 8.2, 8.3, 8.4, 8.3, 8.4, 8.5, 8.5, 8.6, 8.5, 8.6] },
-    { label: 'Accompagnement du coach',    q: 'Comment avez-vous trouvé l\'accompagnement du coach ?', val: 8.8, delta: +0.3, data: [8.2, 8.3, 8.4, 8.5, 8.5, 8.6, 8.6, 8.7, 8.7, 8.8, 8.7, 8.8] },
-  ],
+  qEnergie: [],
 
   // --- Détail par question Lucidité ---
-  qLucidite: [
-    { label: 'Recul & clarté',            q: 'Cet atelier vous a-t-il aidé à voir plus clair ?', val: 8.1, delta: +0.5, data: [7.2, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9, 7.8, 7.9, 8.0, 8.0, 8.1] },
-    { label: 'Qualité des échanges',      q: 'Comment avez-vous trouvé les échanges avec le groupe ?', val: 8.5, delta: +0.3, data: [7.8, 7.9, 8.0, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5, 8.5] },
-    { label: 'Outils & méthodes',         q: 'Repartez-vous avec quelque chose de concret ?', val: 7.7, delta: +0.2, data: [7.2, 7.3, 7.3, 7.4, 7.5, 7.4, 7.5, 7.6, 7.6, 7.7, 7.6, 7.7] },
-    { label: 'Élan après la rencontre',   q: 'Sentez-vous une envie de faire bouger les choses ?', val: 8.0, delta: +0.4, data: [7.2, 7.4, 7.4, 7.5, 7.6, 7.7, 7.7, 7.8, 7.8, 7.9, 7.9, 8.0] },
-    { label: 'Animation de l\'atelier',   q: 'Comment avez-vous trouvé l\'animation de l\'atelier ?', val: 8.4, delta: +0.3, data: [7.8, 7.9, 8.0, 8.1, 8.1, 8.2, 8.2, 8.3, 8.3, 8.3, 8.4, 8.4] },
-  ],
+  qLucidite: [],
 
   // --- Par intervenant (note moyenne par mois) ---
-  coachYoga:  [8.2, 8.3, 8.1, 8.4, 8.5, 8.4, 8.6, 8.5, 8.7, 8.6, 8.8, 8.7],
-  coachPadel: [7.9, 8.0, 8.1, 8.0, 8.2, 8.1, 8.3, 8.2, 8.4, 8.3, 8.5, 8.4],
+  coachYoga:  [],
+  coachPadel: [],
 
   // --- Lieux (note 0-10) ---
-  lieuxNoms:   ['Greatly House', 'Lieu Yoga', 'Lieu Padel'],
-  lieuxNotes:  [8.9, 7.8, 7.6],
-  lieuxHouse:  [8.4, 8.5, 8.5, 8.6, 8.7, 8.7, 8.8, 8.8, 8.9, 8.9, 8.8, 8.9],
-  lieuxSport:  [7.5, 7.6, 7.5, 7.7, 7.6, 7.8, 7.7, 7.8, 7.7, 7.9, 7.8, 7.7],
+  lieuxNoms:   [],
+  lieuxNotes:  [],
+  lieuxHouse:  [],
+  lieuxSport:  [],
 
   // --- Greatly House (formulaire dédié) ---
-  qGreatlyHouse: [
-    { label: 'Arrivée & accueil',        q: 'Comment vous êtes-vous senti en arrivant à la Greatly House ?', val: 9.1, delta: +0.2, data: [8.6, 8.7, 8.8, 8.8, 8.9, 8.9, 9.0, 9.0, 9.0, 9.1, 9.0, 9.1] },
-    { label: 'Déconnexion',              q: 'Le lieu vous a-t-il aidé à vous poser et à déconnecter ?', val: 8.8, delta: +0.3, data: [8.2, 8.3, 8.4, 8.5, 8.5, 8.6, 8.6, 8.7, 8.7, 8.8, 8.7, 8.8] },
-    { label: 'Atmosphère',               q: 'Comment trouvez-vous l\'atmosphère de la maison ?', val: 9.3, delta: +0.1, data: [9.0, 9.0, 9.1, 9.1, 9.2, 9.2, 9.2, 9.3, 9.2, 9.3, 9.2, 9.3] },
-    { label: 'Aisance à échanger',       q: 'Vous êtes-vous senti à l\'aise pour échanger librement ?', val: 8.9, delta: +0.2, data: [8.4, 8.5, 8.6, 8.6, 8.7, 8.7, 8.8, 8.8, 8.8, 8.9, 8.8, 8.9] },
-    { label: 'Confort des espaces',       q: 'Que pensez-vous du confort des espaces ?', val: 8.5, delta: +0.1, data: [8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.4, 8.5, 8.5, 8.4, 8.5] },
-    { label: 'Accès au lieu',             q: 'L\'accès au lieu vous convient-il ?', val: 7.6, delta: -0.1, data: [7.8, 7.7, 7.7, 7.6, 7.7, 7.6, 7.6, 7.7, 7.6, 7.6, 7.7, 7.6] },
-    { label: 'Adéquation lieu / expérience', q: 'Le lieu est-il à la hauteur de ce qu\'on y vit ?', val: 9.2, delta: +0.2, data: [8.8, 8.9, 8.9, 9.0, 9.0, 9.0, 9.1, 9.1, 9.1, 9.2, 9.1, 9.2] },
-    { label: 'Envie de rester',           q: 'Avez-vous eu envie de rester un peu plus longtemps ?', val: 8.7, delta: +0.3, data: [8.1, 8.2, 8.3, 8.3, 8.4, 8.5, 8.5, 8.6, 8.6, 8.7, 8.6, 8.7] },
-    { label: 'Recommandation du lieu',    q: 'Recommanderiez-vous ce lieu à quelqu\'un qui cherche un cadre pour se retrouver ?', val: 9.0, delta: +0.2, data: [8.5, 8.6, 8.7, 8.7, 8.8, 8.8, 8.9, 8.9, 8.9, 9.0, 8.9, 9.0] },
-  ],
+  qGreatlyHouse: [],
 
   // --- Prospect ---
-  prospectNPS:        [45, 48, 52, 50, 55, 58, 60, 62, 58, 65, 63, 68],
-  prospectImpression: [7.2, 7.4, 7.5, 7.6, 7.8, 7.7, 8.0, 7.9, 8.1, 8.0, 8.2, 8.3],
-  prospectClarte:     [6.8, 7.0, 7.2, 7.1, 7.4, 7.5, 7.6, 7.8, 7.7, 7.9, 8.0, 8.1],
-  prospectProjection: [5.8, 6.0, 6.2, 6.4, 6.5, 6.8, 7.0, 6.9, 7.2, 7.1, 7.4, 7.5],
-  prospectValeur:     [6.5, 6.7, 6.8, 7.0, 7.1, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8, 7.9],
-  prospectPertinence: [7.0, 7.2, 7.3, 7.5, 7.6, 7.8, 7.9, 8.0, 8.1, 8.0, 8.2, 8.3],
+  prospectNPS:        [],
+  prospectImpression: [],
+  prospectClarte:     [],
+  prospectProjection: [],
+  prospectValeur:     [],
+  prospectPertinence: [],
 
   // Sources de découverte (prospect)
-  sourcesLabels: ['Bouche-à-oreille', 'Réseaux sociaux', 'Site web', 'Événement', 'Presse', 'On m\'a contacté', 'Autre'],
-  sourcesData:   [34, 18, 16, 12, 4, 10, 6],
-  sourcesColors: ['#6B7D5C', '#C0814E', '#4F7C82', '#8B6E4E', '#9B8B7A', '#7A6B8C', '#E7E1D7'],
+  sourcesLabels: [],
+  sourcesData:   [],
+  sourcesColors: [],
 
-  // Freins (prospect) — alignés sur prospect.html data-v
-  freinsLabels: ['L\'investissement financier', 'Trouver le temps', 'Le déplacement', 'Le format en groupe', 'Je ne cerne pas bien ce que c\'est', 'Le côté sportif m\'impressionne', 'Rien de particulier'],
-  freinsData:   [42, 28, 15, 12, 18, 8, 22],
+  // Freins (prospect)
+  freinsLabels: [],
+  freinsData:   [],
 
-  // Attraits (prospect) — alignés sur prospect.html data-v
-  attraitsLabels: ['Bouger, prendre soin de son corps', 'Prendre du recul, réfléchir autrement', 'Échanger entre pairs', 'Le cadre, la Greatly House', 'L\'approche globale', 'S\'accorder une vraie pause'],
-  attraitsData:   [48, 42, 35, 30, 26, 22],
+  // Attraits (prospect)
+  attraitsLabels: [],
+  attraitsData:   [],
 
   // --- Phases intervenants (déroulé vu par l'intervenant) ---
-  phasesIvENoms:  ['Accueil du groupe', 'Échauffement', 'Cœur de séance', 'Récupération', 'Clôture', 'Lieu'],
-  phasesIvENote:  [8.4, 8.0, 8.3, 8.6, 8.1, 7.6],
-  phasesIvLNoms:  ['Accueil', 'Brunch', 'Atelier', 'Greatly House'],
-  phasesIvLNote:  [8.7, 7.9, 8.5, 9.0],
+  phasesIvENoms:  [],
+  phasesIvENote:  [],
+  phasesIvLNoms:  [],
+  phasesIvLNote:  [],
 
   // --- Échelles intervenants (retours de séance) ---
-  qIntervenantEnergie: [
-    { label: 'Ressenti du groupe',          q: 'Comment avez-vous senti le groupe aujourd\'hui ?', val: 8.3, delta: +0.3, data: [7.8, 7.9, 8.0, 8.0, 8.1, 8.1, 8.2, 8.2, 8.2, 8.3, 8.2, 8.3] },
-    { label: 'Adaptation de la séance',     q: 'Avez-vous pu adapter la séance comme vous le souhaitiez ?', val: 8.0, delta: +0.2, data: [7.5, 7.6, 7.7, 7.7, 7.8, 7.8, 7.9, 7.9, 7.9, 8.0, 7.9, 8.0] },
-    { label: 'Conditions de travail',       q: 'Les conditions étaient-elles réunies pour bien travailler ?', val: 7.8, delta: +0.1, data: [7.4, 7.5, 7.5, 7.6, 7.6, 7.7, 7.7, 7.7, 7.8, 7.8, 7.7, 7.8] },
-    { label: 'Ressenti d\'animation',       q: 'Comment vous êtes-vous senti dans votre rôle ?', val: 8.6, delta: +0.4, data: [8.0, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5, 8.5, 8.6, 8.6] },
-  ],
-  qIntervenantLucidite: [
-    { label: 'Ressenti du groupe',          q: 'Comment avez-vous senti le groupe pendant l\'atelier ?', val: 8.5, delta: +0.3, data: [7.9, 8.0, 8.1, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5, 8.5] },
-    { label: 'Contenu de l\'atelier',       q: 'Le contenu de l\'atelier a-t-il bien fonctionné ?', val: 8.2, delta: +0.2, data: [7.7, 7.8, 7.8, 7.9, 8.0, 8.0, 8.0, 8.1, 8.1, 8.2, 8.1, 8.2] },
-    { label: 'Conditions de travail',       q: 'Les conditions étaient-elles réunies pour un bon atelier ?', val: 8.0, delta: +0.1, data: [7.6, 7.7, 7.7, 7.8, 7.8, 7.9, 7.9, 7.9, 8.0, 8.0, 7.9, 8.0] },
-    { label: 'Ressenti d\'animation',       q: 'Comment vous êtes-vous senti dans l\'animation ?', val: 8.7, delta: +0.3, data: [8.1, 8.2, 8.3, 8.3, 8.4, 8.5, 8.5, 8.6, 8.6, 8.7, 8.6, 8.7] },
-  ],
+  qIntervenantEnergie: [],
+  qIntervenantLucidite: [],
 
   // --- Intervenants + Greatly ---
-  igLabels:    ['Logistique', 'Administratif', 'Pédagogie', 'Communication', 'Cadre & lieux', 'Relation équipe'],
-  igScores:    [8.1, 7.6, 8.4, 7.8, 8.7, 9.0],
-  igEvol:      [7.8, 7.9, 8.0, 8.0, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.5],
-  igLogist:    [7.5, 7.6, 7.7, 7.8, 7.9, 7.9, 8.0, 8.0, 8.1, 8.0, 8.1, 8.1],
-  igAdmin:     [7.0, 7.1, 7.2, 7.3, 7.3, 7.4, 7.5, 7.5, 7.6, 7.6, 7.5, 7.6],
-  igPedag:     [8.0, 8.1, 8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.3, 8.4, 8.4, 8.4],
-  igComm:      [7.4, 7.5, 7.5, 7.6, 7.7, 7.7, 7.8, 7.8, 7.7, 7.8, 7.8, 7.8],
-  igCadre:     [8.3, 8.4, 8.4, 8.5, 8.6, 8.6, 8.7, 8.7, 8.7, 8.8, 8.7, 8.7],
-  igRelation:  [8.6, 8.7, 8.7, 8.8, 8.8, 8.9, 8.9, 9.0, 9.0, 9.0, 9.0, 9.0],
+  igLabels:    [],
+  igScores:    [],
+  igEvol:      [],
+  igLogist:    [],
+  igAdmin:     [],
+  igPedag:     [],
+  igComm:      [],
+  igCadre:     [],
+  igRelation:  [],
 };
 
 
 /* =============================================
-   VERBATIMS & ALERTES (données fictives)
+   VERBATIMS & ALERTES (vides — alimentés par l'API)
    ============================================= */
 
 const VERBATIMS = {
-  energie: [
-    { date: '12 juin 2026', tag: 'Yoga', text: 'La séance de ce matin m\'a remis d\'aplomb pour la journée. Le format court est parfait pour ne pas culpabiliser de s\'absenter du bureau.' },
-    { date: '9 juin 2026', tag: 'Padel', text: 'Excellente ambiance, on sent que le groupe se soude de séance en séance. Le coach adapte bien le niveau.' },
-    { date: '3 juin 2026', tag: 'Yoga', text: 'J\'arrive avec la tête pleine et je repars avec un vrai calme intérieur. Le lieu est top, bien situé.' },
-    { date: '28 mai 2026', tag: 'Padel', text: 'Le padel c\'est le moment où on décroche vraiment. J\'aurais juste aimé un vestiaire un peu mieux équipé.' },
-    { date: '22 mai 2026', tag: 'Yoga', text: 'Je n\'aurais jamais fait de yoga seul. Le fait que ce soit intégré au programme change tout.' },
-  ],
-  lucidite: [
-    { date: '10 juin 2026', tag: 'Atelier 5', text: 'L\'exercice sur la posture de leader m\'a fait prendre conscience de certains angles morts. Très utile.' },
-    { date: '5 juin 2026', tag: 'Atelier 4', text: 'Les échanges avec les autres membres sont d\'une richesse incroyable. On ne trouve ça nulle part ailleurs.' },
-    { date: '30 mai 2026', tag: 'Atelier 5', text: 'La Greatly House crée une atmosphère qui facilite la prise de recul. On se sent en confiance pour partager.' },
-    { date: '20 mai 2026', tag: 'Atelier 3', text: 'J\'ai enfin mis des mots sur ce que je ressentais. L\'outil compas est très éclairant.' },
-    { date: '15 mai 2026', tag: 'Atelier 4', text: 'Rencontre intense et bienveillante. Je repars avec un vrai élan pour les semaines à venir.' },
-  ],
-  prospect: {
-    pas: [
-      'Pouvoir assister à une séance découverte avant de m\'engager.',
-      'Un échange individuel avec Arnaud pour comprendre comment le programme s\'adapte à ma situation.',
-      'Voir des témoignages vidéo de membres actuels.',
-      'Une offre trimestrielle pour tester sans engagement long.',
-      'Savoir qu\'il y a d\'autres membres de mon secteur dans le groupe.',
-    ],
-    suggestions: [
-      'Rendre l\'offre plus lisible sur le site, j\'ai dû chercher pour comprendre le programme.',
-      'Proposer un format hybride avec quelques sessions en visio pour les semaines chargées.',
-      'Afficher plus clairement le calendrier des séances.',
-      'Un petit livret de présentation PDF à partager avec mon associé.',
-      'Plus de contenu sur LinkedIn pour montrer l\'ambiance du groupe.',
-    ],
-  },
-  lieux: [
-    { date: '11 juin 2026', lieu: 'Greatly House', text: 'Le cadre est exceptionnel. On sent que chaque détail a été pensé pour favoriser les échanges.' },
-    { date: '8 juin 2026', lieu: 'Studio Yoga', text: 'Salle agréable et bien chauffée. Petit bémol sur le parking qui est parfois complet.' },
-    { date: '4 juin 2026', lieu: 'Club Padel', text: 'Les terrains sont en bon état. L\'accès est facile depuis la métropole. Vestiaires corrects.' },
-    { date: '28 mai 2026', lieu: 'Greatly House', text: 'L\'atmosphère de la maison met tout le monde à l\'aise. Le café d\'accueil est un vrai plus.' },
-    { date: '21 mai 2026', lieu: 'Studio Yoga', text: 'Espace calme et lumineux. Idéal pour déconnecter. Un peu juste en places quand on est 10.' },
-  ],
+  energie: [],
+  lucidite: [],
+  prospect: { pas: [], suggestions: [] },
+  lieux: [],
 };
 
 const VERBATIMS_IG = {
-  facilite: [
-    { date: '14 juin 2026', text: 'Un récapitulatif mail la veille avec les infos clés (horaire, effectif, matériel dispo) serait très utile.' },
-    { date: '10 juin 2026', text: 'Pouvoir accéder à un espace partagé avec les retours des membres m\'aiderait à adapter mes séances.' },
-    { date: '3 juin 2026', text: 'La facturation est un peu lente — un process automatisé serait top.' },
-  ],
-  collab: [
-    { date: '12 juin 2026', text: 'La confiance que vous m\'accordez est vraiment appréciable. C\'est rare d\'avoir autant de liberté pédagogique.' },
-    { date: '8 juin 2026', text: 'J\'adorerais qu\'on ait un temps d\'échange entre intervenants une fois par trimestre. On ne se croise jamais.' },
-    { date: '1 juin 2026', text: 'La Greatly House est un lieu extraordinaire pour travailler. Ça change tout dans la qualité de l\'atelier.' },
-  ],
+  facilite: [],
+  collab: [],
 };
 
-const FEEDBACKS_ECRITS = [
-  {
-    date: '14 juin 2026',
-    titre: 'Ce que je retiens après 3 mois',
-    html: '<p>Je suis arrivé chez Greatly un peu par hasard, sur la recommandation d\'un ami. <b>Trois mois plus tard, je mesure à quel point ce programme a changé ma façon d\'aborder mes semaines.</b></p><p>Le yoga du mardi matin est devenu un rituel. Je ne pensais pas dire ça un jour. L\'atelier Lucidité sur les décisions m\'a aidé à débloquer une situation que je repoussais depuis des mois.</p><p>Ce qui fait la différence : <b>le groupe</b>. On est entre pairs, on se comprend sans avoir à tout expliquer.</p>',
-    texte: 'Je suis arrivé chez Greatly un peu par hasard… Trois mois plus tard, je mesure à quel point ce programme a changé ma façon d\'aborder mes semaines.',
-  },
-  {
-    date: '10 juin 2026',
-    titre: 'Retour sur la coordination des séances',
-    html: '<p>Quelques réflexions après 4 mois d\'intervention :</p><ul><li><b>La communication en amont fonctionne bien</b> — je reçois toujours les infos à temps.</li><li>Le matériel est parfois un peu juste quand on est 10+ (tapis de yoga).</li><li>La Greatly House est un lieu formidable pour travailler.</li></ul><p>Une suggestion : <b>un brief trimestriel entre intervenants</b> pour partager nos observations croisées.</p>',
-    texte: 'Quelques réflexions après 4 mois d\'intervention. La communication en amont fonctionne bien. Le matériel est parfois un peu juste.',
-  },
-  {
-    date: '5 juin 2026',
-    titre: null,
-    html: '<p>J\'ai hésité longtemps avant d\'écrire ce retour. <b>Le padel m\'a réconcilié avec le sport.</b> Je n\'avais pas bougé depuis des années. L\'approche progressive du coach et la bienveillance du groupe font qu\'on ne se sent jamais jugé.</p><blockquote>Le plus beau compliment que je puisse faire : j\'ai recommencé à courir le week-end, seul. Le déclic est venu d\'ici.</blockquote>',
-    texte: 'J\'ai hésité longtemps avant d\'écrire ce retour. Le padel m\'a réconcilié avec le sport.',
-  },
-  {
-    date: '28 mai 2026',
-    titre: 'Un format qui respecte notre temps',
-    html: '<p>Mon agenda est une guerre de tranchées. <b>Greatly a trouvé le bon dosage :</b> des formats courts, un lieu accessible, une équipe qui comprend nos contraintes.</p><p>Je n\'ai manqué qu\'une seule séance en 4 mois. Pour moi, c\'est le meilleur indicateur.</p>',
-    texte: 'Mon agenda est une guerre de tranchées. Greatly a trouvé le bon dosage.',
-  },
-];
+const FEEDBACKS_ECRITS = [];
 
-const ALERTES = [
-  { ico: '⚠️', titre: 'Vestiaires club padel', text: 'Plusieurs retours négatifs sur la propreté des vestiaires depuis mars. À remonter au club.', severity: 'mid' },
-  { ico: '📉', titre: 'Énergie avant en baisse', text: 'L\'énergie déclarée avant séance baisse légèrement en mai. Possible signe de fatigue saisonnière.', severity: 'low' },
-  { ico: '💬', titre: 'Demande de format plus long', text: '3 membres ont mentionné qu\'ils aimeraient des séances yoga de 1h15 au lieu d\'1h.', severity: 'info' },
-  { ico: '🔔', titre: 'Atelier 3 — score en retrait', text: 'Le score de recommandation de l\'atelier Compas est en retrait par rapport aux autres. Voir si le contenu doit évoluer.', severity: 'mid' },
-];
+const ALERTES = [];
 
 
 /* =============================================
@@ -465,38 +392,55 @@ function renderKPIs(isTous, isEnergie, isLucidite, m) {
   // NPS
   const npsArr = isEnergie ? D.npsEnergie : isLucidite ? D.npsLucidite : D.npsGlobal;
   const npsVal = last(npsArr, m);
-  const npsCurr = npsVal[npsVal.length - 1];
-  const npsPrev = npsVal[0];
-  const npsDelta = npsCurr - npsPrev;
-  txt('k-nps', '+' + npsCurr);
-  txt('k-nps-d', (npsDelta >= 0 ? '+' : '') + npsDelta + ' pts');
-  const npsD = document.getElementById('k-nps-d');
-  if (npsD) {
-    npsD.className = npsDelta >= 0 ? 'up' : 'down';
-    npsD.style.color = npsDelta >= 0 ? C.good : C.bad;
+  if (npsVal.length === 0) {
+    txt('k-nps', '—');
+    txt('k-nps-d', '');
+  } else {
+    const npsCurr = npsVal[npsVal.length - 1];
+    const npsPrev = npsVal[0];
+    const npsDelta = npsCurr - npsPrev;
+    txt('k-nps', '+' + npsCurr);
+    txt('k-nps-d', (npsDelta >= 0 ? '+' : '') + npsDelta + ' pts');
+    const npsD = document.getElementById('k-nps-d');
+    if (npsD) {
+      npsD.className = npsDelta >= 0 ? 'up' : 'down';
+      npsD.style.color = npsDelta >= 0 ? C.good : C.bad;
+    }
   }
 
   // Énergie avant → après
   if (isTous || isEnergie) {
     const avArr = last(D.energieAvant, m);
     const apArr = last(D.energieApres, m);
-    const avMoy = avArr.reduce((a, b) => a + b) / avArr.length;
-    const apMoy = apArr.reduce((a, b) => a + b) / apArr.length;
-    txt('k-ea', fr(avMoy) + ' → ' + fr(apMoy));
-    txt('k-ea-d', '+' + fr(apMoy - avMoy));
+    if (avArr.length === 0 || apArr.length === 0) {
+      txt('k-ea', '—');
+      txt('k-ea-d', '');
+    } else {
+      const avMoy = avArr.reduce((a, b) => a + b, 0) / avArr.length;
+      const apMoy = apArr.reduce((a, b) => a + b, 0) / apArr.length;
+      txt('k-ea', fr(avMoy) + ' → ' + fr(apMoy));
+      txt('k-ea-d', '+' + fr(apMoy - avMoy));
+    }
   }
 
   // Recul & clarté
   if (isTous || isLucidite) {
-    const clArr = last(D.qLucidite[0].data, m);
-    const clMoy = clArr[clArr.length - 1];
-    txt('k-cl', fr(clMoy));
+    if (D.qLucidite.length === 0) {
+      txt('k-cl', '—');
+    } else {
+      const clArr = last(D.qLucidite[0].data, m);
+      if (clArr.length === 0) {
+        txt('k-cl', '—');
+      } else {
+        const clMoy = clArr[clArr.length - 1];
+        txt('k-cl', fr(clMoy));
+      }
+    }
   }
 
   // Taux de réponse
-  const tx = isEnergie ? 76 : isLucidite ? 82 : 78;
-  txt('k-tx', tx);
-  txt('k-tx-sub', isEnergie ? '142 réponses sur 187 envois' : isLucidite ? '98 réponses sur 120 envois' : '240 réponses sur 307 envois');
+  txt('k-tx', '—');
+  txt('k-tx-sub', 'Pas encore de réponses');
 
   // Adapter les labels KPI selon le filtre
   const kpiNpsEl = document.querySelector('.k-nps .lab');
@@ -516,26 +460,48 @@ function renderKPIs(isTous, isEnergie, isLucidite, m) {
     else kpiClLab.textContent = 'Recul & clarté (Lucidité)';
   }
   if (isEnergie) {
-    const plArr = last(D.qEnergie[1].data, F.period);
-    txt('k-cl', fr(plArr[plArr.length - 1]));
+    if (D.qEnergie.length > 1) {
+      const plArr = last(D.qEnergie[1].data, F.period);
+      if (plArr.length > 0) txt('k-cl', fr(plArr[plArr.length - 1]));
+      else txt('k-cl', '—');
+    } else {
+      txt('k-cl', '—');
+    }
   } else if (isLucidite) {
-    const qeArr = last(D.qLucidite[1].data, F.period);
-    txt('k-cl', fr(qeArr[qeArr.length - 1]));
+    if (D.qLucidite.length > 1) {
+      const qeArr = last(D.qLucidite[1].data, F.period);
+      if (qeArr.length > 0) txt('k-cl', fr(qeArr[qeArr.length - 1]));
+      else txt('k-cl', '—');
+    } else {
+      txt('k-cl', '—');
+    }
   }
 }
 
 
 /* ---- NPS évolution ---- */
 function renderNPS(mois, m, isTous, isEnergie, isLucidite) {
+  const hasEnergie = D.npsEnergie.length > 0;
+  const hasLucidite = D.npsLucidite.length > 0;
+
+  if (!hasEnergie && !hasLucidite) {
+    emptyStateCanvas('c-nps', 'Les données apparaîtront ici dès les premiers retours.');
+    return;
+  }
+
   const datasets = [];
-  if (isTous || isEnergie) {
+  if ((isTous || isEnergie) && hasEnergie) {
     datasets.push(lineds('Énergie', last(D.npsEnergie, m), C.energie));
   }
-  if (isTous || isLucidite) {
+  if ((isTous || isLucidite) && hasLucidite) {
     datasets.push(lineds('Lucidité', last(D.npsLucidite, m), C.lucidite));
   }
-  if (isTous) {
+  if (isTous && D.npsGlobal.length > 0) {
     datasets.push(lineds('Global', last(D.npsGlobal, m), C.sage, true));
+  }
+  if (datasets.length === 0) {
+    emptyStateCanvas('c-nps', 'Les données apparaîtront ici dès les premiers retours.');
+    return;
   }
   mk('c-nps', {
     type: 'line',
@@ -547,6 +513,10 @@ function renderNPS(mois, m, isTous, isEnergie, isLucidite) {
 
 /* ---- Énergie avant/après ---- */
 function renderEnergie(mois, m) {
+  if (D.energieAvant.length === 0) {
+    emptyStateCanvas('c-energie', 'Les données apparaîtront ici dès les premiers retours.');
+    return;
+  }
   mk('c-energie', {
     type: 'line',
     data: {
@@ -563,6 +533,10 @@ function renderEnergie(mois, m) {
 
 /* ---- Répartition NPS ---- */
 function renderRepart(mois, m) {
+  if (D.npsPromo.length === 0) {
+    emptyStateCanvas('c-repart', 'Les données apparaîtront ici dès les premiers retours.');
+    return;
+  }
   mk('c-repart', {
     type: 'bar',
     data: {
@@ -591,6 +565,10 @@ function renderRepart(mois, m) {
 
 /* ---- NPS par atelier Lucidité ---- */
 function renderAteliers() {
+  if (D.ateliersNPS.length === 0) {
+    emptyStateCanvas('c-ateliers', 'Les données apparaîtront ici dès les premiers retours.');
+    return;
+  }
   mk('c-ateliers', {
     type: 'bar',
     data: {
@@ -620,6 +598,10 @@ function renderAteliers() {
 
 /* ---- Yoga vs Padel ---- */
 function renderSports() {
+  if (D.sportsNPS.length === 0) {
+    emptyStateCanvas('c-sports', 'Les données apparaîtront ici dès les premiers retours.');
+    return;
+  }
   mk('c-sports', {
     type: 'bar',
     data: {
@@ -654,6 +636,10 @@ function renderSports() {
 
 /* ---- Séance Énergie étape par étape ---- */
 function renderPhasesE() {
+  if (D.phasesENote.length === 0) {
+    emptyStateCanvas('c-phases-e', 'Les données apparaîtront ici dès les premiers retours.');
+    return;
+  }
   mk('c-phases-e', {
     type: 'bar',
     data: {
@@ -671,6 +657,10 @@ function renderPhasesE() {
 
 /* ---- Rencontre Lucidité étape par étape ---- */
 function renderPhasesL() {
+  if (D.phasesLNote.length === 0) {
+    emptyStateCanvas('c-phases-l', 'Les données apparaîtront ici dès les premiers retours.');
+    return;
+  }
   mk('c-phases-l', {
     type: 'bar',
     data: {
@@ -693,11 +683,16 @@ function renderDetail(isTous, isEnergie, isLucidite, mois, m) {
   grid.innerHTML = '';
 
   const sections = [];
-  if (isTous || isEnergie) {
+  if ((isTous || isEnergie) && D.qEnergie.length > 0) {
     sections.push({ titre: '⛷️ Parcours Énergie', questions: D.qEnergie, color: C.energie });
   }
-  if (isTous || isLucidite) {
+  if ((isTous || isLucidite) && D.qLucidite.length > 0) {
     sections.push({ titre: '🦉 Parcours Lucidité', questions: D.qLucidite, color: C.lucidite });
+  }
+
+  if (sections.length === 0) {
+    emptyState('detail-grid', 'Les données détaillées apparaîtront ici dès les premiers retours.');
+    return;
   }
 
   sections.forEach(sec => {
@@ -728,23 +723,25 @@ function renderDetail(isTous, isEnergie, isLucidite, mois, m) {
       grid.appendChild(card);
 
       // Sparkline
-      requestAnimationFrame(() => {
-        mk(id, {
-          type: 'line',
-          data: {
-            labels: mois,
-            datasets: [{
-              data: last(q.data, m),
-              borderColor: sec.color,
-              backgroundColor: sec.color + '15',
-              borderWidth: 2,
-              fill: true,
-              tension: 0.4,
-            }],
-          },
-          options: sparkOpts(),
+      if (q.data && q.data.length > 0) {
+        requestAnimationFrame(() => {
+          mk(id, {
+            type: 'line',
+            data: {
+              labels: mois,
+              datasets: [{
+                data: last(q.data, m),
+                borderColor: sec.color,
+                backgroundColor: sec.color + '15',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+              }],
+            },
+            options: sparkOpts(),
+          });
         });
-      });
+      }
     });
   });
 }
@@ -753,6 +750,10 @@ function renderDetail(isTous, isEnergie, isLucidite, mois, m) {
 /* ---- Par intervenant ---- */
 function renderCoach(mois, m) {
   const data = F.coach === 'padel' ? D.coachPadel : D.coachYoga;
+  if (data.length === 0) {
+    emptyStateCanvas('c-coach', 'Les données apparaîtront ici dès les premiers retours.');
+    return;
+  }
   const color = F.coach === 'padel' ? C.energie : C.lucidite;
   const label = F.coach === 'padel' ? 'Coach Padel — Note moyenne' : 'Coach Yoga — Note moyenne';
 
@@ -769,6 +770,10 @@ function renderCoach(mois, m) {
 
 /* ---- Lieux (carte synthèse dans la vue Tous) ---- */
 function renderLieuxSynthese() {
+  if (D.lieuxNotes.length === 0) {
+    emptyStateCanvas('c-lieux', 'Les données apparaîtront ici dès les premiers retours.');
+    return;
+  }
   mk('c-lieux', {
     type: 'bar',
     data: {
@@ -794,24 +799,15 @@ function renderVerbatims(isTous, isEnergie, isLucidite) {
   else if (isEnergie) verbs = VERBATIMS.energie;
   else if (isLucidite) verbs = VERBATIMS.lucidite;
 
-  // Mélanger par date (déjà triées dans nos données)
-  verbs.sort((a, b) => 0); // garder l'ordre
+  if (verbs.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
+      <p style="font-size:.88rem;line-height:1.5">Aucun retour pour le moment. Les verbatims apparaîtront ici au fil des réponses.</p>
+    </div>`;
+  } else {
+    // Mélanger par date (déjà triées dans nos données)
+    verbs.sort((a, b) => 0); // garder l'ordre
 
-  list.innerHTML = verbs.map(v => `
-    <div class="verb">
-      <div class="meta">
-        <span class="tag ${v.tag.toLowerCase().includes('yoga') || v.tag.toLowerCase().includes('padel') ? 'energie' : 'lucidite'}">${v.tag}</span>
-        <span>${v.date}</span>
-      </div>
-      <p>« ${v.text} »</p>
-    </div>
-  `).join('');
-
-  // Popup détail
-  const detail = document.getElementById('verbatims-detail');
-  if (detail) {
-    const all = [...VERBATIMS.energie, ...VERBATIMS.lucidite];
-    detail.innerHTML = all.map(v => `
+    list.innerHTML = verbs.map(v => `
       <div class="verb">
         <div class="meta">
           <span class="tag ${v.tag.toLowerCase().includes('yoga') || v.tag.toLowerCase().includes('padel') ? 'energie' : 'lucidite'}">${v.tag}</span>
@@ -821,6 +817,27 @@ function renderVerbatims(isTous, isEnergie, isLucidite) {
       </div>
     `).join('');
   }
+
+  // Popup détail
+  const detail = document.getElementById('verbatims-detail');
+  if (detail) {
+    const all = [...VERBATIMS.energie, ...VERBATIMS.lucidite];
+    if (all.length === 0) {
+      detail.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
+        <p style="font-size:.88rem;line-height:1.5">Aucun verbatim pour le moment.</p>
+      </div>`;
+    } else {
+      detail.innerHTML = all.map(v => `
+        <div class="verb">
+          <div class="meta">
+            <span class="tag ${v.tag.toLowerCase().includes('yoga') || v.tag.toLowerCase().includes('padel') ? 'energie' : 'lucidite'}">${v.tag}</span>
+            <span>${v.date}</span>
+          </div>
+          <p>« ${v.text} »</p>
+        </div>
+      `).join('');
+    }
+  }
 }
 
 
@@ -829,20 +846,12 @@ function renderAlertes() {
   const list = document.getElementById('alerts-list');
   if (!list) return;
 
-  list.innerHTML = ALERTES.map(a => `
-    <div class="alert">
-      <span class="ico">${a.ico}</span>
-      <div>
-        <b>${a.titre}</b>
-        <div style="font-size:.82rem;color:var(--warm-grey);margin-top:2px">${a.text}</div>
-      </div>
-    </div>
-  `).join('');
-
-  // Popup détail
-  const detail = document.getElementById('alerts-detail');
-  if (detail) {
-    detail.innerHTML = ALERTES.map(a => `
+  if (ALERTES.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
+      <p style="font-size:.88rem;line-height:1.5">Aucun point d'attention pour le moment.</p>
+    </div>`;
+  } else {
+    list.innerHTML = ALERTES.map(a => `
       <div class="alert">
         <span class="ico">${a.ico}</span>
         <div>
@@ -851,6 +860,26 @@ function renderAlertes() {
         </div>
       </div>
     `).join('');
+  }
+
+  // Popup détail
+  const detail = document.getElementById('alerts-detail');
+  if (detail) {
+    if (ALERTES.length === 0) {
+      detail.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
+        <p style="font-size:.88rem;line-height:1.5">Aucun point d'attention pour le moment.</p>
+      </div>`;
+    } else {
+      detail.innerHTML = ALERTES.map(a => `
+        <div class="alert">
+          <span class="ico">${a.ico}</span>
+          <div>
+            <b>${a.titre}</b>
+            <div style="font-size:.82rem;color:var(--warm-grey);margin-top:2px">${a.text}</div>
+          </div>
+        </div>
+      `).join('');
+    }
   }
 }
 
@@ -872,11 +901,24 @@ function feedbackCard(fb, truncate) {
 function renderFeedbacksEcrits() {
   const list = document.getElementById('feedbacks-list');
   if (!list) return;
-  list.innerHTML = FEEDBACKS_ECRITS.slice(0, 3).map(fb => feedbackCard(fb, true)).join('');
+
+  if (FEEDBACKS_ECRITS.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
+      <p style="font-size:.88rem;line-height:1.5">Aucun feedback écrit pour le moment.</p>
+    </div>`;
+  } else {
+    list.innerHTML = FEEDBACKS_ECRITS.slice(0, 3).map(fb => feedbackCard(fb, true)).join('');
+  }
 
   const detail = document.getElementById('feedbacks-detail');
   if (detail) {
-    detail.innerHTML = FEEDBACKS_ECRITS.map(fb => feedbackCard(fb, false)).join('');
+    if (FEEDBACKS_ECRITS.length === 0) {
+      detail.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
+        <p style="font-size:.88rem;line-height:1.5">Aucun feedback écrit pour le moment.</p>
+      </div>`;
+    } else {
+      detail.innerHTML = FEEDBACKS_ECRITS.map(fb => feedbackCard(fb, false)).join('');
+    }
   }
 }
 
@@ -899,77 +941,98 @@ function renderLieux() {
   const mois = last(MOIS, m);
 
   // KPIs
-  txt('lx-house', fr(D.lieuxNotes[0]));
-  txt('lx-sport', fr((D.lieuxNotes[1] + D.lieuxNotes[2]) / 2));
+  if (D.lieuxNotes.length >= 3) {
+    txt('lx-house', fr(D.lieuxNotes[0]));
+    txt('lx-sport', fr((D.lieuxNotes[1] + D.lieuxNotes[2]) / 2));
+  } else {
+    txt('lx-house', '—');
+    txt('lx-sport', '—');
+  }
 
   // Vue d'ensemble (horizontal bar)
-  mk('c-lieux-overview', {
-    type: 'bar',
-    data: {
-      labels: D.lieuxNoms,
-      datasets: [{
-        data: D.lieuxNotes,
-        backgroundColor: [C.sage + 'CC', C.lucidite + 'AA', C.energie + 'AA'],
-        borderRadius: 6,
-      }],
-    },
-    options: hbarOpts(10),
-  });
+  if (D.lieuxNotes.length === 0) {
+    emptyStateCanvas('c-lieux-overview', 'Pas encore de retours sur les lieux.');
+  } else {
+    mk('c-lieux-overview', {
+      type: 'bar',
+      data: {
+        labels: D.lieuxNoms,
+        datasets: [{
+          data: D.lieuxNotes,
+          backgroundColor: [C.sage + 'CC', C.lucidite + 'AA', C.energie + 'AA'],
+          borderRadius: 6,
+        }],
+      },
+      options: hbarOpts(10),
+    });
+  }
 
   // Greatly House mini line
-  mk('c-lieux-house', {
-    type: 'line',
-    data: {
-      labels: mois,
-      datasets: [{
-        data: last(D.lieuxHouse, m),
-        borderColor: C.sage,
-        backgroundColor: C.sage + '18',
-        borderWidth: 2,
-        pointRadius: 2,
-        tension: 0.35,
-        fill: true,
-      }],
-    },
-    options: {
-      ...lineOpts(7, 10),
-      plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10 } },
-    },
-  });
+  if (D.lieuxHouse.length === 0) {
+    emptyStateCanvas('c-lieux-house', 'Pas encore de retours sur la Greatly House.');
+  } else {
+    mk('c-lieux-house', {
+      type: 'line',
+      data: {
+        labels: mois,
+        datasets: [{
+          data: last(D.lieuxHouse, m),
+          borderColor: C.sage,
+          backgroundColor: C.sage + '18',
+          borderWidth: 2,
+          pointRadius: 2,
+          tension: 0.35,
+          fill: true,
+        }],
+      },
+      options: {
+        ...lineOpts(7, 10),
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10 } },
+      },
+    });
+  }
 
   // Lieux sportifs mini line
-  mk('c-lieux-sport', {
-    type: 'line',
-    data: {
-      labels: mois,
-      datasets: [{
-        data: last(D.lieuxSport, m),
-        borderColor: C.energie,
-        backgroundColor: C.energie + '18',
-        borderWidth: 2,
-        pointRadius: 2,
-        tension: 0.35,
-        fill: true,
-      }],
-    },
-    options: {
-      ...lineOpts(6, 10),
-      plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10 } },
-    },
-  });
+  if (D.lieuxSport.length === 0) {
+    emptyStateCanvas('c-lieux-sport', 'Pas encore de retours sur les lieux sportifs.');
+  } else {
+    mk('c-lieux-sport', {
+      type: 'line',
+      data: {
+        labels: mois,
+        datasets: [{
+          data: last(D.lieuxSport, m),
+          borderColor: C.energie,
+          backgroundColor: C.energie + '18',
+          borderWidth: 2,
+          pointRadius: 2,
+          tension: 0.35,
+          fill: true,
+        }],
+      },
+      options: {
+        ...lineOpts(6, 10),
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10 } },
+      },
+    });
+  }
 
   // Évolution par lieu
-  mk('c-lieux-evol', {
-    type: 'line',
-    data: {
-      labels: mois,
-      datasets: [
-        lineds('Greatly House', last(D.lieuxHouse, m), C.sage),
-        lineds('Lieux sportifs', last(D.lieuxSport, m), C.energie),
-      ],
-    },
-    options: lineOpts(6, 10),
-  });
+  if (D.lieuxHouse.length === 0 && D.lieuxSport.length === 0) {
+    emptyStateCanvas('c-lieux-evol', 'Pas encore de données d\'évolution.');
+  } else {
+    mk('c-lieux-evol', {
+      type: 'line',
+      data: {
+        labels: mois,
+        datasets: [
+          ...(D.lieuxHouse.length > 0 ? [lineds('Greatly House', last(D.lieuxHouse, m), C.sage)] : []),
+          ...(D.lieuxSport.length > 0 ? [lineds('Lieux sportifs', last(D.lieuxSport, m), C.energie)] : []),
+        ],
+      },
+      options: lineOpts(6, 10),
+    });
+  }
 
   // Détail par question Greatly House
   renderGHDetail(mois, m);
@@ -977,15 +1040,21 @@ function renderLieux() {
   // Verbatims lieux
   const vList = document.getElementById('lieux-verbatims-list');
   if (vList) {
-    vList.innerHTML = VERBATIMS.lieux.map(v => `
-      <div class="verb">
-        <div class="meta">
-          <span class="tag ${v.lieu === 'Greatly House' ? 'lucidite' : 'energie'}">${v.lieu}</span>
-          <span>${v.date}</span>
+    if (VERBATIMS.lieux.length === 0) {
+      vList.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
+        <p style="font-size:.88rem;line-height:1.5">Les verbatims sur les lieux s'afficheront ici au fil des réponses.</p>
+      </div>`;
+    } else {
+      vList.innerHTML = VERBATIMS.lieux.map(v => `
+        <div class="verb">
+          <div class="meta">
+            <span class="tag ${v.lieu === 'Greatly House' ? 'lucidite' : 'energie'}">${v.lieu}</span>
+            <span>${v.date}</span>
+          </div>
+          <p>« ${v.text} »</p>
         </div>
-        <p>« ${v.text} »</p>
-      </div>
-    `).join('');
+      `).join('');
+    }
   }
 }
 
@@ -1000,129 +1069,169 @@ function renderProspect() {
 
   // --- KPIs ---
   const npsArr = last(D.prospectNPS, m);
-  txt('pk-nps', '+' + npsArr[npsArr.length - 1]);
+  if (npsArr.length === 0) {
+    txt('pk-nps', '—');
+  } else {
+    txt('pk-nps', '+' + npsArr[npsArr.length - 1]);
+  }
 
   const impArr = last(D.prospectImpression, m);
-  txt('pk-impression', fr(impArr[impArr.length - 1]));
+  txt('pk-impression', impArr.length > 0 ? fr(impArr[impArr.length - 1]) : '—');
 
   const clArr = last(D.prospectClarte, m);
-  txt('pk-clarte', fr(clArr[clArr.length - 1]));
+  txt('pk-clarte', clArr.length > 0 ? fr(clArr[clArr.length - 1]) : '—');
 
   const prArr = last(D.prospectProjection, m);
-  txt('pk-projection', fr(prArr[prArr.length - 1]));
+  txt('pk-projection', prArr.length > 0 ? fr(prArr[prArr.length - 1]) : '—');
 
   // --- Sources de découverte (doughnut) ---
-  mk('c-prospect-sources', {
-    type: 'doughnut',
-    data: {
-      labels: D.sourcesLabels,
-      datasets: [{
-        data: D.sourcesData,
-        backgroundColor: D.sourcesColors,
-        borderWidth: 2,
-        borderColor: '#fff',
-      }],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '55%',
-      plugins: {
-        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, font: { size: 11 } } },
-        tooltip: {
-          backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10,
-          callbacks: { label: ctx => ctx.label + ' : ' + ctx.raw + '%' },
+  if (D.sourcesData.length === 0) {
+    emptyStateCanvas('c-prospect-sources', 'Pas encore de données sur les sources de découverte.');
+  } else {
+    mk('c-prospect-sources', {
+      type: 'doughnut',
+      data: {
+        labels: D.sourcesLabels,
+        datasets: [{
+          data: D.sourcesData,
+          backgroundColor: D.sourcesColors,
+          borderWidth: 2,
+          borderColor: '#fff',
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '55%',
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, font: { size: 11 } } },
+          tooltip: {
+            backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10,
+            callbacks: { label: ctx => ctx.label + ' : ' + ctx.raw + '%' },
+          },
         },
       },
-    },
-  });
+    });
+  }
 
   // --- Perception valeur (line) ---
-  mk('c-prospect-valeur', {
-    type: 'line',
-    data: {
-      labels: mois,
-      datasets: [lineds('Perception valeur', last(D.prospectValeur, m), C.sage)],
-    },
-    options: lineOpts(5, 10),
-  });
+  if (D.prospectValeur.length === 0) {
+    emptyStateCanvas('c-prospect-valeur', 'Les données apparaîtront ici dès les premiers retours.');
+  } else {
+    mk('c-prospect-valeur', {
+      type: 'line',
+      data: {
+        labels: mois,
+        datasets: [lineds('Perception valeur', last(D.prospectValeur, m), C.sage)],
+      },
+      options: lineOpts(5, 10),
+    });
+  }
 
   // --- Freins (horizontal bar) ---
-  mk('c-prospect-freins', {
-    type: 'bar',
-    data: {
-      labels: D.freinsLabels,
-      datasets: [{
-        data: D.freinsData,
-        backgroundColor: C.bad + 'AA',
-        borderRadius: 6,
-      }],
-    },
-    options: {
-      ...hbarOpts(50),
-      scales: {
-        ...hbarOpts(50).scales,
-        x: { ...hbarOpts(50).scales.x, ticks: { callback: v => v + '%', font: { size: 11 } } },
+  if (D.freinsData.length === 0) {
+    emptyStateCanvas('c-prospect-freins', 'Pas encore de données sur les freins.');
+  } else {
+    mk('c-prospect-freins', {
+      type: 'bar',
+      data: {
+        labels: D.freinsLabels,
+        datasets: [{
+          data: D.freinsData,
+          backgroundColor: C.bad + 'AA',
+          borderRadius: 6,
+        }],
       },
-    },
-  });
+      options: {
+        ...hbarOpts(50),
+        scales: {
+          ...hbarOpts(50).scales,
+          x: { ...hbarOpts(50).scales.x, ticks: { callback: v => v + '%', font: { size: 11 } } },
+        },
+      },
+    });
+  }
 
   // --- Attraits (horizontal bar) ---
-  mk('c-prospect-attraits', {
-    type: 'bar',
-    data: {
-      labels: D.attraitsLabels,
-      datasets: [{
-        data: D.attraitsData,
-        backgroundColor: C.good + 'AA',
-        borderRadius: 6,
-      }],
-    },
-    options: {
-      ...hbarOpts(60),
-      scales: {
-        ...hbarOpts(60).scales,
-        x: { ...hbarOpts(60).scales.x, ticks: { callback: v => v + '%', font: { size: 11 } } },
+  if (D.attraitsData.length === 0) {
+    emptyStateCanvas('c-prospect-attraits', 'Pas encore de données sur les attraits.');
+  } else {
+    mk('c-prospect-attraits', {
+      type: 'bar',
+      data: {
+        labels: D.attraitsLabels,
+        datasets: [{
+          data: D.attraitsData,
+          backgroundColor: C.good + 'AA',
+          borderRadius: 6,
+        }],
       },
-    },
-  });
+      options: {
+        ...hbarOpts(60),
+        scales: {
+          ...hbarOpts(60).scales,
+          x: { ...hbarOpts(60).scales.x, ticks: { callback: v => v + '%', font: { size: 11 } } },
+        },
+      },
+    });
+  }
 
   // --- NPS prospect (line) ---
-  mk('c-prospect-nps', {
-    type: 'line',
-    data: {
-      labels: mois,
-      datasets: [lineds('Recommandation prospect', last(D.prospectNPS, m), '#8B6E4E')],
-    },
-    options: lineOpts(20, 90),
-  });
+  if (D.prospectNPS.length === 0) {
+    emptyStateCanvas('c-prospect-nps', 'Les données apparaîtront ici dès les premiers retours.');
+  } else {
+    mk('c-prospect-nps', {
+      type: 'line',
+      data: {
+        labels: mois,
+        datasets: [lineds('Recommandation prospect', last(D.prospectNPS, m), '#8B6E4E')],
+      },
+      options: lineOpts(20, 90),
+    });
+  }
 
   // --- Pertinence vs Projection ---
-  mk('c-prospect-pertproj', {
-    type: 'line',
-    data: {
-      labels: mois,
-      datasets: [
-        lineds('Pertinence perçue', last(D.prospectPertinence, m), C.sage),
-        lineds('Projection', last(D.prospectProjection, m), '#8B6E4E'),
-      ],
-    },
-    options: lineOpts(4, 10),
-  });
+  if (D.prospectPertinence.length === 0 && D.prospectProjection.length === 0) {
+    emptyStateCanvas('c-prospect-pertproj', 'Les données apparaîtront ici dès les premiers retours.');
+  } else {
+    mk('c-prospect-pertproj', {
+      type: 'line',
+      data: {
+        labels: mois,
+        datasets: [
+          ...(D.prospectPertinence.length > 0 ? [lineds('Pertinence perçue', last(D.prospectPertinence, m), C.sage)] : []),
+          ...(D.prospectProjection.length > 0 ? [lineds('Projection', last(D.prospectProjection, m), '#8B6E4E')] : []),
+        ],
+      },
+      options: lineOpts(4, 10),
+    });
+  }
 
   // --- Verbatims prospect ---
   const pasList = document.getElementById('prospect-verbatims-pas');
   if (pasList) {
-    pasList.innerHTML = VERBATIMS.prospect.pas.map(t => `
-      <div class="verb"><p>« ${t} »</p></div>
-    `).join('');
+    if (VERBATIMS.prospect.pas.length === 0) {
+      pasList.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
+        <p style="font-size:.88rem;line-height:1.5">Les retours des futurs membres apparaîtront ici au fil des réponses.</p>
+      </div>`;
+    } else {
+      pasList.innerHTML = VERBATIMS.prospect.pas.map(t => `
+        <div class="verb"><p>« ${t} »</p></div>
+      `).join('');
+    }
   }
 
   const sugList = document.getElementById('prospect-verbatims-suggestions');
   if (sugList) {
-    sugList.innerHTML = VERBATIMS.prospect.suggestions.map(t => `
-      <div class="verb"><p>« ${t} »</p></div>
-    `).join('');
+    if (VERBATIMS.prospect.suggestions.length === 0) {
+      sugList.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
+        <p style="font-size:.88rem;line-height:1.5">Les suggestions apparaîtront ici au fil des réponses.</p>
+      </div>`;
+    } else {
+      sugList.innerHTML = VERBATIMS.prospect.suggestions.map(t => `
+        <div class="verb"><p>« ${t} »</p></div>
+      `).join('');
+    }
   }
 }
 
@@ -1136,104 +1245,141 @@ function renderIvGreatly() {
   const mois = last(MOIS, m);
 
   // KPIs
-  const avg = D.igScores.reduce((s, v) => s + v, 0) / D.igScores.length;
-  txt('ig-satisfaction', fr(avg));
-  txt('ig-logistique', fr(D.igScores[0]));
-  txt('ig-pedagogie', fr(D.igScores[2]));
-  txt('ig-relation', fr(D.igScores[5]));
-  txt('ig-admin', fr(D.igScores[1]));
-  txt('ig-comm', fr(D.igScores[3]));
+  if (D.igScores.length === 0) {
+    txt('ig-satisfaction', '—');
+    txt('ig-logistique', '—');
+    txt('ig-pedagogie', '—');
+    txt('ig-relation', '—');
+    txt('ig-admin', '—');
+    txt('ig-comm', '—');
+  } else {
+    const avg = D.igScores.reduce((s, v) => s + v, 0) / D.igScores.length;
+    txt('ig-satisfaction', fr(avg));
+    txt('ig-logistique', D.igScores.length > 0 ? fr(D.igScores[0]) : '—');
+    txt('ig-pedagogie', D.igScores.length > 2 ? fr(D.igScores[2]) : '—');
+    txt('ig-relation', D.igScores.length > 5 ? fr(D.igScores[5]) : '—');
+    txt('ig-admin', D.igScores.length > 1 ? fr(D.igScores[1]) : '—');
+    txt('ig-comm', D.igScores.length > 3 ? fr(D.igScores[3]) : '—');
+  }
 
   // --- Radar / bar des 6 dimensions ---
-  mk('c-ig-radar', {
-    type: 'bar',
-    data: {
-      labels: D.igLabels,
-      datasets: [{
-        data: D.igScores,
-        backgroundColor: [C.sage + 'BB', C.grey + '99', C.lucidite + 'BB', C.energie + 'BB', '#7A6B5C' + 'BB', C.good + 'BB'],
-        borderRadius: 8,
-      }],
-    },
-    options: {
-      ...hbarOpts(10),
-      indexAxis: 'y',
-      scales: {
-        x: { min: 0, max: 10, grid: { color: C.line }, ticks: { font: { size: 11 } } },
-        y: { grid: { display: false }, ticks: { font: { size: 12 } } },
+  if (D.igScores.length === 0) {
+    emptyStateCanvas('c-ig-radar', 'Les données apparaîtront ici dès les premiers retours.');
+  } else {
+    mk('c-ig-radar', {
+      type: 'bar',
+      data: {
+        labels: D.igLabels,
+        datasets: [{
+          data: D.igScores,
+          backgroundColor: [C.sage + 'BB', C.grey + '99', C.lucidite + 'BB', C.energie + 'BB', '#7A6B5C' + 'BB', C.good + 'BB'],
+          borderRadius: 8,
+        }],
       },
-    },
-  });
+      options: {
+        ...hbarOpts(10),
+        indexAxis: 'y',
+        scales: {
+          x: { min: 0, max: 10, grid: { color: C.line }, ticks: { font: { size: 11 } } },
+          y: { grid: { display: false }, ticks: { font: { size: 12 } } },
+        },
+      },
+    });
+  }
 
   // --- Évolution satisfaction globale ---
-  mk('c-ig-evol', {
-    type: 'line',
-    data: {
-      labels: mois,
-      datasets: [lineds('Satisfaction moyenne', last(D.igEvol, m), C.sage)],
-    },
-    options: lineOpts(6, 10),
-  });
+  if (D.igEvol.length === 0) {
+    emptyStateCanvas('c-ig-evol', 'Les données apparaîtront ici dès les premiers retours.');
+  } else {
+    mk('c-ig-evol', {
+      type: 'line',
+      data: {
+        labels: mois,
+        datasets: [lineds('Satisfaction moyenne', last(D.igEvol, m), C.sage)],
+      },
+      options: lineOpts(6, 10),
+    });
+  }
 
   // --- Administratif sparkline ---
-  mk('c-ig-admin', {
-    type: 'line',
-    data: {
-      labels: mois,
-      datasets: [lineds('Administratif', last(D.igAdmin, m), C.grey)],
-    },
-    options: sparkOpts(6, 9),
-  });
+  if (D.igAdmin.length === 0) {
+    emptyStateCanvas('c-ig-admin', 'Pas encore de données.');
+  } else {
+    mk('c-ig-admin', {
+      type: 'line',
+      data: {
+        labels: mois,
+        datasets: [lineds('Administratif', last(D.igAdmin, m), C.grey)],
+      },
+      options: sparkOpts(6, 9),
+    });
+  }
 
   // --- Communication sparkline ---
-  mk('c-ig-comm', {
-    type: 'line',
-    data: {
-      labels: mois,
-      datasets: [lineds('Communication', last(D.igComm, m), C.energie)],
-    },
-    options: sparkOpts(6, 9),
-  });
+  if (D.igComm.length === 0) {
+    emptyStateCanvas('c-ig-comm', 'Pas encore de données.');
+  } else {
+    mk('c-ig-comm', {
+      type: 'line',
+      data: {
+        labels: mois,
+        datasets: [lineds('Communication', last(D.igComm, m), C.energie)],
+      },
+      options: sparkOpts(6, 9),
+    });
+  }
 
-  // --- Cadre & lieux (bar : Greatly House vs lieux sport) ---
-  mk('c-ig-cadre', {
-    type: 'line',
-    data: {
-      labels: mois,
-      datasets: [
-        lineds('Greatly House', last(D.igCadre, m), C.lucidite),
-        lineds('Lieux sportifs', last(D.lieuxSport, m), C.energie),
-      ],
-    },
-    options: lineOpts(6, 10),
-  });
+  // --- Cadre & lieux ---
+  if (D.igCadre.length === 0 && D.lieuxSport.length === 0) {
+    emptyStateCanvas('c-ig-cadre', 'Pas encore de données sur le cadre et les lieux.');
+  } else {
+    mk('c-ig-cadre', {
+      type: 'line',
+      data: {
+        labels: mois,
+        datasets: [
+          ...(D.igCadre.length > 0 ? [lineds('Greatly House', last(D.igCadre, m), C.lucidite)] : []),
+          ...(D.lieuxSport.length > 0 ? [lineds('Lieux sportifs', last(D.lieuxSport, m), C.energie)] : []),
+        ],
+      },
+      options: lineOpts(6, 10),
+    });
+  }
 
   // --- Phases intervenants : étape par étape ---
-  mk('c-phases-iv-e', {
-    type: 'bar',
-    data: {
-      labels: D.phasesIvENoms,
-      datasets: [{
-        data: D.phasesIvENote,
-        backgroundColor: C.energie + 'AA',
-        borderRadius: 6,
-      }],
-    },
-    options: hbarOpts(10),
-  });
+  if (D.phasesIvENote.length === 0) {
+    emptyStateCanvas('c-phases-iv-e', 'Pas encore de retours sur les séances Énergie.');
+  } else {
+    mk('c-phases-iv-e', {
+      type: 'bar',
+      data: {
+        labels: D.phasesIvENoms,
+        datasets: [{
+          data: D.phasesIvENote,
+          backgroundColor: C.energie + 'AA',
+          borderRadius: 6,
+        }],
+      },
+      options: hbarOpts(10),
+    });
+  }
 
-  mk('c-phases-iv-l', {
-    type: 'bar',
-    data: {
-      labels: D.phasesIvLNoms,
-      datasets: [{
-        data: D.phasesIvLNote,
-        backgroundColor: C.lucidite + 'AA',
-        borderRadius: 6,
-      }],
-    },
-    options: hbarOpts(10),
-  });
+  if (D.phasesIvLNote.length === 0) {
+    emptyStateCanvas('c-phases-iv-l', 'Pas encore de retours sur les ateliers Lucidité.');
+  } else {
+    mk('c-phases-iv-l', {
+      type: 'bar',
+      data: {
+        labels: D.phasesIvLNoms,
+        datasets: [{
+          data: D.phasesIvLNote,
+          backgroundColor: C.lucidite + 'AA',
+          borderRadius: 6,
+        }],
+      },
+      options: hbarOpts(10),
+    });
+  }
 
   // --- Retours de séance des intervenants (détail par question) ---
   renderIvSeance(mois, m);
@@ -1241,22 +1387,34 @@ function renderIvGreatly() {
   // --- Verbatims ---
   const facList = document.getElementById('ig-verbatims-facilite');
   if (facList) {
-    facList.innerHTML = VERBATIMS_IG.facilite.map(v => `
-      <div class="verb">
-        <div class="meta"><span style="font-size:.74rem;color:var(--warm-grey)">${v.date}</span></div>
-        <p>« ${v.text} »</p>
-      </div>
-    `).join('');
+    if (VERBATIMS_IG.facilite.length === 0) {
+      facList.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
+        <p style="font-size:.88rem;line-height:1.5">Les retours des intervenants apparaîtront ici au fil des réponses.</p>
+      </div>`;
+    } else {
+      facList.innerHTML = VERBATIMS_IG.facilite.map(v => `
+        <div class="verb">
+          <div class="meta"><span style="font-size:.74rem;color:var(--warm-grey)">${v.date}</span></div>
+          <p>« ${v.text} »</p>
+        </div>
+      `).join('');
+    }
   }
 
   const colList = document.getElementById('ig-verbatims-collab');
   if (colList) {
-    colList.innerHTML = VERBATIMS_IG.collab.map(v => `
-      <div class="verb">
-        <div class="meta"><span style="font-size:.74rem;color:var(--warm-grey)">${v.date}</span></div>
-        <p>« ${v.text} »</p>
-      </div>
-    `).join('');
+    if (VERBATIMS_IG.collab.length === 0) {
+      colList.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
+        <p style="font-size:.88rem;line-height:1.5">Les retours sur la collaboration apparaîtront ici au fil des réponses.</p>
+      </div>`;
+    } else {
+      colList.innerHTML = VERBATIMS_IG.collab.map(v => `
+        <div class="verb">
+          <div class="meta"><span style="font-size:.74rem;color:var(--warm-grey)">${v.date}</span></div>
+          <p>« ${v.text} »</p>
+        </div>
+      `).join('');
+    }
   }
 }
 
@@ -1270,10 +1428,18 @@ function renderIvSeance(mois, m) {
   if (!grid) return;
   grid.innerHTML = '';
 
-  const sections = [
-    { titre: '⛷️ Séances Énergie', questions: D.qIntervenantEnergie, color: C.energie },
-    { titre: '🦉 Ateliers Lucidité', questions: D.qIntervenantLucidite, color: C.lucidite },
-  ];
+  const sections = [];
+  if (D.qIntervenantEnergie.length > 0) {
+    sections.push({ titre: '⛷️ Séances Énergie', questions: D.qIntervenantEnergie, color: C.energie });
+  }
+  if (D.qIntervenantLucidite.length > 0) {
+    sections.push({ titre: '🦉 Ateliers Lucidité', questions: D.qIntervenantLucidite, color: C.lucidite });
+  }
+
+  if (sections.length === 0) {
+    emptyState('iv-seance-grid', 'Les retours de séance des intervenants apparaîtront ici dès les premières réponses.');
+    return;
+  }
 
   sections.forEach(sec => {
     const div = document.createElement('div');
@@ -1299,23 +1465,25 @@ function renderIvSeance(mois, m) {
       `;
       grid.appendChild(card);
 
-      requestAnimationFrame(() => {
-        mk(id, {
-          type: 'line',
-          data: {
-            labels: mois,
-            datasets: [{
-              data: last(q.data, m),
-              borderColor: sec.color,
-              backgroundColor: sec.color + '15',
-              borderWidth: 2,
-              fill: true,
-              tension: 0.4,
-            }],
-          },
-          options: sparkOpts(),
+      if (q.data && q.data.length > 0) {
+        requestAnimationFrame(() => {
+          mk(id, {
+            type: 'line',
+            data: {
+              labels: mois,
+              datasets: [{
+                data: last(q.data, m),
+                borderColor: sec.color,
+                backgroundColor: sec.color + '15',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+              }],
+            },
+            options: sparkOpts(),
+          });
         });
-      });
+      }
     });
   });
 }
@@ -1333,6 +1501,11 @@ function renderGHDetail(mois, m) {
   Object.keys(charts).filter(k => k.startsWith('spark-gh-')).forEach(k => {
     charts[k].destroy(); delete charts[k];
   });
+
+  if (D.qGreatlyHouse.length === 0) {
+    emptyState('gh-detail-grid', 'Les retours détaillés sur la Greatly House apparaîtront ici dès les premières réponses.');
+    return;
+  }
 
   D.qGreatlyHouse.forEach((q, i) => {
     const id = 'spark-gh-' + i;
@@ -1352,22 +1525,24 @@ function renderGHDetail(mois, m) {
     `;
     grid.appendChild(card);
 
-    requestAnimationFrame(() => {
-      mk(id, {
-        type: 'line',
-        data: {
-          labels: mois,
-          datasets: [{
-            data: last(q.data, m),
-            borderColor: C.sage,
-            backgroundColor: C.sage + '15',
-            borderWidth: 2,
-            fill: true,
-            tension: 0.4,
-          }],
-        },
-        options: sparkOpts(),
+    if (q.data && q.data.length > 0) {
+      requestAnimationFrame(() => {
+        mk(id, {
+          type: 'line',
+          data: {
+            labels: mois,
+            datasets: [{
+              data: last(q.data, m),
+              borderColor: C.sage,
+              backgroundColor: C.sage + '15',
+              borderWidth: 2,
+              fill: true,
+              tension: 0.4,
+            }],
+          },
+          options: sparkOpts(),
+        });
       });
-    });
+    }
   });
 }
