@@ -831,3 +831,14 @@ body.is-admin .admin-only { display: inline-flex; }
   transition: filter .12s;
 }
 .chat-send:hover { filter: brightness(.9); }
+
+/* --- Help links (?) --- */
+.help-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 1.5px solid var(--line); background: #fff;
+  font-size: .7rem; font-weight: 700; color: var(--warm-grey);
+  text-decoration: none; margin-left: 6px; vertical-align: middle;
+  transition: all .12s; flex-shrink: 0;
+}
+.help-link:hover { border-color: var(--sage); color: var(--sage); background: var(--sage-pale); }

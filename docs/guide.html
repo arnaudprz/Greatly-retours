@@ -106,7 +106,16 @@
 </style>
 </head>
 <body>
-<div class="layout">
+<script>
+if (!localStorage.getItem('greatly_retours_token')) {
+  window.location.replace('dashboard.html');
+} else {
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('guide-content').style.display = '';
+  });
+}
+</script>
+<div class="layout" id="guide-content" style="display:none">
 
 <!-- ============ SIDEBAR ============ -->
 <aside class="sidebar">

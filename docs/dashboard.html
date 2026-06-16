@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=25">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=25">
+<link rel="stylesheet" href="assets/css/shared.css?v=26">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=26">
 </head>
 <body>
 
@@ -235,6 +235,7 @@
 
     <!-- Filtres (sticky sous la navbar) -->
     <div class="filters" id="filters-bar">
+      <a href="guide.html#filtres" target="_blank" class="help-link" style="align-self:center">?</a>
       <div class="fgroup f-type" id="f-type">
         <button class="on" data-v="tous">Tous</button>
         <button data-v="energie">⛷️ Énergie</button>
@@ -261,7 +262,7 @@
     <!-- KPIs -->
     <div class="kpis">
       <div class="kpi k-nps">
-        <div class="lab">NPS global</div>
+        <div class="lab">NPS global <a href="guide.html#nps" target="_blank" class="help-link">?</a></div>
         <div class="val" id="k-nps">—</div>
         <div class="sub"><span class="up" id="k-nps-d"></span> sur la période</div>
       </div>
@@ -285,19 +286,19 @@
     <!-- Graphiques -->
     <div class="grid">
       <div class="card full">
-        <h3>Évolution du NPS</h3>
+        <h3>Évolution du NPS <a href="guide.html#nps" target="_blank" class="help-link">?</a></h3>
         <div class="sub">« Imaginez qu'un proche traverse une période intense — lui conseilleriez-vous de vivre cette expérience ? » · par mois</div>
         <div class="chartbox"><canvas id="c-nps"></canvas></div>
       </div>
 
       <div class="card" id="card-energie">
-        <h3>Énergie ressentie avant / après séance</h3>
+        <h3>Énergie ressentie avant / après séance <a href="guide.html#kpis" target="_blank" class="help-link">?</a></h3>
         <div class="sub">« Comment vous sentiez-vous en arrivant ? » vs « Et maintenant ? » · moyenne mensuelle</div>
         <div class="chartbox"><canvas id="c-energie"></canvas></div>
       </div>
 
       <div class="card">
-        <h3>Répartition NPS</h3>
+        <h3>Répartition NPS <a href="guide.html#nps" target="_blank" class="help-link">?</a></h3>
         <div class="sub">Promoteurs (9–10) · Passifs (7–8) · Détracteurs (0–6)</div>
         <div class="chartbox"><canvas id="c-repart"></canvas></div>
       </div>
@@ -327,13 +328,13 @@
       </div>
 
       <div class="card full" id="card-detail">
-        <h3>Détail par question</h3>
+        <h3>Détail par question <a href="guide.html#detail" target="_blank" class="help-link">?</a></h3>
         <div class="sub">Une carte par question · note du dernier mois, progression et évolution mensuelle (0–10)</div>
         <div class="qgrid" id="detail-grid"></div>
       </div>
 
       <div class="card full" id="card-perint">
-        <h3>Par intervenant·e</h3>
+        <h3>Par intervenant·e <a href="guide.html#graphiques" target="_blank" class="help-link">?</a></h3>
         <div class="sub">« Comment avez-vous trouvé l'accompagnement du coach ? » · note moyenne par mois</div>
         <div class="fgroup" id="f-coach" style="display:inline-flex;margin-bottom:14px">
           <button class="on" data-v="yoga">🧘 Coach Yoga</button>
@@ -343,7 +344,7 @@
       </div>
 
       <div class="card full" id="card-lieux">
-        <h3>Les lieux</h3>
+        <h3>Les lieux <a href="guide.html#lieux" target="_blank" class="help-link">?</a></h3>
         <div class="sub">Note moyenne (0–10) · Greatly House (Lucidité) et lieux extérieurs (Énergie)</div>
         <div class="chartbox" style="height:180px"><canvas id="c-lieux"></canvas></div>
       </div>
@@ -355,7 +356,7 @@
       <div id="lieux-section" style="display:none">
         <div class="grid">
           <div class="card full">
-            <h3>Vue d'ensemble des lieux</h3>
+            <h3>Vue d'ensemble des lieux <a href="guide.html#lieux" target="_blank" class="help-link">?</a></h3>
             <div class="sub">Note moyenne par lieu (0–10) · toutes les réponses à la question « lieu »</div>
             <div class="chartbox" style="height:220px"><canvas id="c-lieux-overview"></canvas></div>
           </div>
@@ -407,7 +408,7 @@
         <!-- KPIs prospect -->
         <div class="kpis">
           <div class="kpi k-nps">
-            <div class="lab">NPS prospect</div>
+            <div class="lab">NPS prospect <a href="guide.html#prospects" target="_blank" class="help-link">?</a></div>
             <div class="val" id="pk-nps">—</div>
             <div class="sub">« Si quelqu'un de votre entourage cherchait à cultiver son énergie et sa lucidité, lui parleriez-vous de Greatly ? »</div>
           </div>
@@ -495,7 +496,7 @@
         <!-- KPIs -->
         <div class="kpis">
           <div class="kpi k-nps">
-            <div class="lab">Satisfaction globale</div>
+            <div class="lab">Satisfaction globale <a href="guide.html#intervenants" target="_blank" class="help-link">?</a></div>
             <div class="val" id="ig-satisfaction">—<span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
             <div class="sub">moyenne des 6 dimensions Greatly & vous</div>
           </div>
@@ -590,21 +591,21 @@
       </div>
 
       <div class="card" id="card-verbatims">
-        <h3>Derniers retours</h3>
+        <h3>Derniers retours <a href="guide.html#verbatims" target="_blank" class="help-link">?</a></h3>
         <div class="sub">Ce que les membres emportent avec eux</div>
         <div id="verbatims-list"></div>
         <button type="button" class="btn-ghost" style="margin-top:12px;width:100%" onclick="openVerbatims()">Voir tous les retours</button>
       </div>
 
       <div class="card" id="card-feedbacks">
-        <h3>✍️ Feedbacks écrits</h3>
+        <h3>✍️ Feedbacks écrits <a href="guide.html#form-ecrit" target="_blank" class="help-link">?</a></h3>
         <div class="sub">Retours détaillés rédigés librement par les membres et intervenants</div>
         <div id="feedbacks-list"></div>
         <button type="button" class="btn-ghost" style="margin-top:12px;width:100%" onclick="openFeedbacks()">Voir tous les feedbacks</button>
       </div>
 
       <div class="card" id="card-alerts">
-        <h3>Points d'attention — retours intervenants</h3>
+        <h3>Points d'attention — retours intervenants <a href="guide.html#verbatims" target="_blank" class="help-link">?</a></h3>
         <div class="sub">Signaux remontés dans les fiches d'observation</div>
         <div id="alerts-list"></div>
         <button type="button" class="btn-ghost" style="margin-top:12px;width:100%" onclick="openAlerts()">Voir tous les retours</button>
@@ -739,15 +740,15 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=25"></script>
-<script src="assets/js/api.js?v=25"></script>
-<script src="assets/js/dashboard/filters.js?v=25"></script>
-<script src="assets/js/dashboard/charts.js?v=25"></script>
-<script src="assets/js/dashboard/auth.js?v=25"></script>
-<script src="assets/js/dashboard/data.js?v=25"></script>
-<script src="assets/js/dashboard/admin.js?v=25"></script>
-<script src="assets/js/dashboard/alerts.js?v=25"></script>
-<script src="assets/js/dashboard/chat.js?v=25"></script>
+<script src="assets/js/config.js?v=26"></script>
+<script src="assets/js/api.js?v=26"></script>
+<script src="assets/js/dashboard/filters.js?v=26"></script>
+<script src="assets/js/dashboard/charts.js?v=26"></script>
+<script src="assets/js/dashboard/auth.js?v=26"></script>
+<script src="assets/js/dashboard/data.js?v=26"></script>
+<script src="assets/js/dashboard/admin.js?v=26"></script>
+<script src="assets/js/dashboard/alerts.js?v=26"></script>
+<script src="assets/js/dashboard/chat.js?v=26"></script>
 <script>
 // Navigation principale (navbar)
 document.querySelectorAll('.navbar-item[data-view]').forEach(btn => {
