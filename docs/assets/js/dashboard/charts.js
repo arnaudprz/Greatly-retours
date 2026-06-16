@@ -50,6 +50,11 @@ function last(arr, m) {
   return arr.slice(arr.length - m);
 }
 
+/** Vérifie si un tableau contient au moins une vraie valeur (non null) */
+function hasData(arr) {
+  return arr && arr.some(v => v !== null && v !== undefined);
+}
+
 /** Texte HTML pour un élément */
 function txt(id, v) {
   const el = document.getElementById(id);
@@ -101,7 +106,17 @@ function emptyStateCanvas(canvasId, message) {
    DONNÉES (vides — alimentées par l'API)
    ============================================= */
 
-const MOIS = ['Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.', 'Janv.', 'Févr.', 'Mars', 'Avr.', 'Mai', 'Juin'];
+// Générer les 12 derniers mois dynamiquement à partir de la date actuelle
+const MOIS_NOMS = ['Janv.', 'Févr.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'];
+const MOIS = (() => {
+  const now = new Date();
+  const result = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    result.push(MOIS_NOMS[d.getMonth()]);
+  }
+  return result;
+})();
 
 const D = {
   // --- NPS par mois ---
@@ -274,6 +289,7 @@ function lineds(label, data, color, dashed) {
     pointHoverRadius: 5,
     tension: 0.35,
     fill: false,
+    spanGaps: true,
     borderDash: dashed ? [5, 5] : [],
   };
 }
@@ -403,7 +419,7 @@ function renderStandard(isTous, isEnergie, isLucidite) {
 function renderKPIs(isTous, isEnergie, isLucidite, m) {
   // NPS
   const npsArr = isEnergie ? D.npsEnergie : isLucidite ? D.npsLucidite : D.npsGlobal;
-  const npsVal = last(npsArr, m);
+  const npsVal = last(npsArr, m).filter(v => v !== null);
   if (npsVal.length === 0) {
     txt('k-nps', '—');
     txt('k-nps-d', '');
@@ -422,8 +438,8 @@ function renderKPIs(isTous, isEnergie, isLucidite, m) {
 
   // Énergie avant → après
   if (isTous || isEnergie) {
-    const avArr = last(D.energieAvant, m);
-    const apArr = last(D.energieApres, m);
+    const avArr = last(D.energieAvant, m).filter(v => v !== null);
+    const apArr = last(D.energieApres, m).filter(v => v !== null);
     if (avArr.length === 0 || apArr.length === 0) {
       txt('k-ea', '—');
       txt('k-ea-d', '');
@@ -493,8 +509,8 @@ function renderKPIs(isTous, isEnergie, isLucidite, m) {
 
 /* ---- NPS évolution ---- */
 function renderNPS(mois, m, isTous, isEnergie, isLucidite) {
-  const hasEnergie = D.npsEnergie.length > 0;
-  const hasLucidite = D.npsLucidite.length > 0;
+  const hasEnergie = hasData(D.npsEnergie);
+  const hasLucidite = hasData(D.npsLucidite);
 
   if (!hasEnergie && !hasLucidite) {
     emptyStateCanvas('c-nps', 'Les données apparaîtront ici dès les premiers retours.');
@@ -508,7 +524,7 @@ function renderNPS(mois, m, isTous, isEnergie, isLucidite) {
   if ((isTous || isLucidite) && hasLucidite) {
     datasets.push(lineds('Lucidité', last(D.npsLucidite, m), C.lucidite));
   }
-  if (isTous && D.npsGlobal.length > 0) {
+  if (isTous && hasData(D.npsGlobal)) {
     datasets.push(lineds('Global', last(D.npsGlobal, m), C.sage, true));
   }
   if (datasets.length === 0) {

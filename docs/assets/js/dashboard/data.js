@@ -335,7 +335,18 @@ function npsScore(notes) {
   return Math.round((promo - detrac) / notes.length * 100);
 }
 
-/** Moyenne par mois (retourne un tableau de 12 valeurs ou moins) */
+/** Génère les clés YYYY-MM des 12 derniers mois */
+function getLast12MonthKeys() {
+  const now = new Date();
+  const keys = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    keys.push(d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'));
+  }
+  return keys;
+}
+
+/** Moyenne par mois — retourne un tableau aligné sur les 12 derniers mois */
 function monthlyAvg(responses, getter) {
   const buckets = {};
   responses.forEach(r => {
@@ -348,11 +359,15 @@ function monthlyAvg(responses, getter) {
     if (!buckets[key]) buckets[key] = [];
     buckets[key].push(val);
   });
-  const sorted = Object.keys(buckets).sort();
-  return sorted.map(k => +(buckets[k].reduce((a, b) => a + b, 0) / buckets[k].length).toFixed(1));
+  // Aligner sur les 12 derniers mois, null pour les mois vides
+  const months = getLast12MonthKeys();
+  return months.map(k => {
+    if (!buckets[k] || buckets[k].length === 0) return null;
+    return +(buckets[k].reduce((a, b) => a + b, 0) / buckets[k].length).toFixed(1);
+  });
 }
 
-/** Moyenne par mois combinant plusieurs sources de réponses */
+/** Moyenne par mois combinant plusieurs sources */
 function monthlyAvgMulti(sources) {
   const buckets = {};
   sources.forEach(src => {
@@ -367,8 +382,11 @@ function monthlyAvgMulti(sources) {
       buckets[key].push(val);
     });
   });
-  const sorted = Object.keys(buckets).sort();
-  return sorted.map(k => +(buckets[k].reduce((a, b) => a + b, 0) / buckets[k].length).toFixed(1));
+  const months = getLast12MonthKeys();
+  return months.map(k => {
+    if (!buckets[k] || buckets[k].length === 0) return null;
+    return +(buckets[k].reduce((a, b) => a + b, 0) / buckets[k].length).toFixed(1);
+  });
 }
 
 /** Agrège les phases d'un ensemble de réponses */
