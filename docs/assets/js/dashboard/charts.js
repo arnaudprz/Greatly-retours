@@ -232,6 +232,33 @@ const VERBATIMS_IG = {
   ],
 };
 
+const FEEDBACKS_ECRITS = [
+  {
+    date: '14 juin 2026', role: 'membre', tags: ['Programme', 'Atelier Lucidité'],
+    titre: 'Ce que je retiens après 3 mois',
+    html: '<p>Je suis arrivé chez Greatly un peu par hasard, sur la recommandation d\'un ami. <b>Trois mois plus tard, je mesure à quel point ce programme a changé ma façon d\'aborder mes semaines.</b></p><p>Le yoga du mardi matin est devenu un rituel. Je ne pensais pas dire ça un jour. L\'atelier Lucidité sur les décisions m\'a aidé à débloquer une situation que je repoussais depuis des mois.</p><p>Ce qui fait la différence : <b>le groupe</b>. On est entre pairs, on se comprend sans avoir à tout expliquer.</p>',
+    texte: 'Je suis arrivé chez Greatly un peu par hasard… Trois mois plus tard, je mesure à quel point ce programme a changé ma façon d\'aborder mes semaines.',
+  },
+  {
+    date: '10 juin 2026', role: 'intervenant', tags: ['Équipe & organisation'],
+    titre: 'Retour sur la coordination des séances',
+    html: '<p>Quelques réflexions après 4 mois d\'intervention :</p><ul><li><b>La communication en amont fonctionne bien</b> — je reçois toujours les infos à temps.</li><li>Le matériel est parfois un peu juste quand on est 10+ (tapis de yoga).</li><li>La Greatly House est un lieu formidable pour travailler.</li></ul><p>Une suggestion : <b>un brief trimestriel entre intervenants</b> pour partager nos observations croisées.</p>',
+    texte: 'Quelques réflexions après 4 mois d\'intervention. La communication en amont fonctionne bien. Le matériel est parfois un peu juste.',
+  },
+  {
+    date: '5 juin 2026', role: 'membre', tags: ['Séance Énergie', 'Greatly House'],
+    titre: null,
+    html: '<p>J\'ai hésité longtemps avant d\'écrire ce retour. <b>Le padel m\'a réconcilié avec le sport.</b> Je n\'avais pas bougé depuis des années. L\'approche progressive du coach et la bienveillance du groupe font qu\'on ne se sent jamais jugé.</p><blockquote>Le plus beau compliment que je puisse faire : j\'ai recommencé à courir le week-end, seul. Le déclic est venu d\'ici.</blockquote>',
+    texte: 'J\'ai hésité longtemps avant d\'écrire ce retour. Le padel m\'a réconcilié avec le sport.',
+  },
+  {
+    date: '28 mai 2026', role: 'membre', tags: ['Programme'],
+    titre: 'Un format qui respecte notre temps',
+    html: '<p>En tant que dirigeante, mon agenda est une guerre de tranchées. <b>Greatly a trouvé le bon dosage :</b> des formats courts, un lieu accessible, une équipe qui comprend nos contraintes.</p><p>Je n\'ai manqué qu\'une seule séance en 4 mois. Pour moi, c\'est le meilleur indicateur.</p>',
+    texte: 'En tant que dirigeante, mon agenda est une guerre de tranchées. Greatly a trouvé le bon dosage.',
+  },
+];
+
 const ALERTES = [
   { ico: '⚠️', titre: 'Vestiaires club padel', text: 'Plusieurs retours négatifs sur la propreté des vestiaires depuis mars. À remonter au club.', severity: 'mid' },
   { ico: '📉', titre: 'Énergie avant en baisse', text: 'L\'énergie déclarée avant séance baisse légèrement en mai. Possible signe de fatigue saisonnière.', severity: 'low' },
@@ -338,9 +365,10 @@ function render() {
   show('f-who', isStandard);
   show('f-period', true);
 
-  // Masquer verbatims/alertes hors vue standard
+  // Masquer verbatims/alertes/feedbacks hors vue standard
   if (!isStandard) {
     show('card-verbatims', false);
+    show('card-feedbacks', false);
     show('card-alerts', false);
   }
 
@@ -410,6 +438,9 @@ function renderStandard(isTous, isEnergie, isLucidite) {
 
   // --- Verbatims ---
   if (!isIntervenants) renderVerbatims(isTous, isEnergie, isLucidite);
+
+  // --- Feedbacks écrits ---
+  renderFeedbacksEcrits();
 
   // --- Alertes ---
   if (!isMembres) renderAlertes();
@@ -808,6 +839,46 @@ function renderAlertes() {
       </div>
     `).join('');
   }
+}
+
+
+/* ---- Feedbacks écrits ---- */
+function feedbackCard(fb, truncate) {
+  const tagClass = fb.role === 'intervenant' ? 'coach' : 'lucidite';
+  const roleLabel = fb.role === 'intervenant' ? '🧭 Intervenant' : '🌱 Membre';
+  const tagsHtml = fb.tags.map(t => `<span class="tag energie" style="background:var(--sage-pale);color:var(--sage-dark)">${t}</span>`).join(' ');
+  const content = truncate ? `<p style="font-size:.88rem;color:var(--warm-grey);margin-top:6px">${fb.texte}</p>` : `<div style="font-size:.92rem;margin-top:8px;line-height:1.6">${fb.html}</div>`;
+  return `
+    <div class="verb" style="padding:16px 0">
+      <div class="meta" style="flex-wrap:wrap;gap:6px">
+        <span class="tag ${tagClass}">${roleLabel}</span>
+        ${tagsHtml}
+        <span>${fb.date}</span>
+      </div>
+      ${fb.titre ? `<div style="font-weight:600;font-size:.95rem;margin-top:6px">${fb.titre}</div>` : ''}
+      ${content}
+    </div>
+  `;
+}
+
+function renderFeedbacksEcrits() {
+  const list = document.getElementById('feedbacks-list');
+  if (!list) return;
+  list.innerHTML = FEEDBACKS_ECRITS.slice(0, 3).map(fb => feedbackCard(fb, true)).join('');
+
+  const detail = document.getElementById('feedbacks-detail');
+  if (detail) {
+    detail.innerHTML = FEEDBACKS_ECRITS.map(fb => feedbackCard(fb, false)).join('');
+  }
+}
+
+function openFeedbacks() {
+  document.getElementById('feedbacks-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeFeedbacks() {
+  document.getElementById('feedbacks-overlay').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 

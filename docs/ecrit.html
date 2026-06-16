@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Feedback écrit — GREATLY</title>
+<meta name="description" content="Partagez un retour détaillé, à votre rythme. Anonyme, sans limite de temps.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Greatly — Feedback écrit">
+<meta property="og:description" content="Partagez un retour détaillé, à votre rythme. 100 % anonyme.">
+<meta property="og:image" content="https://arnaudprz.github.io/Greatly-retours/assets/og-retours.svg">
+<meta property="og:url" content="https://arnaudprz.github.io/Greatly-retours/ecrit.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GREATLY">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/shared.css">
+<link rel="stylesheet" href="assets/css/form.css">
+<style>
+  /* --- Éditeur riche --- */
+  .editor-wrap { margin-top: 10px; }
+  .toolbar {
+    display: flex; gap: 4px; padding: 8px 10px;
+    background: #fff; border: 1.5px solid var(--line);
+    border-bottom: none; border-radius: 12px 12px 0 0;
+  }
+  .toolbar button {
+    width: 34px; height: 34px; border: 1.5px solid transparent;
+    background: transparent; border-radius: 8px; cursor: pointer;
+    font-family: inherit; font-size: .85rem; color: var(--warm-grey);
+    display: flex; align-items: center; justify-content: center;
+    transition: all .12s;
+  }
+  .toolbar button:hover { background: var(--cream); border-color: var(--line); }
+  .toolbar button.active { background: var(--sage-pale); border-color: var(--sage); color: var(--sage-dark); }
+  .toolbar .sep { width: 1px; background: var(--line); margin: 4px 4px; }
+  .editor {
+    min-height: 220px; padding: 16px 18px;
+    border: 1.5px solid var(--line); border-top: none;
+    border-radius: 0 0 12px 12px; background: #fff;
+    font-family: inherit; font-size: 1rem; line-height: 1.65;
+    color: var(--ink); outline: none; overflow-y: auto;
+  }
+  .editor:focus { border-color: var(--accent, var(--sage)); }
+  .editor:empty::before {
+    content: attr(data-placeholder);
+    color: var(--warm-grey); opacity: .6; pointer-events: none;
+  }
+  .editor h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.2rem; font-weight: 500; margin: 12px 0 4px; }
+  .editor blockquote {
+    border-left: 3px solid var(--sage-pale); padding-left: 14px;
+    margin: 8px 0; color: var(--warm-grey); font-style: italic;
+  }
+  .editor ul, .editor ol { padding-left: 22px; margin: 6px 0; }
+  .char-count { text-align: right; font-size: .74rem; color: var(--warm-grey); margin-top: 6px; }
+
+  /* --- Sujet (tag) --- */
+  .subject-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+  /* --- Popup merci --- */
+  .merci-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(26,26,26,.35); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .merci-overlay.open { display: flex; }
+  .merci-popup {
+    background: var(--cream); border-radius: 22px; padding: 40px 30px;
+    max-width: 400px; width: 100%; text-align: center;
+    box-shadow: 0 16px 48px rgba(26,26,26,.12);
+    animation: popIn .35s ease;
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(.92) translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div class="brand">Greatly</div>
+    <h1>Feedback écrit</h1>
+    <p>Prenez le temps de partager un retour détaillé. Pas de limite, pas de format imposé — écrivez ce qui vous semble important, à votre rythme.</p>
+    <div class="anon">🤍 100&nbsp;% anonyme · sans limite de temps</div>
+  </header>
+
+  <div class="progress" id="progress"></div>
+
+  <!-- ÉTAPE 0 : qui + sujet -->
+  <section class="step active" data-step="0">
+    <div class="q">
+      <h3>Vous êtes…</h3>
+      <div class="hint">Votre retour est anonyme dans tous les cas.</div>
+      <div class="bigchoice">
+        <button type="button" class="bigbtn" data-role="membre">
+          <span class="ico" style="background:var(--sage-pale)">🌱</span>
+          <span><b>Membre</b><small>Je participe au programme Greatly</small></span>
+        </button>
+        <button type="button" class="bigbtn" data-role="intervenant">
+          <span class="ico" style="background:#EFEBE3">🧭</span>
+          <span><b>Intervenant·e / Coach</b><small>J'anime des séances ou ateliers</small></span>
+        </button>
+      </div>
+    </div>
+    <div class="q">
+      <h3>Votre retour concerne…</h3>
+      <div class="hint">Choisissez un ou plusieurs sujets, ou passez directement à l'écriture.</div>
+      <div class="subject-chips">
+        <button type="button" class="chip" data-tag="Programme">📋 Le programme</button>
+        <button type="button" class="chip" data-tag="Séance Énergie">⛷️ Une séance Énergie</button>
+        <button type="button" class="chip" data-tag="Atelier Lucidité">🦉 Un atelier Lucidité</button>
+        <button type="button" class="chip" data-tag="Greatly House">🏡 La Greatly House</button>
+        <button type="button" class="chip" data-tag="Équipe & organisation">🤝 L'équipe & l'organisation</button>
+        <button type="button" class="chip" data-tag="Autre">💡 Autre</button>
+      </div>
+    </div>
+    <div class="nav">
+      <button type="button" class="btn-solid" id="start" disabled>Continuer</button>
+    </div>
+  </section>
+
+  <!-- ÉTAPE 1 : titre + éditeur -->
+  <section class="step" data-step="1">
+    <div class="q">
+      <h3>Un titre pour votre retour <span style="font-weight:400;color:var(--warm-grey);font-size:.82rem">(facultatif)</span></h3>
+      <input type="text" id="fb-title" placeholder="Ex : Ce que je retiens après 3 mois…" style="margin-top:8px">
+    </div>
+    <div class="q">
+      <h3>Votre retour</h3>
+      <div class="hint">Écrivez librement. Vous pouvez mettre en forme avec la barre d'outils.</div>
+      <div class="editor-wrap">
+        <div class="toolbar" id="toolbar">
+          <button type="button" data-cmd="bold" title="Gras"><b>G</b></button>
+          <button type="button" data-cmd="italic" title="Italique"><i>I</i></button>
+          <button type="button" data-cmd="underline" title="Souligné"><u>S</u></button>
+          <div class="sep"></div>
+          <button type="button" data-cmd="insertUnorderedList" title="Liste à puces">•</button>
+          <button type="button" data-cmd="insertOrderedList" title="Liste numérotée">1.</button>
+          <div class="sep"></div>
+          <button type="button" data-cmd="formatBlock" data-val="H2" title="Sous-titre">H</button>
+          <button type="button" data-cmd="formatBlock" data-val="BLOCKQUOTE" title="Citation">❝</button>
+        </div>
+        <div class="editor" id="editor" contenteditable="true" data-placeholder="Partagez ce qui vous tient à cœur…"></div>
+      </div>
+      <div class="char-count"><span id="char-count">0</span> caractères</div>
+    </div>
+    <div class="nav">
+      <button type="button" class="btn-ghost" id="nav-back-1">Retour</button>
+      <button type="button" class="btn-solid" id="btn-send" disabled>Envoyer mon retour</button>
+    </div>
+  </section>
+
+  <!-- ÉTAPE 2 : merci (fallback) -->
+  <section class="step" data-step="2">
+    <div class="merci">
+      <div class="big">🤍</div>
+      <h2>Merci pour ce retour</h2>
+      <p>Vos mots, anonymes, rejoignent ceux du groupe. Ils nous aident à faire évoluer le programme au plus près de vos besoins.</p>
+      <button type="button" class="btn-solid" style="max-width:260px" onclick="location.reload()">Écrire un autre retour</button>
+    </div>
+  </section>
+
+  <div class="foot">GREATLY · 10 rue de Lambersart, Verlinghem<br>Vos retours sont anonymes et servent uniquement à améliorer le programme.</div>
+</div>
+
+<!-- Popup merci -->
+<div class="merci-overlay" id="merci-overlay">
+  <div class="merci-popup">
+    <div class="big" style="width:64px;height:64px;border-radius:50%;background:var(--sage-pale);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 16px">🤍</div>
+    <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:1.4rem;margin-bottom:10px">Merci pour ce retour</h2>
+    <p style="color:var(--warm-grey);font-size:.92rem;max-width:340px;margin:0 auto 22px;line-height:1.5">Vos mots, anonymes, rejoignent ceux du groupe. Ils nous aident à faire évoluer le programme au plus près de vos besoins.</p>
+    <button type="button" class="btn-solid" style="max-width:260px;width:100%" onclick="location.reload()">Écrire un autre retour</button>
+    <button type="button" class="btn-ghost" style="max-width:260px;width:100%;margin-top:8px" onclick="closeMerci()">Fermer</button>
+  </div>
+</div>
+
+<script src="assets/js/config.js?v=16"></script>
+<script src="assets/js/api.js?v=16"></script>
+<script>
+// --- État ---
+const state = { role: null, tags: [], step: 0 };
+
+// --- Navigation ---
+function go(n) {
+  state.step = n;
+  document.querySelectorAll('.step').forEach(s => s.classList.toggle('active', +s.dataset.step === n));
+  const p = document.getElementById('progress');
+  p.innerHTML = '';
+  for (let i = 1; i <= 2; i++) {
+    const sp = document.createElement('span');
+    if (i <= n) sp.classList.add('on');
+    p.appendChild(sp);
+  }
+  p.style.display = n === 0 ? 'none' : 'flex';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// --- Étape 0 : rôle ---
+document.querySelectorAll('[data-role]').forEach(btn =>
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-role]').forEach(x => x.classList.remove('sel'));
+    btn.classList.add('sel');
+    state.role = btn.dataset.role;
+    document.getElementById('start').disabled = false;
+  })
+);
+
+// --- Étape 0 : tags (multi-sélection) ---
+document.querySelectorAll('[data-tag]').forEach(btn =>
+  btn.addEventListener('click', () => {
+    btn.classList.toggle('sel');
+    const tag = btn.dataset.tag;
+    if (state.tags.includes(tag)) state.tags = state.tags.filter(t => t !== tag);
+    else state.tags.push(tag);
+  })
+);
+
+// --- Start ---
+document.getElementById('start').addEventListener('click', () => go(1));
+document.getElementById('nav-back-1').addEventListener('click', () => go(0));
+
+// --- Toolbar ---
+document.querySelectorAll('#toolbar button[data-cmd]').forEach(btn =>
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    const cmd = btn.dataset.cmd;
+    const val = btn.dataset.val || null;
+    document.execCommand(cmd, false, val);
+    editor.focus();
+    updateToolbar();
+  })
+);
+
+// --- Éditeur ---
+const editor = document.getElementById('editor');
+const charCount = document.getElementById('char-count');
+const sendBtn = document.getElementById('btn-send');
+
+function updateToolbar() {
+  document.querySelectorAll('#toolbar button[data-cmd]').forEach(btn => {
+    const cmd = btn.dataset.cmd;
+    if (['bold', 'italic', 'underline', 'insertUnorderedList', 'insertOrderedList'].includes(cmd)) {
+      btn.classList.toggle('active', document.queryCommandState(cmd));
+    }
+  });
+}
+
+editor.addEventListener('input', () => {
+  const text = editor.innerText.trim();
+  charCount.textContent = text.length;
+  sendBtn.disabled = text.length < 10;
+});
+
+editor.addEventListener('keyup', updateToolbar);
+editor.addEventListener('mouseup', updateToolbar);
+
+// Coller en texte enrichi (garder le gras/italique mais pas les styles externes)
+editor.addEventListener('paste', e => {
+  e.preventDefault();
+  const html = e.clipboardData.getData('text/html');
+  const text = e.clipboardData.getData('text/plain');
+  if (html) {
+    // Nettoyer le HTML : garder seulement les balises simples
+    const clean = html
+      .replace(/<style[\s\S]*?<\/style>/gi, '')
+      .replace(/ style="[^"]*"/gi, '')
+      .replace(/ class="[^"]*"/gi, '');
+    document.execCommand('insertHTML', false, clean);
+  } else {
+    document.execCommand('insertText', false, text);
+  }
+});
+
+// --- Envoi ---
+sendBtn.addEventListener('click', async () => {
+  const content = editor.innerHTML.trim();
+  if (editor.innerText.trim().length < 10) return;
+
+  const original = sendBtn.textContent;
+  sendBtn.disabled = true;
+  sendBtn.textContent = 'Envoi en cours…';
+
+  try {
+    await API.submit({
+      type: 'feedback_ecrit',
+      ts: new Date().toISOString(),
+      role: state.role,
+      tags: state.tags,
+      titre: document.getElementById('fb-title').value.trim() || null,
+      contenu_html: content,
+      contenu_texte: editor.innerText.trim(),
+    });
+    document.getElementById('merci-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  } catch (err) {
+    sendBtn.disabled = false;
+    sendBtn.textContent = original;
+    console.error('Erreur envoi:', err);
+  }
+});
+
+function closeMerci() {
+  document.getElementById('merci-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+go(0);
+</script>
+</body>
+</html>
