@@ -3,7 +3,7 @@
    ============================================ */
 
 // État des filtres
-const F = { type: 'tous', act: 'tous', who: 'tous', period: 6, coach: 'yoga' };
+const F = { type: 'tous', act: 'tous', who: 'tous', period: 12, coach: 'yoga' };
 
 /** Bind un groupe de filtres sur un état + re-render */
 function bindFilter(id, key, parse) {

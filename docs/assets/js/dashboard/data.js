@@ -52,17 +52,11 @@ function aggregateData() {
   D.npsLucidite = monthlyNPS(membres_l);
   D.npsGlobal = monthlyNPS(allMembres);
 
-  // NPS répartition (dernier mois)
-  const allNps = all.map(r => r.nps).filter(n => n !== null && n !== undefined);
-  if (allNps.length > 0) {
-    const promo = allNps.filter(n => n >= 9).length;
-    const passif = allNps.filter(n => n >= 7 && n < 9).length;
-    const detrac = allNps.filter(n => n < 7).length;
-    const total = allNps.length;
-    D.npsPromo = [Math.round(promo / total * 100)];
-    D.npsPassif = [Math.round(passif / total * 100)];
-    D.npsDetrac = [Math.round(detrac / total * 100)];
-  }
+  // NPS répartition par mois (aligné sur 12 mois)
+  const npsRepart = monthlyNPSRepart(all);
+  D.npsPromo = npsRepart.promo;
+  D.npsPassif = npsRepart.passif;
+  D.npsDetrac = npsRepart.detrac;
 
   // --- Énergie avant/après ---
   D.energieAvant = monthlyAvg(membres_e, r => r.echelles && r.echelles.avant);
@@ -333,6 +327,35 @@ function npsScore(notes) {
   const promo = notes.filter(n => n >= 9).length;
   const detrac = notes.filter(n => n < 7).length;
   return Math.round((promo - detrac) / notes.length * 100);
+}
+
+/** Répartition NPS par mois (promoteurs/passifs/détracteurs en %) */
+function monthlyNPSRepart(responses) {
+  const buckets = {};
+  responses.forEach(r => {
+    if (r.nps === null || r.nps === undefined) return;
+    const ts = r.ts || r.ts_server;
+    if (!ts) return;
+    const d = new Date(ts);
+    const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+    if (!buckets[key]) buckets[key] = [];
+    buckets[key].push(r.nps);
+  });
+  const months = getLast12MonthKeys();
+  return {
+    promo: months.map(k => {
+      if (!buckets[k]) return null;
+      return Math.round(buckets[k].filter(n => n >= 9).length / buckets[k].length * 100);
+    }),
+    passif: months.map(k => {
+      if (!buckets[k]) return null;
+      return Math.round(buckets[k].filter(n => n >= 7 && n < 9).length / buckets[k].length * 100);
+    }),
+    detrac: months.map(k => {
+      if (!buckets[k]) return null;
+      return Math.round(buckets[k].filter(n => n < 7).length / buckets[k].length * 100);
+    }),
+  };
 }
 
 /** Score NPS par mois — retourne un tableau aligné sur les 12 derniers mois */

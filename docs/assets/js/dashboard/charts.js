@@ -55,6 +55,29 @@ function hasData(arr) {
   return arr && arr.some(v => v !== null && v !== undefined);
 }
 
+/** Retourne les labels mois + données tronqués pour ne garder que depuis le premier mois avec données */
+function trimToData(mois, ...dataArrays) {
+  // Trouver le premier index qui a au moins une donnée non-null dans n'importe quel dataset
+  let firstIdx = mois.length;
+  dataArrays.forEach(arr => {
+    if (!arr) return;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] !== null && arr[i] !== undefined && i < firstIdx) {
+        firstIdx = i;
+        break;
+      }
+    }
+  });
+  if (firstIdx >= mois.length) return { labels: mois, start: 0 };
+  return { labels: mois.slice(firstIdx), start: firstIdx };
+}
+
+/** Tronque un tableau de données en cohérence avec trimToData */
+function trimData(arr, start) {
+  if (!arr) return [];
+  return arr.slice(start);
+}
+
 /** Texte HTML pour un élément */
 function txt(id, v) {
   const el = document.getElementById(id);
@@ -520,15 +543,23 @@ function renderNPS(mois, m, isTous, isEnergie, isLucidite) {
     return;
   }
 
+  // Trouver les données à afficher et tronquer aux mois avec data
+  const allSeries = [
+    (isTous || isEnergie) && hasEnergie ? last(D.npsEnergie, m) : null,
+    (isTous || isLucidite) && hasLucidite ? last(D.npsLucidite, m) : null,
+    isTous && hasData(D.npsGlobal) ? last(D.npsGlobal, m) : null,
+  ].filter(Boolean);
+  const t = trimToData(mois, ...allSeries);
+
   const datasets = [];
   if ((isTous || isEnergie) && hasEnergie) {
-    datasets.push(lineds('Énergie', last(D.npsEnergie, m), C.energie));
+    datasets.push(lineds('Énergie', trimData(last(D.npsEnergie, m), t.start), C.energie));
   }
   if ((isTous || isLucidite) && hasLucidite) {
-    datasets.push(lineds('Lucidité', last(D.npsLucidite, m), C.lucidite));
+    datasets.push(lineds('Lucidité', trimData(last(D.npsLucidite, m), t.start), C.lucidite));
   }
   if (isTous && hasData(D.npsGlobal)) {
-    datasets.push(lineds('Global', last(D.npsGlobal, m), C.sage, true));
+    datasets.push(lineds('Global', trimData(last(D.npsGlobal, m), t.start), C.sage, true));
   }
   if (datasets.length === 0) {
     emptyStateCanvas('c-nps', 'Les données apparaîtront ici dès les premiers retours.');
@@ -536,46 +567,51 @@ function renderNPS(mois, m, isTous, isEnergie, isLucidite) {
   }
   mk('c-nps', {
     type: 'line',
-    data: { labels: mois, datasets },
-    options: lineOpts(30, 100),
+    data: { labels: t.labels, datasets },
+    options: lineOpts(-100, 100),
   });
 }
 
 
 /* ---- Énergie avant/après ---- */
 function renderEnergie(mois, m) {
-  if (D.energieAvant.length === 0) {
+  const av = last(D.energieAvant, m);
+  const ap = last(D.energieApres, m);
+  if (!hasData(av) && !hasData(ap)) {
     emptyStateCanvas('c-energie', 'Les données apparaîtront ici dès les premiers retours.');
     return;
   }
+  const t = trimToData(mois, av, ap);
   mk('c-energie', {
     type: 'line',
     data: {
-      labels: mois,
+      labels: t.labels,
       datasets: [
-        lineds('Avant séance', last(D.energieAvant, m), C.bad),
-        lineds('Après séance', last(D.energieApres, m), C.good),
+        lineds('Avant séance', trimData(av, t.start), C.bad),
+        lineds('Après séance', trimData(ap, t.start), C.good),
       ],
     },
-    options: lineOpts(2, 10),
+    options: lineOpts(0, 10),
   });
 }
 
 
 /* ---- Répartition NPS ---- */
 function renderRepart(mois, m) {
-  if (D.npsPromo.length === 0) {
+  const pr = last(D.npsPromo, m);
+  if (!hasData(pr)) {
     emptyStateCanvas('c-repart', 'Les données apparaîtront ici dès les premiers retours.');
     return;
   }
+  const tR = trimToData(mois, last(D.npsPromo, m), last(D.npsPassif, m), last(D.npsDetrac, m));
   mk('c-repart', {
     type: 'bar',
     data: {
-      labels: mois,
+      labels: tR.labels,
       datasets: [
-        { label: 'Promoteurs (9-10)', data: last(D.npsPromo, m), backgroundColor: C.good + 'CC', borderRadius: 3 },
-        { label: 'Passifs (7-8)', data: last(D.npsPassif, m), backgroundColor: C.mid + 'CC', borderRadius: 3 },
-        { label: 'Détracteurs (0-6)', data: last(D.npsDetrac, m), backgroundColor: C.bad + 'CC', borderRadius: 3 },
+        { label: 'Promoteurs (9-10)', data: trimData(last(D.npsPromo, m), tR.start), backgroundColor: C.good + 'CC', borderRadius: 3 },
+        { label: 'Passifs (7-8)', data: trimData(last(D.npsPassif, m), tR.start), backgroundColor: C.mid + 'CC', borderRadius: 3 },
+        { label: 'Détracteurs (0-6)', data: trimData(last(D.npsDetrac, m), tR.start), backgroundColor: C.bad + 'CC', borderRadius: 3 },
       ],
     },
     options: {
