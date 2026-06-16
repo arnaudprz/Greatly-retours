@@ -2,6 +2,13 @@
    Greatly — Vos retours · Console admin
    ============================================ */
 
+/** Échappe le HTML pour prévenir les injections XSS */
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 // --- Données démo ---
 const DEMO_PEOPLE = [
   { firstname: 'Arnaud', lastname: 'P.', email: 'arnaud@greatly.fr', role: 'Super-admin', status: 'actif', lastLogin: '15 juin 2026' },
@@ -75,15 +82,15 @@ function renderPeopleTable(people) {
         ${people.map(p => `
           <tr style="border-bottom:1px solid var(--line)">
             <td style="padding:10px 8px">
-              <div style="font-weight:600">${p.firstname} ${p.lastname}</div>
-              <div style="font-size:.76rem;color:var(--warm-grey)">${p.email}</div>
+              <div style="font-weight:600">${escapeHtml(p.firstname)} ${escapeHtml(p.lastname)}</div>
+              <div style="font-size:.76rem;color:var(--warm-grey)">${escapeHtml(p.email)}</div>
             </td>
-            <td style="padding:10px 8px"><span class="tag" style="${roleColor(p.role)}">${p.role}</span></td>
-            <td style="padding:10px 8px">${statusDot(p.status)} ${p.status}</td>
-            <td style="padding:10px 8px;color:var(--warm-grey)">${p.lastLogin}</td>
+            <td style="padding:10px 8px"><span class="tag" style="${roleColor(p.role)}">${escapeHtml(p.role)}</span></td>
+            <td style="padding:10px 8px">${statusDot(p.status)} ${escapeHtml(p.status)}</td>
+            <td style="padding:10px 8px;color:var(--warm-grey)">${escapeHtml(p.lastLogin)}</td>
             <td style="padding:10px 8px;text-align:right">
-              ${p.status === 'invité' ? `<button class="btn-ghost" style="padding:6px 12px;font-size:.78rem" onclick="adminAction('resend','${p.email}')">Relancer</button>` : ''}
-              ${p.status === 'actif' ? `<button class="btn-ghost" style="padding:6px 12px;font-size:.78rem" onclick="adminAction('suspend','${p.email}','Suspendre l\\'accès de ${p.firstname} ?')">Suspendre</button>` : ''}
+              ${p.status === 'invité' ? `<button class="btn-ghost" style="padding:6px 12px;font-size:.78rem" onclick="adminAction('resend','${escapeHtml(p.email)}')">Relancer</button>` : ''}
+              ${p.status === 'actif' ? `<button class="btn-ghost" style="padding:6px 12px;font-size:.78rem" onclick="adminAction('suspend','${escapeHtml(p.email)}','Suspendre l\\'accès de ${escapeHtml(p.firstname)} ?')">Suspendre</button>` : ''}
             </td>
           </tr>
         `).join('')}
@@ -104,12 +111,12 @@ function renderPendingRequests(requests) {
   container.innerHTML = requests.map(r => `
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)">
       <div>
-        <div style="font-weight:600;font-size:.9rem">${r.name}</div>
-        <div style="font-size:.78rem;color:var(--warm-grey)">${r.email} · ${r.role} · ${r.scope}</div>
+        <div style="font-weight:600;font-size:.9rem">${escapeHtml(r.name)}</div>
+        <div style="font-size:.78rem;color:var(--warm-grey)">${escapeHtml(r.email)} · ${escapeHtml(r.role)} · ${escapeHtml(r.scope)}</div>
       </div>
       <div style="display:flex;gap:6px">
-        <button class="btn-solid" style="padding:7px 14px;font-size:.8rem" onclick="adminAction('approve','${r.email}')">Accepter</button>
-        <button class="btn-ghost" style="padding:7px 14px;font-size:.8rem" onclick="adminAction('reject','${r.email}','Refuser la demande de ${r.name} ?')">Refuser</button>
+        <button class="btn-solid" style="padding:7px 14px;font-size:.8rem" onclick="adminAction('approve','${escapeHtml(r.email)}')">Accepter</button>
+        <button class="btn-ghost" style="padding:7px 14px;font-size:.8rem" onclick="adminAction('reject','${escapeHtml(r.email)}','Refuser la demande de ${escapeHtml(r.name)} ?')">Refuser</button>
       </div>
     </div>
   `).join('');
@@ -121,10 +128,10 @@ function renderActivityLog(log) {
 
   container.innerHTML = log.map(l => `
     <div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.83rem">
-      <span style="color:var(--warm-grey);white-space:nowrap;min-width:100px">${l.date}</span>
-      <span style="font-weight:600">${l.action}</span>
-      <span>${l.who}</span>
-      <span style="color:var(--warm-grey)">${l.detail}</span>
+      <span style="color:var(--warm-grey);white-space:nowrap;min-width:100px">${escapeHtml(l.date)}</span>
+      <span style="font-weight:600">${escapeHtml(l.action)}</span>
+      <span>${escapeHtml(l.who)}</span>
+      <span style="color:var(--warm-grey)">${escapeHtml(l.detail)}</span>
     </div>
   `).join('');
 }
