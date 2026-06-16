@@ -7,74 +7,113 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=38">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=38">
+<link rel="stylesheet" href="assets/css/shared.css?v=39">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=39">
 </head>
 <body>
 
-<!-- ÉCRAN DE CONNEXION -->
+<!-- ÉCRAN D'ACCUEIL -->
 <div id="gate">
-  <div class="brand">Greatly · Espace équipe</div>
-  <h1>Vos retours</h1>
 
-  <div class="panels">
-    <!-- Panneau connexion -->
-    <div class="panel active" id="panel-login">
-      <input type="password" placeholder="Mot de passe équipe" id="pwd">
-      <div id="login-error" style="display:none;color:var(--bad);font-size:.82rem;margin-bottom:8px"></div>
-      <button class="btn-solid" id="btn-login" onclick="login()">Entrer</button>
-      <div>
-        <span class="panel-link" onclick="showPanel('forgot')">Mot de passe oublié</span>
-        <span style="color:var(--line);margin:0 6px">·</span>
-        <span class="panel-link" onclick="showPanel('request')">Demander un accès</span>
+  <!-- Hero -->
+  <div class="gate-hero">
+    <div class="brand">Greatly</div>
+    <h1>Vos retours</h1>
+    <p class="gate-lead">Cet espace rassemble les ressentis partagés par les membres et les intervenants après chaque séance. Il nous aide à comprendre ce qui se vit, à repérer ce qui peut évoluer, et à ajuster le programme au plus près de vos besoins.</p>
+    <div class="gate-ctas">
+      <button class="btn-solid" onclick="showPanel('login')">Se connecter</button>
+      <button class="btn-ghost" onclick="showPanel('request')">Demander un accès</button>
+    </div>
+  </div>
+
+  <!-- Features preview -->
+  <div class="gate-features">
+    <div class="gate-feat">
+      <div class="gate-feat-icon">📊</div>
+      <h3>Suivre ce qui compte</h3>
+      <p>Score de recommandation, énergie ressentie, qualité des échanges — chaque dimension est mesurée et suivie dans le temps.</p>
+    </div>
+    <div class="gate-feat">
+      <div class="gate-feat-icon">💬</div>
+      <h3>Écouter les mots</h3>
+      <p>Les verbatims donnent accès aux ressentis bruts, sans filtre. Ce que les membres emportent avec eux, ce qui les a marqués.</p>
+    </div>
+    <div class="gate-feat">
+      <div class="gate-feat-icon">🎯</div>
+      <h3>Ajuster le programme</h3>
+      <p>Repérer les signaux faibles, identifier ce qui fonctionne, faire évoluer le programme au bon rythme — séance après séance.</p>
+    </div>
+    <div class="gate-feat">
+      <div class="gate-feat-icon">🤍</div>
+      <h3>100 % anonyme</h3>
+      <p>Aucun nom n'est demandé, aucune réponse n'est rattachée à une personne. Les retours sont agrégés, jamais individuels.</p>
+    </div>
+  </div>
+
+  <!-- Panneaux (login / forgot / request) -->
+  <div class="gate-panels">
+    <div class="panels">
+      <!-- Panneau connexion -->
+      <div class="panel" id="panel-login">
+        <h3>Se connecter</h3>
+        <p class="panel-sub">Entrez le mot de passe qui vous a été communiqué par l'équipe Greatly.</p>
+        <input type="password" placeholder="Mot de passe" id="pwd">
+        <div id="login-error" style="display:none;color:var(--bad);font-size:.82rem;margin-bottom:8px"></div>
+        <button class="btn-solid" id="btn-login" onclick="login()">Entrer</button>
+        <div class="panel-links">
+          <span class="panel-link" onclick="showPanel('forgot')">Mot de passe oublié ?</span>
+          <span style="color:var(--line);margin:0 6px">·</span>
+          <span class="panel-link" onclick="showPanel('request')">Demander un accès</span>
+        </div>
       </div>
-    </div>
 
-    <!-- Panneau mot de passe oublié -->
-    <div class="panel" id="panel-forgot">
-      <h3 style="font-size:1rem;margin-bottom:12px">Réinitialiser votre mot de passe</h3>
-      <input type="email" placeholder="Votre email" id="forgot-email">
-      <button class="btn-solid" onclick="forgotPassword()">Envoyer le lien</button>
-      <span class="panel-link" onclick="showPanel('login')">← Retour</span>
-    </div>
-
-    <!-- Confirmation mot de passe oublié -->
-    <div class="panel" id="panel-forgot-confirm">
-      <div class="confirm-msg">
-        <div class="ico">✉️</div>
-        <h3 style="font-size:1rem;margin-bottom:8px">Email envoyé</h3>
-        <p style="font-size:.88rem;color:var(--warm-grey)">Si un compte est associé à cette adresse, vous recevrez un lien de réinitialisation valable 1 heure.</p>
+      <!-- Panneau mot de passe oublié -->
+      <div class="panel" id="panel-forgot">
+        <h3>Mot de passe oublié</h3>
+        <p class="panel-sub">Renseignez l'email associé à votre compte. Si un accès existe, vous recevrez un lien de réinitialisation.</p>
+        <input type="email" placeholder="Votre email" id="forgot-email">
+        <button class="btn-solid" onclick="forgotPassword()">Envoyer le lien</button>
         <span class="panel-link" onclick="showPanel('login')">← Retour à la connexion</span>
       </div>
-    </div>
 
-    <!-- Panneau demande d'accès -->
-    <div class="panel" id="panel-request">
-      <h3 style="font-size:1rem;margin-bottom:12px">Demander un accès</h3>
-      <input type="text" placeholder="Votre nom" id="req-name">
-      <input type="email" placeholder="Votre email" id="req-email">
-      <input type="text" placeholder="Votre fonction" id="req-role">
-      <select id="req-scope">
-        <option value="">Accès souhaité…</option>
-        <option value="Tout le dashboard">Tout le dashboard</option>
-        <option value="Parcours Énergie">Parcours Énergie</option>
-        <option value="Parcours Lucidité">Parcours Lucidité</option>
-      </select>
-      <textarea id="req-message" placeholder="Motif de la demande (facultatif)" style="min-height:60px;margin-bottom:10px"></textarea>
-      <button class="btn-solid" onclick="requestAccess()">Envoyer la demande</button>
-      <span class="panel-link" onclick="showPanel('login')">← Retour</span>
-    </div>
+      <!-- Confirmation mot de passe oublié -->
+      <div class="panel" id="panel-forgot-confirm">
+        <div class="confirm-msg">
+          <div class="ico">✉️</div>
+          <h3>Email envoyé</h3>
+          <p>Si un compte est associé à cette adresse, vous recevrez un lien de réinitialisation valable 1 heure.</p>
+          <span class="panel-link" onclick="showPanel('login')">← Retour à la connexion</span>
+        </div>
+      </div>
 
-    <!-- Confirmation demande d'accès -->
-    <div class="panel" id="panel-request-confirm">
-      <div class="confirm-msg">
-        <div class="ico">🤍</div>
-        <h3 style="font-size:1rem;margin-bottom:8px">Demande envoyée</h3>
-        <p style="font-size:.88rem;color:var(--warm-grey)">Votre demande a été transmise. Vous recevrez un email une fois votre accès validé.</p>
-        <span class="panel-link" onclick="showPanel('login')">← Retour à la connexion</span>
+      <!-- Panneau demande d'accès -->
+      <div class="panel" id="panel-request">
+        <h3>Demander un accès</h3>
+        <p class="panel-sub">Remplissez ce formulaire et nous reviendrons vers vous rapidement. L'accès est réservé à l'équipe Greatly et aux intervenants.</p>
+        <div style="display:flex;gap:8px">
+          <input type="text" placeholder="Prénom" id="req-firstname" style="flex:1">
+          <input type="text" placeholder="Nom" id="req-lastname" style="flex:1">
+        </div>
+        <input type="email" placeholder="Email" id="req-email">
+        <input type="text" placeholder="Votre fonction (coach, coordinatrice, équipe Greatly…)" id="req-role">
+        <textarea id="req-message" placeholder="Quelques mots sur votre demande (facultatif)" style="min-height:60px;margin-bottom:10px"></textarea>
+        <button class="btn-solid" onclick="requestAccess()">Envoyer ma demande</button>
+        <span class="panel-link" onclick="showPanel('login')">← J'ai déjà un accès</span>
+      </div>
+
+      <!-- Confirmation demande d'accès -->
+      <div class="panel" id="panel-request-confirm">
+        <div class="confirm-msg">
+          <div class="ico">🤍</div>
+          <h3>Demande envoyée</h3>
+          <p>Votre demande a été transmise à l'équipe Greatly. Vous recevrez un email dès que votre accès sera validé.</p>
+          <span class="panel-link" onclick="showPanel('login')">← Retour à la connexion</span>
+        </div>
       </div>
     </div>
   </div>
+
+  <div class="gate-foot">GREATLY · 10 rue de Lambersart, Verlinghem</div>
 </div>
 
 <!-- ONBOARDING (première connexion) -->
@@ -745,15 +784,15 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=38"></script>
-<script src="assets/js/api.js?v=38"></script>
-<script src="assets/js/dashboard/filters.js?v=38"></script>
-<script src="assets/js/dashboard/charts.js?v=38"></script>
-<script src="assets/js/dashboard/auth.js?v=38"></script>
-<script src="assets/js/dashboard/data.js?v=38"></script>
-<script src="assets/js/dashboard/admin.js?v=38"></script>
-<script src="assets/js/dashboard/alerts.js?v=38"></script>
-<script src="assets/js/dashboard/chat.js?v=38"></script>
+<script src="assets/js/config.js?v=39"></script>
+<script src="assets/js/api.js?v=39"></script>
+<script src="assets/js/dashboard/filters.js?v=39"></script>
+<script src="assets/js/dashboard/charts.js?v=39"></script>
+<script src="assets/js/dashboard/auth.js?v=39"></script>
+<script src="assets/js/dashboard/data.js?v=39"></script>
+<script src="assets/js/dashboard/admin.js?v=39"></script>
+<script src="assets/js/dashboard/alerts.js?v=39"></script>
+<script src="assets/js/dashboard/chat.js?v=39"></script>
 <script>
 // Navigation principale (navbar)
 // Navigation principale (navbar views)

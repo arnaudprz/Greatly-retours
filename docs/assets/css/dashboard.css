@@ -4,18 +4,99 @@
 
 .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 22px 80px; }
 
-/* --- Gate (connexion) --- */
-#gate { max-width: 420px; margin: 10vh auto; text-align: center; padding: 0 20px; }
-#gate h1 {
+/* --- Gate (accueil) --- */
+#gate { max-width: 100%; }
+
+.gate-hero {
+  text-align: center;
+  padding: 60px 20px 40px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.gate-hero h1 {
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 400;
-  font-size: 1.7rem;
-  margin: 6px 0 18px;
+  font-size: 2.4rem;
+  letter-spacing: -.4px;
+  margin: 8px 0 16px;
 }
-#gate .hint { margin-top: 14px; font-size: .78rem; color: var(--warm-grey); }
+.gate-lead {
+  font-size: .95rem;
+  color: var(--warm-grey);
+  line-height: 1.6;
+  max-width: 480px;
+  margin: 0 auto 28px;
+}
+.gate-ctas {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.gate-ctas .btn-solid, .gate-ctas .btn-ghost {
+  padding: 14px 32px;
+  width: auto;
+}
+
+/* Features */
+.gate-features {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  max-width: 860px;
+  margin: 0 auto 48px;
+  padding: 0 20px;
+}
+.gate-feat {
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  padding: 22px 18px;
+  text-align: center;
+}
+.gate-feat-icon {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+.gate-feat h3 {
+  font-size: .9rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.gate-feat p {
+  font-size: .8rem;
+  color: var(--warm-grey);
+  line-height: 1.45;
+}
+@media (max-width: 700px) {
+  .gate-features { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 440px) {
+  .gate-features { grid-template-columns: 1fr; }
+  .gate-ctas { flex-direction: column; }
+}
+
+/* Panels */
+.gate-panels {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+  text-align: center;
+}
 #gate .panels { position: relative; }
 #gate .panel { display: none; }
 #gate .panel.active { display: block; }
+#gate .panel h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: 1.3rem;
+  margin-bottom: 6px;
+}
+#gate .panel .panel-sub {
+  font-size: .85rem;
+  color: var(--warm-grey);
+  margin-bottom: 16px;
+  line-height: 1.45;
+}
 #gate .panel-link {
   display: inline-block;
   margin-top: 14px;
@@ -26,6 +107,7 @@
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+#gate .panel-links { margin-top: 16px; }
 #gate .confirm-msg {
   text-align: center;
   padding: 30px 10px;
@@ -41,20 +123,15 @@
   font-size: 1.5rem;
   margin: 0 auto 14px;
 }
-#gate input { margin-bottom: 10px; text-align: center; }
-#gate select {
-  width: 100%;
-  padding: 14px 15px;
-  border: 1.5px solid var(--line);
-  border-radius: 12px;
-  font-family: inherit;
-  font-size: 16px;
-  background: #fff;
-  color: var(--ink);
-  margin-bottom: 10px;
-  appearance: none;
-}
+#gate .confirm-msg p { font-size: .88rem; color: var(--warm-grey); }
+#gate input { margin-bottom: 10px; }
 #gate .btn-solid { width: 100%; margin-top: 4px; }
+.gate-foot {
+  text-align: center;
+  padding: 20px;
+  font-size: .76rem;
+  color: var(--warm-grey);
+}
 
 /* --- Header dashboard --- */
 #app { display: none; }

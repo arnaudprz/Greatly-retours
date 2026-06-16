@@ -146,14 +146,18 @@ async function forgotPassword() {
 
 /** Demande d'accès */
 async function requestAccess() {
+  const firstname = document.getElementById('req-firstname').value.trim();
+  const lastname = document.getElementById('req-lastname').value.trim();
+  const email = document.getElementById('req-email').value.trim();
+  const role = document.getElementById('req-role').value.trim();
+  const message = document.getElementById('req-message').value.trim();
+
+  if (!firstname || !lastname || !email) return;
+
   const form = {
-    name: document.getElementById('req-name').value,
-    email: document.getElementById('req-email').value,
-    role: document.getElementById('req-role').value,
-    scope: document.getElementById('req-scope').value,
-    message: document.getElementById('req-message').value,
+    name: firstname + ' ' + lastname,
+    firstname, lastname, email, role, message,
   };
-  if (!form.name || !form.email) return;
 
   if (!CONFIG.DEMO_MODE) {
     try { await API.requestAccess(form); } catch (_) {}
