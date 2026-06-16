@@ -956,17 +956,19 @@ function renderLieux() {
     txt('lx-sport', '—');
   }
 
-  // Vue d'ensemble (horizontal bar)
-  if (D.lieuxNotes.length === 0) {
+  // Vue d'ensemble (horizontal bar) — ne montrer que les lieux avec des données
+  const lieuxFiltered = D.lieuxNoms.map((n, i) => ({ name: n, val: D.lieuxNotes[i] })).filter(l => l.val > 0);
+  if (lieuxFiltered.length === 0) {
     emptyStateCanvas('c-lieux-overview', 'Pas encore de retours sur les lieux.');
   } else {
+    const colors = [C.sage + 'CC', C.lucidite + 'AA', C.energie + 'AA'];
     mk('c-lieux-overview', {
       type: 'bar',
       data: {
-        labels: D.lieuxNoms,
+        labels: lieuxFiltered.map(l => l.name),
         datasets: [{
-          data: D.lieuxNotes,
-          backgroundColor: [C.sage + 'CC', C.lucidite + 'AA', C.energie + 'AA'],
+          data: lieuxFiltered.map(l => l.val),
+          backgroundColor: lieuxFiltered.map((_, i) => colors[i % colors.length]),
           borderRadius: 6,
         }],
       },
