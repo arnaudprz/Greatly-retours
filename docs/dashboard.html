@@ -278,12 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
         <button data-v="intervenants">Les intervenants</button>
       </div>
       <a href="guide.html#filtres" target="_blank" class="help-link" style="align-self:center">?</a>
-      <!-- Filtre période masqué pour le moment (pas assez de données) -->
-      <div class="fgroup" id="f-period" style="display:none">
-        <button data-v="3">3 mois</button>
-        <button class="on" data-v="12">12 mois</button>
-        <button data-v="12">12 mois</button>
-      </div>
     </div>
 
     <!-- Contenu standard (masqué en vue Lieux) -->
@@ -863,7 +857,7 @@ document.querySelectorAll('#nav-act-wrap .navbar-dropdown button[data-act]').for
     render();
   });
 });
-bindFilter('f-period', 'period', v => +v);
+// bindFilter('f-period') retiré — on rajoutera quand il y aura assez de données
 bindFilter('f-coach', 'coach');
 
 // Enter sur le champ email de connexion

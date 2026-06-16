@@ -357,7 +357,7 @@ function render() {
   // Filtres secondaires
   show('nav-act-wrap', isStandard);
   show('f-who', true);
-  show('f-period', true);
+  // f-period retiré (pas assez de données pour le moment)
 
   // Masquer verbatims/alertes/feedbacks hors vue standard
   if (!isStandard) {
