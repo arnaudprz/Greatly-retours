@@ -2,8 +2,9 @@
    Greatly — Vos retours · Filtres du dashboard
    ============================================ */
 
-// État des filtres
-const F = { type: 'tous', act: 'tous', who: 'tous', period: 12, coach: 'yoga' };
+// État des filtres — 5 onglets plats, 1 par source de retours
+// who : membres | intervenants | prospects | greatly | greatlyhouse
+const F = { who: 'membres', period: 12 };
 
 /** Bind un groupe de filtres sur un état + re-render */
 function bindFilter(id, key, parse) {

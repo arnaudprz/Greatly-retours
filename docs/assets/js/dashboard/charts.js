@@ -129,15 +129,24 @@ function emptyStateCanvas(canvasId, message) {
    DONNÉES (vides — alimentées par l'API)
    ============================================= */
 
-// Générer les 12 derniers mois dynamiquement à partir de la date actuelle
+// Axe temporel : on démarre à juin 2026 (lancement du programme) et on s'arrête au mois courant
 const MOIS_NOMS = ['Janv.', 'Févr.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'];
+const PROGRAM_START_YEAR = 2026;
+const PROGRAM_START_MONTH = 5; // juin (0-indexé)
 const MOIS = (() => {
   const now = new Date();
+  const endYear = now.getFullYear();
+  const endMonth = now.getMonth();
   const result = [];
-  for (let i = 11; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    result.push(MOIS_NOMS[d.getMonth()]);
+  let y = PROGRAM_START_YEAR;
+  let m = PROGRAM_START_MONTH;
+  while (y < endYear || (y === endYear && m <= endMonth)) {
+    result.push(MOIS_NOMS[m]);
+    m++;
+    if (m > 11) { m = 0; y++; }
   }
+  // Filet : on garantit au moins juin 2026 si la date courante est antérieure (cas dev)
+  if (result.length === 0) result.push(MOIS_NOMS[PROGRAM_START_MONTH]);
   return result;
 })();
 
@@ -146,6 +155,13 @@ const D = {
   npsEnergie:   [],
   npsLucidite:  [],
   npsGlobal:    [],
+
+  // --- Recommandation par canal & par audience (cards de tête, filtrées par F.who) ---
+  npsCards: {
+    energie:  { tous: [], membres: [], intervenants: [] },
+    lucidite: { tous: [], membres: [], intervenants: [] },
+    house:    { tous: [], membres: [], intervenants: [] },
+  },
 
   // --- Énergie avant/après (0-10) ---
   energieAvant: [],
@@ -340,37 +356,26 @@ function sparkOpts() {
    ============================================= */
 
 function render() {
-  const isLieux = F.type === 'lieux';
-  const isProspect = F.type === 'prospect';
-  const isIvGreatly = F.type === 'ivgreatly';
-  const isEnergie = F.type === 'energie';
-  const isLucidite = F.type === 'lucidite';
-  const isTous = F.type === 'tous';
-  const isStandard = !isLieux && !isProspect && !isIvGreatly;
+  // 5 onglets plats. Chaque onglet = une source de retours = une section dédiée.
+  const who = F.who;
+  const isMembres      = who === 'membres';
+  const isIntervenants = who === 'intervenants';
+  const isProspects    = who === 'prospects';
+  const isGreatly      = who === 'greatly';       // intervenants × Greatly
+  const isGreatlyHouse = who === 'greatlyhouse';  // form greatlyhouse.html
 
-  // Basculer entre les sections
+  // standard-section sert membres ET intervenants (montre tout ce que le form recueille)
+  const isStandard = isMembres || isIntervenants;
+
   show('standard-section', isStandard);
-  show('lieux-section', isLieux);
-  show('prospect-section', isProspect);
-  show('ivgreatly-section', isIvGreatly);
+  show('prospect-section', isProspects);
+  show('ivgreatly-section', isGreatly);
+  show('lieux-section', isGreatlyHouse);
 
-  // Filtres secondaires
-  show('nav-act-wrap', isStandard);
-  show('f-who', true);
-  // f-period retiré (pas assez de données pour le moment)
-
-  // Masquer verbatims/alertes/feedbacks hors vue standard
-  if (!isStandard) {
-    show('card-verbatims', false);
-    show('card-feedbacks', false);
-    show('card-alerts', false);
-  }
-
-  // Sous-sections selon le filtre actif
-  if (isStandard) renderStandard(isTous, isEnergie, isLucidite);
-  if (isLieux) renderLieux();
-  if (isProspect) renderProspect();
-  if (isIvGreatly) renderIvGreatly();
+  if (isStandard) renderStandard(true, false, false); // overview de tout le form
+  if (isProspects) renderProspect();
+  if (isGreatly) renderIvGreatly();
+  if (isGreatlyHouse) renderLieux();
 }
 
 
@@ -378,158 +383,97 @@ function render() {
    VUE STANDARD (Tous / Énergie / Lucidité)
    ============================================= */
 
-function renderStandard(isTous, isEnergie, isLucidite) {
+function renderStandard(_isOverview, _isEnergie, _isLucidite) {
+  // Onglet plat : on montre TOUT ce que le formulaire de l'audience recueille.
+  // Membres : Énergie + Lucidité + lieux + sports + coach
+  // Intervenants : Énergie + Lucidité (vue intervenant), sans sports/coach (réservés aux membres)
   const m = F.period;
   const mois = last(MOIS, m);
   const isMembres = F.who === 'membres';
   const isIntervenants = F.who === 'intervenants';
 
-  // --- Masquer/afficher les cartes selon le filtre ---
-  show('card-energie',   (isTous || isEnergie) && !isIntervenants);
-  show('card-ateliers',  (isTous || isLucidite) && !isIntervenants);
-  show('card-sports',    (isTous || isEnergie) && !isIntervenants && F.act === 'tous');
-  show('card-phases-e',  (isTous || isEnergie) && !isIntervenants);
-  show('card-phases-l',  (isTous || isLucidite) && !isIntervenants);
-  show('card-lieux',     isTous && !isIntervenants);
-  show('kpi-ea',         (isTous || isEnergie) && !isIntervenants);
-  show('kpi-cl',         (isTous || isLucidite) && !isIntervenants);
-  show('card-perint',    (isTous || isEnergie) && !isIntervenants);
-  show('card-verbatims', !isIntervenants);
-  show('card-alerts',    !isMembres);
+  show('card-energie',   true);
+  show('card-ateliers',  !isIntervenants);
+  show('card-sports',    isMembres);
+  show('card-phases-e',  true);
+  show('card-phases-l',  true);
+  show('card-lieux',     isMembres);
+  show('card-perint',    isMembres);
+  show('card-verbatims', true);
+  show('card-alerts',    true);
 
   // --- KPIs ---
-  renderKPIs(isTous, isEnergie, isLucidite, m);
+  renderKPIs(true, false, false, m);
 
   // --- NPS évolution ---
-  renderNPS(mois, m, isTous, isEnergie, isLucidite);
+  renderNPS(mois, m, true, false, false);
 
   // --- Énergie avant/après ---
-  if (isTous || isEnergie) renderEnergie(mois, m);
+  renderEnergie(mois, m);
 
   // --- Répartition NPS ---
   renderRepart(mois, m);
 
   // --- NPS par atelier Lucidité ---
-  if (isTous || isLucidite) renderAteliers();
+  if (!isIntervenants) renderAteliers();
 
   // --- Yoga vs Padel ---
-  if (isTous || isEnergie) renderSports();
+  if (isMembres) renderSports();
 
   // --- Étapes Énergie ---
-  if (isTous || isEnergie) renderPhasesE();
+  renderPhasesE();
 
   // --- Étapes Lucidité ---
-  if (isTous || isLucidite) renderPhasesL();
+  renderPhasesL();
 
   // --- Détail par question ---
-  renderDetail(isTous, isEnergie, isLucidite, mois, m);
+  renderDetail(true, false, false, mois, m);
 
   // --- Par intervenant ---
-  renderCoach(mois, m);
+  if (isMembres) renderCoach(mois, m);
 
   // --- Les lieux (carte synthèse) ---
-  if (isTous) renderLieuxSynthese();
+  if (isMembres) renderLieuxSynthese();
 
   // --- Verbatims ---
-  if (!isIntervenants) renderVerbatims(isTous, isEnergie, isLucidite);
+  renderVerbatims(true, false, false);
 
   // --- Feedbacks écrits ---
   renderFeedbacksEcrits();
 
   // --- Alertes ---
-  if (!isMembres) renderAlertes();
+  renderAlertes();
 }
 
 
 /* ---- KPIs ---- */
 function renderKPIs(isTous, isEnergie, isLucidite, m) {
-  // NPS
-  const npsArr = isEnergie ? D.npsEnergie : isLucidite ? D.npsLucidite : D.npsGlobal;
-  const npsVal = last(npsArr, m).filter(v => v !== null);
-  if (npsVal.length === 0) {
-    txt('k-nps', '—');
-    txt('k-nps-d', '');
-  } else {
-    const npsCurr = npsVal[npsVal.length - 1];
-    const npsPrev = npsVal[0];
-    const npsDelta = npsCurr - npsPrev;
-    txt('k-nps', '+' + npsCurr);
-    txt('k-nps-d', (npsDelta >= 0 ? '+' : '') + npsDelta + ' pts');
-    const npsD = document.getElementById('k-nps-d');
-    if (npsD) {
-      npsD.className = npsDelta >= 0 ? 'up' : 'down';
-      npsD.style.color = npsDelta >= 0 ? C.good : C.bad;
+  // 3 cards de tête : Reco Énergie / Lucidité / Greatly House, filtrées par F.who
+  const audience = F.who; // 'tous' | 'membres' | 'intervenants'
+  ['energie', 'lucidite', 'house'].forEach(canal => {
+    const series = (D.npsCards[canal] && D.npsCards[canal][audience]) || [];
+    const vals = last(series, m).filter(v => v !== null);
+    const baseId = 'k-nps-' + canal;
+    if (vals.length === 0) {
+      txt(baseId, '—');
+      txt(baseId + '-d', '');
+      return;
     }
-  }
-
-  // Énergie avant → après
-  if (isTous || isEnergie) {
-    const avArr = last(D.energieAvant, m).filter(v => v !== null);
-    const apArr = last(D.energieApres, m).filter(v => v !== null);
-    if (avArr.length === 0 || apArr.length === 0) {
-      txt('k-ea', '—');
-      txt('k-ea-d', '');
-    } else {
-      const avMoy = avArr.reduce((a, b) => a + b, 0) / avArr.length;
-      const apMoy = apArr.reduce((a, b) => a + b, 0) / apArr.length;
-      txt('k-ea', fr(avMoy) + ' → ' + fr(apMoy));
-      txt('k-ea-d', '+' + fr(apMoy - avMoy));
+    const curr = vals[vals.length - 1];
+    const prev = vals[0];
+    const delta = curr - prev;
+    txt(baseId, '+' + curr);
+    txt(baseId + '-d', (delta >= 0 ? '+' : '') + delta + ' pts');
+    const dEl = document.getElementById(baseId + '-d');
+    if (dEl) {
+      dEl.className = delta >= 0 ? 'up' : 'down';
+      dEl.style.color = delta >= 0 ? C.good : C.bad;
     }
-  }
-
-  // Recul & clarté
-  if (isTous || isLucidite) {
-    if (D.qLucidite.length === 0) {
-      txt('k-cl', '—');
-    } else {
-      const clArr = last(D.qLucidite[0].data, m);
-      if (clArr.length === 0) {
-        txt('k-cl', '—');
-      } else {
-        const clMoy = clArr[clArr.length - 1];
-        txt('k-cl', fr(clMoy));
-      }
-    }
-  }
+  });
 
   // Taux de réponse
   txt('k-tx', '—');
   txt('k-tx-sub', 'Pas encore de réponses');
-
-  // Adapter les labels KPI selon le filtre
-  const kpiNpsEl = document.querySelector('.k-nps .lab');
-  if (kpiNpsEl) {
-    kpiNpsEl.textContent = isEnergie ? 'Recommandation Énergie' : isLucidite ? 'Recommandation Lucidité' : 'Recommandation';
-  }
-
-  // Adapter le KPI 2 selon filtre
-  const kpiEaLab = document.querySelector('#kpi-ea .lab');
-  if (kpiEaLab && isEnergie) kpiEaLab.textContent = 'Énergie avant → après';
-
-  // Adapter le KPI 3 selon filtre
-  const kpiClLab = document.querySelector('#kpi-cl .lab');
-  if (kpiClLab) {
-    if (isEnergie) kpiClLab.textContent = 'Plaisir à bouger';
-    else if (isLucidite) kpiClLab.textContent = 'Qualité des échanges';
-    else kpiClLab.textContent = 'Recul & clarté (Lucidité)';
-  }
-  if (isEnergie) {
-    if (D.qEnergie.length > 1) {
-      const plArr = last(D.qEnergie[1].data, F.period);
-      if (plArr.length > 0) txt('k-cl', fr(plArr[plArr.length - 1]));
-      else txt('k-cl', '—');
-    } else {
-      txt('k-cl', '—');
-    }
-  } else if (isLucidite) {
-    if (D.qLucidite.length > 1) {
-      const qeArr = last(D.qLucidite[1].data, F.period);
-      if (qeArr.length > 0) txt('k-cl', fr(qeArr[qeArr.length - 1]));
-      else txt('k-cl', '—');
-    } else {
-      txt('k-cl', '—');
-    }
-  }
 }
 
 
@@ -800,23 +744,43 @@ function renderDetail(isTous, isEnergie, isLucidite, mois, m) {
 
 /* ---- Par intervenant ---- */
 function renderCoach(mois, m) {
-  const data = F.coach === 'padel' ? D.coachPadel : D.coachYoga;
-  if (data.length === 0) {
+  // Histogramme : 2 séries (yoga + padel) en barres groupées par mois.
+  const yogaData = D.coachYoga;
+  const padelData = D.coachPadel;
+  const hasYoga = yogaData.length > 0;
+  const hasPadel = padelData.length > 0;
+
+  if (!hasYoga && !hasPadel) {
     emptyStateCanvas('c-coach', 'Les données apparaîtront ici dès les premiers retours.');
     return;
   }
-  const color = F.coach === 'padel' ? C.energie : C.lucidite;
-  const label = F.coach === 'padel' ? 'Coach Padel — Note moyenne' : 'Coach Yoga — Note moyenne';
-  const coachData = last(data, m);
-  const t = trimToData(mois, coachData);
+
+  const yoga = hasYoga ? last(yogaData, m) : [];
+  const padel = hasPadel ? last(padelData, m) : [];
+  const len = Math.max(yoga.length, padel.length);
+  const labels = last(mois, len);
+
+  const datasets = [];
+  if (hasYoga) datasets.push({
+    label: 'Coach Yoga', data: yoga,
+    backgroundColor: C.lucidite + '88', borderColor: C.lucidite, borderWidth: 1, borderRadius: 4,
+  });
+  if (hasPadel) datasets.push({
+    label: 'Coach Padel', data: padel,
+    backgroundColor: C.energie + '88', borderColor: C.energie, borderWidth: 1, borderRadius: 4,
+  });
 
   mk('c-coach', {
-    type: 'line',
-    data: {
-      labels: t.labels,
-      datasets: [lineds(label, trimData(coachData, t.start), color)],
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top' } },
+      scales: {
+        x: { grid: { display: false } },
+        y: { min: 0, max: 10, grid: { color: '#E7E1D720' } },
+      },
     },
-    options: lineOpts(6, 10),
   });
 }
 
@@ -1558,55 +1522,38 @@ function renderIvSeance(mois, m) {
 
 /** Affiche un mini-graphique adapté au nombre de points de données */
 function renderQChart(canvasId, q, mois, m, color) {
-  const data = q.data && q.data.length > 0 ? last(q.data, m) : [q.val];
+  // Histogramme vertical : 1 barre par mois depuis juin 2026.
+  // Plus lisible que la sparkline quand peu de points, et garde la même grille de lecture en grandissant.
+  const rawData = q.data && q.data.length > 0 ? last(q.data, m) : [q.val || 0];
+  const labels = last(mois, rawData.length);
 
-  if (data.length <= 1 && q.val > 0) {
-    // 1 seul point → barre horizontale avec la note
-    mk(canvasId, {
-      type: 'bar',
-      data: {
-        labels: [''],
-        datasets: [{
-          data: [q.val],
-          backgroundColor: color + '55',
-          borderColor: color,
-          borderWidth: 1.5,
-          borderRadius: 6,
-          barPercentage: 0.5,
-        }],
+  mk(canvasId, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: rawData,
+        backgroundColor: color + '88',
+        borderColor: color,
+        borderWidth: 1,
+        borderRadius: 4,
+        barPercentage: 0.85,
+        categoryPercentage: 0.85,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => (ctx.raw == null ? '—' : ctx.raw.toFixed(1) + '/10') } },
       },
-      options: {
-        indexAxis: 'y',
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => ctx.raw.toFixed(1) + '/10' } },
-        },
-        scales: {
-          x: { min: 0, max: 10, grid: { color: '#E7E1D720' }, ticks: { display: false } },
-          y: { display: false },
-        },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 9 }, color: '#999' } },
+        y: { min: 0, max: 10, grid: { color: '#E7E1D720' }, ticks: { display: false } },
       },
-    });
-  } else if (data.length > 1) {
-    // 2+ points → sparkline
-    mk(canvasId, {
-      type: 'line',
-      data: {
-        labels: last(mois, data.length),
-        datasets: [{
-          data: data,
-          borderColor: color,
-          backgroundColor: color + '15',
-          borderWidth: 2,
-          fill: true,
-          tension: 0.4,
-        }],
-      },
-      options: sparkOpts(),
-    });
-  }
+    },
+  });
 }
 
 function renderGHDetail(mois, m) {

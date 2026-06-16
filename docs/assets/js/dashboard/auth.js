@@ -3,6 +3,7 @@
    ============================================ */
 
 const PROFILE_KEY = 'greatly_retours_profile';
+const ONBOARDING_DONE_KEY = 'greatly_retours_onboarding_done';
 
 /** Profil par défaut */
 function defaultProfile() {
@@ -165,8 +166,9 @@ function enterDashboard(role) {
     document.body.classList.add('is-admin');
   }
 
-  // Première connexion → onboarding
-  if (!isProfileComplete()) {
+  // Première connexion → onboarding (uniquement si jamais terminé)
+  const onboardingDone = localStorage.getItem(ONBOARDING_DONE_KEY) === '1';
+  if (!onboardingDone && !isProfileComplete()) {
     // Pré-remplir avec les données du magic link
     const p = getProfile();
     if (p.firstname) document.getElementById('ob-firstname').value = p.firstname;
@@ -244,6 +246,7 @@ function obPrev() {
 }
 
 function obFinish() {
+  localStorage.setItem(ONBOARDING_DONE_KEY, '1');
   document.getElementById('onboarding').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   renderProfile();
