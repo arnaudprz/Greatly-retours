@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=22">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=22">
+<link rel="stylesheet" href="assets/css/shared.css?v=23">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=23">
 </head>
 <body>
 
@@ -180,6 +180,7 @@
           <a href="index.html" target="_blank">🌱 Formulaire membres</a>
           <a href="intervenant.html" target="_blank">🧭 Formulaire intervenants</a>
           <a href="prospect.html" target="_blank">🌿 Formulaire futurs membres</a>
+          <a href="greatlyhouse.html" target="_blank">🏡 La Greatly House</a>
           <a href="ecrit.html" target="_blank">✍️ Feedback écrit</a>
         </div>
       </div>
@@ -382,6 +383,12 @@
             <h3>Évolution par lieu</h3>
             <div class="sub">Greatly House vs lieux sportifs (Yoga + Padel) · note moyenne mensuelle</div>
             <div class="chartbox"><canvas id="c-lieux-evol"></canvas></div>
+          </div>
+
+          <div class="card full" id="card-gh-detail">
+            <h3>🏡 Greatly House — Détail par question</h3>
+            <div class="sub">Formulaire dédié · note 0–10 · évolution mensuelle</div>
+            <div class="qgrid" id="gh-detail-grid"></div>
           </div>
 
           <div class="card full" id="card-lieux-verbatims">
@@ -731,15 +738,15 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=22"></script>
-<script src="assets/js/api.js?v=22"></script>
-<script src="assets/js/dashboard/filters.js?v=22"></script>
-<script src="assets/js/dashboard/charts.js?v=22"></script>
-<script src="assets/js/dashboard/auth.js?v=22"></script>
-<script src="assets/js/dashboard/data.js?v=22"></script>
-<script src="assets/js/dashboard/admin.js?v=22"></script>
-<script src="assets/js/dashboard/alerts.js?v=22"></script>
-<script src="assets/js/dashboard/chat.js?v=22"></script>
+<script src="assets/js/config.js?v=23"></script>
+<script src="assets/js/api.js?v=23"></script>
+<script src="assets/js/dashboard/filters.js?v=23"></script>
+<script src="assets/js/dashboard/charts.js?v=23"></script>
+<script src="assets/js/dashboard/auth.js?v=23"></script>
+<script src="assets/js/dashboard/data.js?v=23"></script>
+<script src="assets/js/dashboard/admin.js?v=23"></script>
+<script src="assets/js/dashboard/alerts.js?v=23"></script>
+<script src="assets/js/dashboard/chat.js?v=23"></script>
 <script>
 // Navigation principale (navbar)
 document.querySelectorAll('.navbar-item[data-view]').forEach(btn => {

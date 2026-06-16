@@ -121,6 +121,19 @@ const D = {
   lieuxHouse:  [8.4, 8.5, 8.5, 8.6, 8.7, 8.7, 8.8, 8.8, 8.9, 8.9, 8.8, 8.9],
   lieuxSport:  [7.5, 7.6, 7.5, 7.7, 7.6, 7.8, 7.7, 7.8, 7.7, 7.9, 7.8, 7.7],
 
+  // --- Greatly House (formulaire dédié) ---
+  qGreatlyHouse: [
+    { label: 'Arrivée & accueil',        q: 'Comment vous êtes-vous senti en arrivant à la Greatly House ?', val: 9.1, delta: +0.2, data: [8.6, 8.7, 8.8, 8.8, 8.9, 8.9, 9.0, 9.0, 9.0, 9.1, 9.0, 9.1] },
+    { label: 'Déconnexion',              q: 'Le lieu vous a-t-il aidé à vous poser et à déconnecter ?', val: 8.8, delta: +0.3, data: [8.2, 8.3, 8.4, 8.5, 8.5, 8.6, 8.6, 8.7, 8.7, 8.8, 8.7, 8.8] },
+    { label: 'Atmosphère',               q: 'Comment trouvez-vous l\'atmosphère de la maison ?', val: 9.3, delta: +0.1, data: [9.0, 9.0, 9.1, 9.1, 9.2, 9.2, 9.2, 9.3, 9.2, 9.3, 9.2, 9.3] },
+    { label: 'Aisance à échanger',       q: 'Vous êtes-vous senti à l\'aise pour échanger librement ?', val: 8.9, delta: +0.2, data: [8.4, 8.5, 8.6, 8.6, 8.7, 8.7, 8.8, 8.8, 8.8, 8.9, 8.8, 8.9] },
+    { label: 'Confort des espaces',       q: 'Que pensez-vous du confort des espaces ?', val: 8.5, delta: +0.1, data: [8.1, 8.2, 8.2, 8.3, 8.3, 8.4, 8.4, 8.4, 8.5, 8.5, 8.4, 8.5] },
+    { label: 'Accès au lieu',             q: 'L\'accès au lieu vous convient-il ?', val: 7.6, delta: -0.1, data: [7.8, 7.7, 7.7, 7.6, 7.7, 7.6, 7.6, 7.7, 7.6, 7.6, 7.7, 7.6] },
+    { label: 'Adéquation lieu / expérience', q: 'Le lieu est-il à la hauteur de ce qu\'on y vit ?', val: 9.2, delta: +0.2, data: [8.8, 8.9, 8.9, 9.0, 9.0, 9.0, 9.1, 9.1, 9.1, 9.2, 9.1, 9.2] },
+    { label: 'Envie de rester',           q: 'Avez-vous eu envie de rester un peu plus longtemps ?', val: 8.7, delta: +0.3, data: [8.1, 8.2, 8.3, 8.3, 8.4, 8.5, 8.5, 8.6, 8.6, 8.7, 8.6, 8.7] },
+    { label: 'Recommandation du lieu',    q: 'Recommanderiez-vous ce lieu à quelqu\'un qui cherche un cadre pour se retrouver ?', val: 9.0, delta: +0.2, data: [8.5, 8.6, 8.7, 8.7, 8.8, 8.8, 8.9, 8.9, 8.9, 9.0, 8.9, 9.0] },
+  ],
+
   // --- Prospect ---
   prospectNPS:        [45, 48, 52, 50, 55, 58, 60, 62, 58, 65, 63, 68],
   prospectImpression: [7.2, 7.4, 7.5, 7.6, 7.8, 7.7, 8.0, 7.9, 8.1, 8.0, 8.2, 8.3],
@@ -958,6 +971,9 @@ function renderLieux() {
     options: lineOpts(6, 10),
   });
 
+  // Détail par question Greatly House
+  renderGHDetail(mois, m);
+
   // Verbatims lieux
   const vList = document.getElementById('lieux-verbatims-list');
   if (vList) {
@@ -1299,6 +1315,58 @@ function renderIvSeance(mois, m) {
           },
           options: sparkOpts(),
         });
+      });
+    });
+  });
+}
+
+
+/* =============================================
+   DÉTAIL GREATLY HOUSE (vue Lieux)
+   ============================================= */
+
+function renderGHDetail(mois, m) {
+  const grid = document.getElementById('gh-detail-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  Object.keys(charts).filter(k => k.startsWith('spark-gh-')).forEach(k => {
+    charts[k].destroy(); delete charts[k];
+  });
+
+  D.qGreatlyHouse.forEach((q, i) => {
+    const id = 'spark-gh-' + i;
+    const deltaColor = q.delta >= 0 ? C.good : C.bad;
+    const deltaSign = q.delta >= 0 ? '+' : '';
+
+    const card = document.createElement('div');
+    card.className = 'qcard';
+    card.innerHTML = `
+      <h4>${q.label}</h4>
+      ${q.q ? `<div class="qq">« ${q.q} »</div>` : ''}
+      <div class="qval">
+        ${fr(q.val)}<span style="font-size:.85rem;color:var(--warm-grey)">/10</span>
+        <span class="qdelta" style="color:${deltaColor}">${deltaSign}${fr(q.delta)}</span>
+      </div>
+      <div class="qchart"><canvas id="${id}"></canvas></div>
+    `;
+    grid.appendChild(card);
+
+    requestAnimationFrame(() => {
+      mk(id, {
+        type: 'line',
+        data: {
+          labels: mois,
+          datasets: [{
+            data: last(q.data, m),
+            borderColor: C.sage,
+            backgroundColor: C.sage + '15',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+          }],
+        },
+        options: sparkOpts(),
       });
     });
   });

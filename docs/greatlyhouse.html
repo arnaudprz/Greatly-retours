@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>La Greatly House — Vos retours — GREATLY</title>
+<meta name="description" content="Partagez votre ressenti sur la Greatly House. Anonyme, 2 minutes.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Greatly — La Greatly House">
+<meta property="og:description" content="Partagez votre ressenti sur la Greatly House. 100 % anonyme.">
+<meta property="og:image" content="https://arnaudprz.github.io/Greatly-retours/assets/og-retours.svg">
+<meta property="og:url" content="https://arnaudprz.github.io/Greatly-retours/greatlyhouse.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GREATLY">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/shared.css">
+<link rel="stylesheet" href="assets/css/form.css">
+<style>
+  .merci-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(26,26,26,.35); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .merci-overlay.open { display: flex; }
+  .merci-popup {
+    background: var(--cream); border-radius: 22px; padding: 40px 30px;
+    max-width: 400px; width: 100%; text-align: center;
+    box-shadow: 0 16px 48px rgba(26,26,26,.12);
+    animation: popIn .35s ease;
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(.92) translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div class="brand">Greatly</div>
+    <h1>La Greatly House</h1>
+    <p>Ce lieu fait partie de l'expérience. Votre ressenti nous aide à en prendre soin — et à le faire évoluer avec vous.</p>
+    <div class="anon">🏡 100&nbsp;% anonyme · 2 minutes</div>
+  </header>
+
+  <div class="progress" id="progress"></div>
+
+  <!-- ÉTAPE 1 : les 10 questions -->
+  <section class="step active" data-step="1">
+    <div class="q" id="q-0">
+      <h3>Comment vous êtes-vous senti en arrivant à la Greatly House ?</h3>
+      <div class="hint">La première impression, l'accueil, ce que vous avez ressenti en passant la porte.</div>
+      <div class="nps"></div>
+      <div class="scale-labels"><span>Pas à l'aise</span><span>Immédiatement bien</span></div>
+    </div>
+
+    <div class="q" id="q-1">
+      <h3>Le lieu vous a-t-il aidé à vous poser et à déconnecter ?</h3>
+      <div class="hint">Quitter le rythme du quotidien, lâcher le téléphone, se rendre disponible pour la suite.</div>
+      <div class="nps"></div>
+      <div class="scale-labels"><span>Pas vraiment</span><span>Totalement</span></div>
+    </div>
+
+    <div class="q" id="q-2">
+      <h3>Comment trouvez-vous l'atmosphère de la maison ?</h3>
+      <div class="hint">La lumière, les matières, l'ambiance sonore, ce que le lieu dégage.</div>
+      <div class="nps"></div>
+      <div class="scale-labels"><span>Quelconque</span><span>Vraiment singulière</span></div>
+    </div>
+
+    <div class="q" id="q-3">
+      <h3>Vous êtes-vous senti à l'aise pour échanger librement ?</h3>
+      <div class="hint">La configuration des espaces, l'intimité, le sentiment de confiance que le lieu inspire.</div>
+      <div class="nps"></div>
+      <div class="scale-labels"><span>Pas vraiment</span><span>Complètement</span></div>
+    </div>
+
+    <div class="q" id="q-4">
+      <h3>Que pensez-vous du confort des espaces ?</h3>
+      <div class="hint">Les assises, la température, la propreté, les petits détails qui comptent.</div>
+      <div class="nps"></div>
+      <div class="scale-labels"><span>À améliorer</span><span>Très confortable</span></div>
+    </div>
+
+    <div class="nav">
+      <button type="button" class="btn-solid nav-next" style="flex:1">Continuer</button>
+    </div>
+  </section>
+
+  <!-- ÉTAPE 2 : suite des questions + ouvertes -->
+  <section class="step" data-step="2">
+    <div class="q" id="q-5">
+      <h3>L'accès au lieu vous convient-il ?</h3>
+      <div class="hint">Le trajet, le stationnement, la facilité pour venir — et l'envie d'y revenir.</div>
+      <div class="nps"></div>
+      <div class="scale-labels"><span>Compliqué</span><span>Très pratique</span></div>
+    </div>
+
+    <div class="q" id="q-6">
+      <h3>Le lieu est-il à la hauteur de ce qu'on y vit ?</h3>
+      <div class="hint">L'adéquation entre l'expérience Greatly et l'écrin dans lequel elle se déroule.</div>
+      <div class="nps"></div>
+      <div class="scale-labels"><span>En décalage</span><span>Parfaitement accordé</span></div>
+    </div>
+
+    <div class="q" id="q-7">
+      <h3>Avez-vous eu envie de rester un peu plus longtemps ?</h3>
+      <div class="hint">Ce sentiment de ne pas vouloir partir tout de suite — ou pas.</div>
+      <div class="nps"></div>
+      <div class="scale-labels"><span>Pas spécialement</span><span>Oui, clairement</span></div>
+    </div>
+
+    <div class="q" id="q-8">
+      <h3>Recommanderiez-vous ce lieu à quelqu'un qui cherche un cadre pour se retrouver ?</h3>
+      <div class="hint">Pour un séminaire, un atelier, un moment de recul — dans un autre contexte que Greatly.</div>
+      <div class="nps"></div>
+      <div class="scale-labels"><span>Probablement pas</span><span>Sans hésiter</span></div>
+    </div>
+
+    <div class="q">
+      <h3>Un mot sur la Greatly House ?</h3>
+      <div class="hint">Ce que vous aimez, ce qui pourrait évoluer, un détail qui vous a marqué…</div>
+      <textarea placeholder="Écrivez librement…"></textarea>
+    </div>
+
+    <div class="nav">
+      <button type="button" class="btn-ghost nav-back">Retour</button>
+      <button type="button" class="btn-solid" id="btn-send">Envoyer mon retour</button>
+    </div>
+  </section>
+
+  <!-- ÉTAPE 3 : merci (fallback) -->
+  <section class="step" data-step="3">
+    <div class="merci">
+      <div class="big">🏡</div>
+      <h2>Merci pour ce retour</h2>
+      <p>Votre regard nous aide à prendre soin de ce lieu et à le faire évoluer avec vous.</p>
+      <button type="button" class="btn-solid" style="max-width:260px" onclick="location.reload()">Déposer un autre retour</button>
+    </div>
+  </section>
+
+  <div class="foot">GREATLY · 10 rue de Lambersart, Verlinghem<br>Vos retours sont anonymes et servent uniquement à améliorer l'expérience.</div>
+</div>
+
+<!-- Popup merci -->
+<div class="merci-overlay" id="merci-overlay">
+  <div class="merci-popup">
+    <div style="width:64px;height:64px;border-radius:50%;background:var(--sage-pale);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 16px">🏡</div>
+    <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:1.4rem;margin-bottom:10px">Merci pour ce retour</h2>
+    <p style="color:var(--warm-grey);font-size:.92rem;max-width:340px;margin:0 auto 22px;line-height:1.5">Votre regard nous aide à prendre soin de ce lieu et à le faire évoluer avec vous.</p>
+    <button type="button" class="btn-solid" style="max-width:260px;width:100%" onclick="location.reload()">Déposer un autre retour</button>
+    <button type="button" class="btn-ghost" style="max-width:260px;width:100%;margin-top:8px" onclick="closeMerci()">Fermer</button>
+  </div>
+</div>
+
+<script src="assets/js/config.js?v=22"></script>
+<script src="assets/js/api.js?v=22"></script>
+<script>
+// --- Questions ---
+const QUESTIONS = [
+  { id: 'arrivee',      t: "Comment vous êtes-vous senti en arrivant à la Greatly House ?" },
+  { id: 'deconnexion',  t: "Le lieu vous a-t-il aidé à vous poser et à déconnecter ?" },
+  { id: 'atmosphere',   t: "Comment trouvez-vous l'atmosphère de la maison ?" },
+  { id: 'echanges',     t: "Vous êtes-vous senti à l'aise pour échanger librement ?" },
+  { id: 'confort',      t: "Que pensez-vous du confort des espaces ?" },
+  { id: 'acces',        t: "L'accès au lieu vous convient-il ?" },
+  { id: 'adequation',   t: "Le lieu est-il à la hauteur de ce qu'on y vit ?" },
+  { id: 'rester',       t: "Avez-vous eu envie de rester un peu plus longtemps ?" },
+  { id: 'recommander',  t: "Recommanderiez-vous ce lieu ?" },
+];
+
+// --- NPS buttons ---
+document.querySelectorAll('.nps').forEach(nps => {
+  for (let n = 0; n <= 10; n++) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.dataset.n = n;
+    btn.textContent = n;
+    btn.addEventListener('click', () => {
+      nps.querySelectorAll('button').forEach(x => x.classList.remove('sel'));
+      btn.classList.add('sel');
+    });
+    nps.appendChild(btn);
+  }
+});
+
+// --- Navigation ---
+let currentStep = 1;
+function go(n) {
+  currentStep = n;
+  document.querySelectorAll('.step').forEach(s => s.classList.toggle('active', +s.dataset.step === n));
+  const p = document.getElementById('progress');
+  p.innerHTML = '';
+  for (let i = 1; i <= 2; i++) {
+    const sp = document.createElement('span');
+    if (i <= n) sp.classList.add('on');
+    p.appendChild(sp);
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Validation
+function validateVisible() {
+  let ok = true, first = null;
+  const step = document.querySelector(`.step[data-step="${currentStep}"]`);
+  step.querySelectorAll('.q').forEach(q => {
+    if (q.querySelector('textarea')) return; // textarea optionnelle
+    const sel = q.querySelector('.nps button.sel');
+    q.classList.toggle('err', !sel);
+    if (!sel) { ok = false; if (!first) first = q; }
+  });
+  if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  return ok;
+}
+
+// Clear error on click
+document.addEventListener('click', e => {
+  const q = e.target.closest('.q.err');
+  if (q) setTimeout(() => {
+    if (q.querySelector('.nps button.sel')) q.classList.remove('err');
+  }, 0);
+});
+
+document.querySelector('.nav-next').addEventListener('click', () => { if (validateVisible()) go(2); });
+document.querySelector('.nav-back').addEventListener('click', () => go(1));
+
+// --- Envoi ---
+document.getElementById('btn-send').addEventListener('click', async () => {
+  if (!validateVisible()) return;
+
+  const btn = document.getElementById('btn-send');
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours…';
+
+  const echelles = {};
+  QUESTIONS.forEach((q, i) => {
+    const card = document.getElementById('q-' + i);
+    if (!card) return;
+    const sel = card.querySelector('.nps button.sel');
+    echelles[q.id] = sel ? +sel.dataset.n : null;
+  });
+
+  const textarea = document.querySelector('textarea');
+  const verbatim = textarea ? textarea.value.trim() : '';
+
+  try {
+    await API.submit({
+      type: 'greatly_house',
+      ts: new Date().toISOString(),
+      echelles,
+      verbatim: verbatim || null,
+    });
+    document.getElementById('merci-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Envoyer mon retour';
+    console.error('Erreur envoi:', err);
+  }
+});
+
+function closeMerci() {
+  document.getElementById('merci-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+</script>
+</body>
+</html>
