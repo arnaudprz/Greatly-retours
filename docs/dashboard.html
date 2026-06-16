@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=37">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=37">
+<link rel="stylesheet" href="assets/css/shared.css?v=38">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=38">
 </head>
 <body>
 
@@ -157,7 +157,7 @@
 <nav class="navbar" id="navbar">
   <div class="navbar-inner">
     <!-- Logo + Guide -->
-    <div class="navbar-brand">GREATLY</div>
+    <div class="navbar-brand" id="logo-home" style="cursor:pointer">GREATLY</div>
     <a class="guide-badge" href="guide.html">📖 Guide · À lire</a>
     <a class="guide-badge" href="#" id="btn-question" style="background:var(--lucidite);animation:none">💬 Une question ?</a>
 
@@ -745,15 +745,15 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=37"></script>
-<script src="assets/js/api.js?v=37"></script>
-<script src="assets/js/dashboard/filters.js?v=37"></script>
-<script src="assets/js/dashboard/charts.js?v=37"></script>
-<script src="assets/js/dashboard/auth.js?v=37"></script>
-<script src="assets/js/dashboard/data.js?v=37"></script>
-<script src="assets/js/dashboard/admin.js?v=37"></script>
-<script src="assets/js/dashboard/alerts.js?v=37"></script>
-<script src="assets/js/dashboard/chat.js?v=37"></script>
+<script src="assets/js/config.js?v=38"></script>
+<script src="assets/js/api.js?v=38"></script>
+<script src="assets/js/dashboard/filters.js?v=38"></script>
+<script src="assets/js/dashboard/charts.js?v=38"></script>
+<script src="assets/js/dashboard/auth.js?v=38"></script>
+<script src="assets/js/dashboard/data.js?v=38"></script>
+<script src="assets/js/dashboard/admin.js?v=38"></script>
+<script src="assets/js/dashboard/alerts.js?v=38"></script>
+<script src="assets/js/dashboard/chat.js?v=38"></script>
 <script>
 // Navigation principale (navbar)
 // Navigation principale (navbar views)
@@ -788,6 +788,11 @@ document.querySelector('.navbar-item[data-view="dashboard"]').addEventListener('
   render();
   // Remonter en haut
   window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// Logo GREATLY — même comportement que la maison
+document.getElementById('logo-home').addEventListener('click', () => {
+  document.querySelector('.navbar-item[data-view="dashboard"]').click();
 });
 
 // Dropdowns navbar
