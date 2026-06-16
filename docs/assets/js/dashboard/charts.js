@@ -372,6 +372,12 @@ function render() {
   show('ivgreatly-section', isGreatly);
   show('lieux-section', isGreatlyHouse);
 
+  // Les cartes "Derniers retours / Feedbacks écrits / Points d'attention"
+  // viennent des forms membres + intervenants — masquées hors de ces onglets.
+  show('card-verbatims', isStandard);
+  show('card-feedbacks', isStandard);
+  show('card-alerts', isIntervenants); // Points d'attention = retours intervenants uniquement
+
   if (isStandard) renderStandard(true, false, false); // overview de tout le form
   if (isProspects) renderProspect();
   if (isGreatly) renderIvGreatly();
@@ -1090,6 +1096,126 @@ function renderLieux() {
    VUE FUTURS MEMBRES (PROSPECT)
    ============================================= */
 
+// Libellés des options des questions multi-choix (utilisés si pas encore de data)
+const FREINS_OPTIONS = [
+  "L'investissement financier",
+  'Trouver le temps',
+  'Le déplacement',
+  'Le format en groupe',
+  'Pas clair pour moi',
+  'Le côté sportif intimide',
+  'Rien de particulier',
+];
+const ATTRAITS_OPTIONS = [
+  'Bouger, prendre soin du corps',
+  'Prendre du recul',
+  'Échanger entre pairs',
+  'Le cadre, la Greatly House',
+  "L'approche globale",
+  "S'accorder une pause",
+];
+
+/** Histogramme vertical 0-10 par mois. Affiche les barres vides si pas de données. */
+function renderRatingHist(canvasId, _moisAll, m, dataArr, label, color) {
+  const len = MOIS.length;
+  let data;
+  if (dataArr && dataArr.length > 0) {
+    data = last(dataArr, m);
+    if (data.length < len) data = new Array(len - data.length).fill(null).concat(data);
+  } else {
+    data = new Array(len).fill(null);
+  }
+  mk(canvasId, {
+    type: 'bar',
+    data: {
+      labels: MOIS,
+      datasets: [{
+        label,
+        data,
+        backgroundColor: color + '88',
+        borderColor: color,
+        borderWidth: 1,
+        borderRadius: 4,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ctx.raw == null ? 'Pas encore de données' : ctx.raw.toFixed(1) + '/10' } },
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { min: 0, max: 10, grid: { color: '#E7E1D720' } },
+      },
+    },
+  });
+}
+
+/** Histogramme horizontal multi-choix (%). Garde toutes les options visibles même sans data. */
+function renderChoiceHist(canvasId, dataLabels, dataValues, fallbackOptions, color) {
+  const hasData = dataValues && dataValues.length > 0;
+  const labels = hasData ? dataLabels : fallbackOptions;
+  const values = hasData ? dataValues : new Array(fallbackOptions.length).fill(0);
+  mk(canvasId, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: color + 'AA',
+        borderColor: color,
+        borderWidth: 1,
+        borderRadius: 6,
+      }],
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => (ctx.raw || 0) + '%' } },
+      },
+      scales: {
+        x: { min: 0, max: 100, grid: { color: '#E7E1D720' }, ticks: { callback: v => v + '%', font: { size: 11 } } },
+        y: { grid: { display: false } },
+      },
+    },
+  });
+}
+
+/** Histogramme groupé 0-10 (2 séries) par mois. */
+function renderDualRatingHist(canvasId, _moisAll, m, data1, label1, color1, data2, label2, color2) {
+  const len = MOIS.length;
+  const get = (arr) => {
+    if (!arr || arr.length === 0) return new Array(len).fill(null);
+    let d = last(arr, m);
+    if (d.length < len) d = new Array(len - d.length).fill(null).concat(d);
+    return d;
+  };
+  mk(canvasId, {
+    type: 'bar',
+    data: {
+      labels: MOIS,
+      datasets: [
+        { label: label1, data: get(data1), backgroundColor: color1 + '88', borderColor: color1, borderWidth: 1, borderRadius: 4 },
+        { label: label2, data: get(data2), backgroundColor: color2 + '88', borderColor: color2, borderWidth: 1, borderRadius: 4 },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, font: { size: 11 } } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ' : ' + (ctx.raw == null ? '—' : ctx.raw.toFixed(1) + '/10') } },
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { min: 0, max: 10, grid: { color: '#E7E1D720' } },
+      },
+    },
+  });
+}
+
 function renderProspect() {
   const m = F.period;
   const mois = last(MOIS, m);
@@ -1141,105 +1267,24 @@ function renderProspect() {
     });
   }
 
-  // --- Perception valeur (line) ---
-  if (D.prospectValeur.length === 0) {
-    emptyStateCanvas('c-prospect-valeur', 'Les données apparaîtront ici dès les premiers retours.');
-  } else {
-    const valData = last(D.prospectValeur, m);
-    const tVal = trimToData(mois, valData);
-    mk('c-prospect-valeur', {
-      type: 'line',
-      data: {
-        labels: tVal.labels,
-        datasets: [lineds('Perception valeur', trimData(valData, tVal.start), C.sage)],
-      },
-      options: lineOpts(5, 10),
-    });
-  }
+  // --- Perception valeur (histogramme 0-10) ---
+  renderRatingHist('c-prospect-valeur', mois, m, D.prospectValeur, 'Perception valeur', C.sage);
 
-  // --- Freins (horizontal bar) ---
-  if (D.freinsData.length === 0) {
-    emptyStateCanvas('c-prospect-freins', 'Pas encore de données sur les freins.');
-  } else {
-    mk('c-prospect-freins', {
-      type: 'bar',
-      data: {
-        labels: D.freinsLabels,
-        datasets: [{
-          data: D.freinsData,
-          backgroundColor: C.bad + 'AA',
-          borderRadius: 6,
-        }],
-      },
-      options: {
-        ...hbarOpts(50),
-        scales: {
-          ...hbarOpts(50).scales,
-          x: { ...hbarOpts(50).scales.x, ticks: { callback: v => v + '%', font: { size: 11 } } },
-        },
-      },
-    });
-  }
+  // --- Freins (histogramme % par option, échelle toujours visible) ---
+  renderChoiceHist('c-prospect-freins', D.freinsLabels, D.freinsData, FREINS_OPTIONS, C.bad);
 
-  // --- Attraits (horizontal bar) ---
-  if (D.attraitsData.length === 0) {
-    emptyStateCanvas('c-prospect-attraits', 'Pas encore de données sur les attraits.');
-  } else {
-    mk('c-prospect-attraits', {
-      type: 'bar',
-      data: {
-        labels: D.attraitsLabels,
-        datasets: [{
-          data: D.attraitsData,
-          backgroundColor: C.good + 'AA',
-          borderRadius: 6,
-        }],
-      },
-      options: {
-        ...hbarOpts(60),
-        scales: {
-          ...hbarOpts(60).scales,
-          x: { ...hbarOpts(60).scales.x, ticks: { callback: v => v + '%', font: { size: 11 } } },
-        },
-      },
-    });
-  }
+  // --- Attraits (histogramme % par option, échelle toujours visible) ---
+  renderChoiceHist('c-prospect-attraits', D.attraitsLabels, D.attraitsData, ATTRAITS_OPTIONS, C.good);
 
-  // --- NPS prospect (line) ---
-  if (D.prospectNPS.length === 0) {
-    emptyStateCanvas('c-prospect-nps', 'Les données apparaîtront ici dès les premiers retours.');
-  } else {
-    const npsData = last(D.prospectNPS, m);
-    const tNps = trimToData(mois, npsData);
-    mk('c-prospect-nps', {
-      type: 'line',
-      data: {
-        labels: tNps.labels,
-        datasets: [lineds('Recommandation prospect', trimData(npsData, tNps.start), '#8B6E4E')],
-      },
-      options: lineOpts(20, 90),
-    });
-  }
+  // --- Recommandation prospect (histogramme 0-10 par mois) ---
+  renderRatingHist('c-prospect-nps', mois, m, D.prospectNPS, 'Recommandation', '#8B6E4E');
 
-  // --- Pertinence vs Projection ---
-  if (D.prospectPertinence.length === 0 && D.prospectProjection.length === 0) {
-    emptyStateCanvas('c-prospect-pertproj', 'Les données apparaîtront ici dès les premiers retours.');
-  } else {
-    const pertData = D.prospectPertinence.length > 0 ? last(D.prospectPertinence, m) : [];
-    const projData = D.prospectProjection.length > 0 ? last(D.prospectProjection, m) : [];
-    const tPP = trimToData(mois, pertData, projData);
-    mk('c-prospect-pertproj', {
-      type: 'line',
-      data: {
-        labels: tPP.labels,
-        datasets: [
-          ...(D.prospectPertinence.length > 0 ? [lineds('Pertinence perçue', trimData(pertData, tPP.start), C.sage)] : []),
-          ...(D.prospectProjection.length > 0 ? [lineds('Projection', trimData(projData, tPP.start), '#8B6E4E')] : []),
-        ],
-      },
-      options: lineOpts(4, 10),
-    });
-  }
+  // --- Pertinence vs Projection (histogramme groupé 0-10) ---
+  renderDualRatingHist(
+    'c-prospect-pertproj', mois, m,
+    D.prospectPertinence, 'Pertinence perçue', C.sage,
+    D.prospectProjection, 'Projection', '#8B6E4E'
+  );
 
   // --- Verbatims prospect ---
   const pasList = document.getElementById('prospect-verbatims-pas');
