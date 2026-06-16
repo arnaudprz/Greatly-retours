@@ -167,6 +167,15 @@ function enterDashboard(role) {
 
   // Première connexion → onboarding
   if (!isProfileComplete()) {
+    // Pré-remplir avec les données du magic link
+    const p = getProfile();
+    if (p.firstname) document.getElementById('ob-firstname').value = p.firstname;
+    if (p.lastname) document.getElementById('ob-lastname').value = p.lastname;
+    if (p.email) {
+      document.getElementById('ob-email').value = p.email;
+      document.getElementById('ob-email').readOnly = true;
+      document.getElementById('ob-email').style.opacity = '0.6';
+    }
     document.getElementById('onboarding').style.display = 'block';
     obGo(1);
     return;
