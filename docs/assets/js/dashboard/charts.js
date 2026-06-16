@@ -20,6 +20,12 @@ function mk(id, cfg) {
   if (charts[id]) { charts[id].destroy(); delete charts[id]; }
   const el = document.getElementById(id);
   if (!el) return;
+  // Nettoyer un éventuel empty-state précédent
+  el.style.display = '';
+  const parent = el.parentElement;
+  if (parent) {
+    parent.querySelectorAll('.empty-state').forEach(e => e.remove());
+  }
   // Forcer la visibilité pour Chart.js
   if (el.offsetParent !== null || el.closest('[style*="display: none"]') === null) {
     charts[id] = new Chart(el, cfg);
