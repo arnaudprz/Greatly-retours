@@ -436,6 +436,7 @@ body.is-admin .admin-only { display: inline-flex; }
 }
 
 .profile-name {
+  display: none;
   font-size: .83rem;
   font-weight: 600;
   color: var(--ink);

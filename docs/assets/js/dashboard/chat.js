@@ -17,7 +17,7 @@ const AVATAR_COLORS = [
 // Messages de démo (un seul fil)
 const DEMO_MESSAGES = [
     { name: 'Arnaud Przybylski', date: '2026-06-10T09:15:00', text: 'Bienvenue dans l\'espace communauté ! N\'hésitez pas à partager vos observations et vos idées ici.' },
-    { name: 'Sophie Lefebvre', date: '2026-06-10T09:42:00', text: 'Super initiative. J\'ai remarqué que le NPS Énergie a bien progressé ce trimestre, les ajustements sur le format court semblent payer.' },
+    { name: 'Sophie Lefebvre', date: '2026-06-10T09:42:00', text: 'Super initiative. J\'ai remarqué que le score de recommandation Énergie a bien progressé ce trimestre, les ajustements sur le format court semblent payer.' },
     { name: 'Marc Dupont', date: '2026-06-10T14:20:00', text: 'Je vois que le brunch Lucidité est le temps le moins bien noté. On pourrait peut-être allonger le créneau de 15 minutes ?' },
     { name: 'Claire Martin', date: '2026-06-11T08:30:00', text: 'Bonjour à tous ! Les verbatims de cette semaine sont très riches, notamment sur le yoga. Les membres parlent beaucoup du retour au calme en fin de séance.' },
     { name: 'Thomas Bernard', date: '2026-06-12T11:05:00', text: 'Question : est-ce qu\'on a un objectif de taux de réponse à atteindre ? On est à 72% là, c\'est bien mais on peut faire mieux.' },
@@ -25,7 +25,7 @@ const DEMO_MESSAGES = [
     { name: 'Sophie Lefebvre', date: '2026-06-13T16:40:00', text: 'Je partage un retour positif d\'un intervenant : "Le groupe est de plus en plus soudé, les échanges en fin de séance sont spontanés et authentiques." 🌱' },
     { name: 'Julie Moreau', date: '2026-06-14T09:55:00', text: 'Les prospects qui ont rempli le formulaire "futurs membres" mentionnent souvent le bouche-à-oreille comme source. Notre meilleur canal d\'acquisition c\'est nos membres actuels !' },
     { name: 'Thomas Bernard', date: '2026-06-10T10:00:00', text: 'Le coach padel a proposé une nouvelle variante d\'échauffement, les notes de la phase "échauffement" ont remonté de 0.3 points ce mois-ci.' },
-    { name: 'Sophie Lefebvre', date: '2026-06-10T15:00:00', text: 'L\'atelier "Le cadre" a eu le meilleur NPS de la série. Le contenu sur les frontières pro/perso a vraiment résonné.' },
+    { name: 'Sophie Lefebvre', date: '2026-06-10T15:00:00', text: 'L\'atelier "Le cadre" a eu le meilleur score de recommandation de la série. Le contenu sur les frontières pro/perso a vraiment résonné.' },
     { name: 'Claire Martin', date: '2026-06-10T11:30:00', text: 'La Greatly House reste notre meilleur score lieu (8.9/10). L\'accueil et l\'atmosphère sont systématiquement mentionnés dans les verbatims positifs.' },
     { name: 'Claire Martin', date: '2026-06-11T14:15:00', text: 'Plusieurs membres mentionnent que le vestiaire du club padel pourrait être amélioré. C\'est un point récurrent dans les verbatims.' },
     { name: 'Julie Moreau', date: '2026-06-12T10:20:00', text: 'Idée pour le prochain atelier Lucidité : intégrer un temps de partage en binôme avant le debrief collectif. Plusieurs membres l\'ont suggéré.' },

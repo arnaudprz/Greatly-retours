@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=29">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=29">
+<link rel="stylesheet" href="assets/css/shared.css?v=30">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=30">
 </head>
 <body>
 
@@ -94,7 +94,7 @@
           <span class="onboarding-feat-icon">📊</span>
           <div>
             <b>Suivre ce qui compte</b>
-            <small>NPS, énergie ressentie, qualité des échanges… tout est mesuré sur une échelle simple de 0 à 10.</small>
+            <small>Score de recommandation, énergie ressentie, qualité des échanges… tout est mesuré sur une échelle simple de 0 à 10.</small>
           </div>
         </div>
         <div class="onboarding-feature">
@@ -163,7 +163,7 @@
 
     <!-- Menu principal -->
     <div class="navbar-menu">
-      <button class="navbar-item on" data-view="dashboard">📊 Tableau de bord</button>
+      <button class="navbar-item on" data-view="dashboard" title="Tableau de bord"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></button>
 
       <!-- Activités (dropdown) -->
       <div class="navbar-dropdown-wrap" id="nav-act-wrap">
@@ -262,7 +262,7 @@
     <!-- KPIs -->
     <div class="kpis">
       <div class="kpi k-nps">
-        <div class="lab">NPS global <a href="guide.html#nps" target="_blank" class="help-link">?</a></div>
+        <div class="lab">Recommandation <a href="guide.html#nps" target="_blank" class="help-link">?</a></div>
         <div class="val" id="k-nps">—</div>
         <div class="sub"><span class="up" id="k-nps-d"></span> sur la période</div>
       </div>
@@ -286,7 +286,7 @@
     <!-- Graphiques -->
     <div class="grid">
       <div class="card full">
-        <h3>Évolution du NPS <a href="guide.html#nps" target="_blank" class="help-link">?</a></h3>
+        <h3>Évolution du score de recommandation <a href="guide.html#nps" target="_blank" class="help-link">?</a></h3>
         <div class="sub">« Imaginez qu'un proche traverse une période intense — lui conseilleriez-vous de vivre cette expérience ? » · par mois</div>
         <div class="chartbox"><canvas id="c-nps"></canvas></div>
       </div>
@@ -298,20 +298,20 @@
       </div>
 
       <div class="card">
-        <h3>Répartition NPS <a href="guide.html#nps" target="_blank" class="help-link">?</a></h3>
+        <h3>Répartition des recommandations <a href="guide.html#nps" target="_blank" class="help-link">?</a></h3>
         <div class="sub">Promoteurs (9–10) · Passifs (7–8) · Détracteurs (0–6)</div>
         <div class="chartbox"><canvas id="c-repart"></canvas></div>
       </div>
 
       <div class="card full" id="card-ateliers">
-        <h3>NPS par atelier — Lucidité</h3>
+        <h3>Recommandation par atelier — Lucidité</h3>
         <div class="sub">Les 6 ateliers du programme + bilan · juin 2026 → janvier 2027</div>
         <div class="chartbox"><canvas id="c-ateliers"></canvas></div>
       </div>
 
       <div class="card" id="card-sports">
         <h3>Par sport — Yoga vs Padel</h3>
-        <div class="sub">NPS et note moyenne de séance (0–10)</div>
+        <div class="sub">Recommandation et note moyenne de séance (0–10)</div>
         <div class="chartbox"><canvas id="c-sports"></canvas></div>
       </div>
 
@@ -408,7 +408,7 @@
         <!-- KPIs prospect -->
         <div class="kpis">
           <div class="kpi k-nps">
-            <div class="lab">NPS prospect <a href="guide.html#prospects" target="_blank" class="help-link">?</a></div>
+            <div class="lab">Recommandation prospect <a href="guide.html#prospects" target="_blank" class="help-link">?</a></div>
             <div class="val" id="pk-nps">—</div>
             <div class="sub">« Si quelqu'un de votre entourage cherchait à cultiver son énergie et sa lucidité, lui parleriez-vous de Greatly ? »</div>
           </div>
@@ -460,7 +460,7 @@
 
           <!-- NPS prospect dans le temps -->
           <div class="card full">
-            <h3>Évolution du NPS prospect</h3>
+            <h3>Évolution de la recommandation prospect</h3>
             <div class="sub">« Si quelqu'un de votre entourage cherchait à cultiver son énergie et sa lucidité, lui parleriez-vous de Greatly ? » · par mois</div>
             <div class="chartbox"><canvas id="c-prospect-nps"></canvas></div>
           </div>
@@ -740,15 +740,15 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=29"></script>
-<script src="assets/js/api.js?v=29"></script>
-<script src="assets/js/dashboard/filters.js?v=29"></script>
-<script src="assets/js/dashboard/charts.js?v=29"></script>
-<script src="assets/js/dashboard/auth.js?v=29"></script>
-<script src="assets/js/dashboard/data.js?v=29"></script>
-<script src="assets/js/dashboard/admin.js?v=29"></script>
-<script src="assets/js/dashboard/alerts.js?v=29"></script>
-<script src="assets/js/dashboard/chat.js?v=29"></script>
+<script src="assets/js/config.js?v=30"></script>
+<script src="assets/js/api.js?v=30"></script>
+<script src="assets/js/dashboard/filters.js?v=30"></script>
+<script src="assets/js/dashboard/charts.js?v=30"></script>
+<script src="assets/js/dashboard/auth.js?v=30"></script>
+<script src="assets/js/dashboard/data.js?v=30"></script>
+<script src="assets/js/dashboard/admin.js?v=30"></script>
+<script src="assets/js/dashboard/alerts.js?v=30"></script>
+<script src="assets/js/dashboard/chat.js?v=30"></script>
 <script>
 // Navigation principale (navbar)
 document.querySelectorAll('.navbar-item[data-view]').forEach(btn => {

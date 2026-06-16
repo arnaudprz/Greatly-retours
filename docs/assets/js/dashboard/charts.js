@@ -202,9 +202,9 @@ const VERBATIMS = {
   ],
   lucidite: [
     { date: '10 juin 2026', tag: 'Atelier 5', text: 'L\'exercice sur la posture de leader m\'a fait prendre conscience de certains angles morts. Très utile.' },
-    { date: '5 juin 2026', tag: 'Atelier 4', text: 'Les échanges avec les autres dirigeants sont d\'une richesse incroyable. On ne trouve ça nulle part ailleurs.' },
+    { date: '5 juin 2026', tag: 'Atelier 4', text: 'Les échanges avec les autres membres sont d\'une richesse incroyable. On ne trouve ça nulle part ailleurs.' },
     { date: '30 mai 2026', tag: 'Atelier 5', text: 'La Greatly House crée une atmosphère qui facilite la prise de recul. On se sent en confiance pour partager.' },
-    { date: '20 mai 2026', tag: 'Atelier 3', text: 'J\'ai enfin mis des mots sur ce que je ressentais comme dirigeant. L\'outil compas est très éclairant.' },
+    { date: '20 mai 2026', tag: 'Atelier 3', text: 'J\'ai enfin mis des mots sur ce que je ressentais. L\'outil compas est très éclairant.' },
     { date: '15 mai 2026', tag: 'Atelier 4', text: 'Rencontre intense et bienveillante. Je repars avec un vrai élan pour les semaines à venir.' },
   ],
   prospect: {
@@ -213,7 +213,7 @@ const VERBATIMS = {
       'Un échange individuel avec Arnaud pour comprendre comment le programme s\'adapte à ma situation.',
       'Voir des témoignages vidéo de membres actuels.',
       'Une offre trimestrielle pour tester sans engagement long.',
-      'Savoir qu\'il y a d\'autres dirigeants de mon secteur dans le groupe.',
+      'Savoir qu\'il y a d\'autres membres de mon secteur dans le groupe.',
     ],
     suggestions: [
       'Rendre l\'offre plus lisible sur le site, j\'ai dû chercher pour comprendre le programme.',
@@ -267,8 +267,8 @@ const FEEDBACKS_ECRITS = [
   {
     date: '28 mai 2026',
     titre: 'Un format qui respecte notre temps',
-    html: '<p>En tant que dirigeante, mon agenda est une guerre de tranchées. <b>Greatly a trouvé le bon dosage :</b> des formats courts, un lieu accessible, une équipe qui comprend nos contraintes.</p><p>Je n\'ai manqué qu\'une seule séance en 4 mois. Pour moi, c\'est le meilleur indicateur.</p>',
-    texte: 'En tant que dirigeante, mon agenda est une guerre de tranchées. Greatly a trouvé le bon dosage.',
+    html: '<p>Mon agenda est une guerre de tranchées. <b>Greatly a trouvé le bon dosage :</b> des formats courts, un lieu accessible, une équipe qui comprend nos contraintes.</p><p>Je n\'ai manqué qu\'une seule séance en 4 mois. Pour moi, c\'est le meilleur indicateur.</p>',
+    texte: 'Mon agenda est une guerre de tranchées. Greatly a trouvé le bon dosage.',
   },
 ];
 
@@ -276,7 +276,7 @@ const ALERTES = [
   { ico: '⚠️', titre: 'Vestiaires club padel', text: 'Plusieurs retours négatifs sur la propreté des vestiaires depuis mars. À remonter au club.', severity: 'mid' },
   { ico: '📉', titre: 'Énergie avant en baisse', text: 'L\'énergie déclarée avant séance baisse légèrement en mai. Possible signe de fatigue saisonnière.', severity: 'low' },
   { ico: '💬', titre: 'Demande de format plus long', text: '3 membres ont mentionné qu\'ils aimeraient des séances yoga de 1h15 au lieu d\'1h.', severity: 'info' },
-  { ico: '🔔', titre: 'Atelier 3 — score en retrait', text: 'Le NPS de l\'atelier Compas est en retrait par rapport aux autres. Voir si le contenu doit évoluer.', severity: 'mid' },
+  { ico: '🔔', titre: 'Atelier 3 — score en retrait', text: 'Le score de recommandation de l\'atelier Compas est en retrait par rapport aux autres. Voir si le contenu doit évoluer.', severity: 'mid' },
 ];
 
 
@@ -501,7 +501,7 @@ function renderKPIs(isTous, isEnergie, isLucidite, m) {
   // Adapter les labels KPI selon le filtre
   const kpiNpsEl = document.querySelector('.k-nps .lab');
   if (kpiNpsEl) {
-    kpiNpsEl.textContent = isEnergie ? 'NPS Énergie' : isLucidite ? 'NPS Lucidité' : 'NPS global';
+    kpiNpsEl.textContent = isEnergie ? 'Recommandation Énergie' : isLucidite ? 'Recommandation Lucidité' : 'Recommandation';
   }
 
   // Adapter le KPI 2 selon filtre
@@ -596,7 +596,7 @@ function renderAteliers() {
     data: {
       labels: D.ateliersNoms,
       datasets: [{
-        label: 'NPS',
+        label: 'Recommandation',
         data: D.ateliersNPS,
         backgroundColor: D.ateliersNPS.map(v => v >= 75 ? C.good + 'CC' : v >= 60 ? C.mid + 'CC' : C.bad + 'CC'),
         borderRadius: 6,
@@ -625,7 +625,7 @@ function renderSports() {
     data: {
       labels: D.sportsNoms,
       datasets: [
-        { label: 'NPS', data: D.sportsNPS, backgroundColor: [C.lucidite + 'CC', C.energie + 'CC'], borderRadius: 6 },
+        { label: 'Recommandation', data: D.sportsNPS, backgroundColor: [C.lucidite + 'CC', C.energie + 'CC'], borderRadius: 6 },
         { label: 'Note moyenne', data: D.sportsNote.map(v => v * 10), backgroundColor: [C.lucidite + '55', C.energie + '55'], borderRadius: 6 },
       ],
     },
@@ -1092,7 +1092,7 @@ function renderProspect() {
     type: 'line',
     data: {
       labels: mois,
-      datasets: [lineds('NPS prospect', last(D.prospectNPS, m), '#8B6E4E')],
+      datasets: [lineds('Recommandation prospect', last(D.prospectNPS, m), '#8B6E4E')],
     },
     options: lineOpts(20, 90),
   });
