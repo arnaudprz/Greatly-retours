@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Vos retours membres — GREATLY</title>
+<meta name="description" content="Partagez votre ressenti après une séance Énergie ou un atelier Lucidité. Anonyme, 2 minutes.">
+
+<!-- Open Graph (partage WhatsApp, LinkedIn, iMessage…) -->
+<meta property="og:title" content="Greatly — Vos retours">
+<meta property="og:description" content="Partagez votre ressenti après une séance. 100 % anonyme, 2 minutes.">
+<meta property="og:image" content="https://arnaudprz.github.io/Greatly-retours/assets/og-retours.svg">
+<meta property="og:url" content="https://arnaudprz.github.io/Greatly-retours/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GREATLY">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Greatly — Vos retours">
+<meta name="twitter:description" content="Partagez votre ressenti après une séance. 100 % anonyme, 2 minutes.">
+<meta name="twitter:image" content="https://arnaudprz.github.io/Greatly-retours/assets/og-retours.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/shared.css">
+<link rel="stylesheet" href="assets/css/form.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div class="brand">Greatly</div>
+    <h1>Vos retours</h1>
+    <p>Quelques instants pour partager votre ressenti. Il n'y a pas de bonne réponse — juste la vôtre.</p>
+    <div class="anon">🤍 100&nbsp;% anonyme · 2 minutes</div>
+  </header>
+
+  <div class="progress" id="progress"></div>
+
+  <!-- ÉTAPE 0 : type de séance -->
+  <section class="step active" data-step="0">
+    <div class="q">
+      <h3>De quelle expérience souhaitez-vous nous parler ?</h3>
+      <div class="bigchoice">
+        <button type="button" class="bigbtn" data-type="energie">
+          <span class="ico" style="background:var(--energie-pale)">⛷️</span>
+          <span><b>Une séance Énergie</b><small>Activité physique — Yoga, Padel…</small></span>
+        </button>
+        <button type="button" class="bigbtn" data-type="lucidite">
+          <span class="ico" style="background:var(--lucidite-pale)">🦉</span>
+          <span><b>Un atelier Lucidité</b><small>Atelier réflexif autour d'un déjeuner</small></span>
+        </button>
+      </div>
+    </div>
+    <div class="nav">
+      <button type="button" class="btn-solid" id="start" disabled>Commencer</button>
+    </div>
+  </section>
+
+  <!-- ÉTAPE 1 : contexte -->
+  <section class="step" data-step="1">
+    <div class="q" id="q-sport">
+      <h3>Quelle activité avez-vous pratiquée ?</h3>
+      <div class="chips">
+        <button type="button" class="chip" data-v="Yoga">🧘 Yoga</button>
+        <button type="button" class="chip" data-v="Padel">🎾 Padel</button>
+      </div>
+    </div>
+    <div class="q" id="q-atelier" style="display:none">
+      <h3>Quel atelier avez-vous vécu ?</h3>
+      <div class="hint">Le programme compte 6 ateliers de juin à décembre 2026, puis le bilan en janvier 2027.</div>
+      <div class="chips" id="ateliers"></div>
+    </div>
+    <div class="nav">
+      <button type="button" class="btn-ghost nav-back">Retour</button>
+      <button type="button" class="btn-solid nav-next">Continuer</button>
+    </div>
+  </section>
+
+  <!-- ÉTAPE 2 : déroulé + échelles (généré dynamiquement) -->
+  <section class="step" data-step="2"></section>
+
+  <!-- ÉTAPE 3 : NPS + questions ouvertes (généré dynamiquement) -->
+  <section class="step" data-step="3"></section>
+
+  <!-- ÉTAPE 4 : merci -->
+  <section class="step" data-step="4">
+    <div class="merci">
+      <div class="big">🤍</div>
+      <h2>Merci d'avoir pris ce temps</h2>
+      <p>Votre ressenti, anonyme, rejoint ceux du groupe. Il nous aide à ajuster le programme au plus près de vos besoins. À très vite.</p>
+      <button type="button" class="btn-solid" style="max-width:260px" onclick="location.reload()">Déposer un autre retour</button>
+    </div>
+  </section>
+
+  <div class="foot">GREATLY · 10 rue de Lambersart, Verlinghem<br>Vos réponses sont anonymes et servent uniquement à améliorer le programme.</div>
+</div>
+
+<!-- Scripts -->
+<script src="assets/js/config.js?v=12"></script>
+<script src="assets/js/api.js?v=12"></script>
+<script src="assets/js/form/scales.js?v=12"></script>
+<script src="assets/js/form/state.js?v=12"></script>
+<script src="assets/js/form/ui.js?v=12"></script>
+<script src="assets/js/form/steps.js?v=12"></script>
+<script src="assets/js/form/submit.js?v=12"></script>
+<script>
+// --- Rôle fixe : membre ---
+state.role = 'membre';
+
+// --- Étape 0 : sélection du type ---
+document.querySelectorAll('[data-type]').forEach(btn =>
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-type]').forEach(x => x.classList.remove('sel'));
+    btn.classList.add('sel');
+    state.type = btn.dataset.type;
+    document.body.className = 't-' + state.type;
+    document.getElementById('start').disabled = false;
+  })
+);
+
+document.getElementById('start').addEventListener('click', () => {
+  buildContext();
+  buildScales();
+  buildOpens();
+  go(1);
+});
+
+// Sélection des chips statiques (Yoga / Padel)
+document.querySelectorAll('#q-sport .chip').forEach(c =>
+  c.addEventListener('click', () => {
+    document.querySelectorAll('#q-sport .chip').forEach(x => x.classList.remove('sel'));
+    c.classList.add('sel');
+  })
+);
+
+bindNav(document.querySelector('[data-step="1"]'));
+go(0);
+</script>
+</body>
+</html>

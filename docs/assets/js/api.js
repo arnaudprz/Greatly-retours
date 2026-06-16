@@ -13,8 +13,21 @@ const API = {
    * @param {object} payload — données à envoyer (sans action ni token)
    * @returns {Promise<object>} — réponse JSON du relais
    */
+  /** Génère un fingerprint simple basé sur le navigateur */
+  _fingerprint() {
+    const nav = navigator;
+    const raw = [nav.userAgent, nav.language, screen.width, screen.height, screen.colorDepth, new Date().getTimezoneOffset()].join('|');
+    let hash = 0;
+    for (let i = 0; i < raw.length; i++) { hash = ((hash << 5) - hash) + raw.charCodeAt(i); hash |= 0; }
+    return 'fp_' + Math.abs(hash).toString(36);
+  },
+
   async call(action, payload = {}) {
     const token = localStorage.getItem(CONFIG.TOKEN_KEY);
+    // Ajouter le fingerprint aux soumissions publiques (submit, request-access)
+    if (action === 'submit' || action === 'request-access') {
+      payload._fp = this._fingerprint();
+    }
     const body = JSON.stringify({ action, token, ...payload });
 
     const res = await fetch(CONFIG.RELAY_URL, {
