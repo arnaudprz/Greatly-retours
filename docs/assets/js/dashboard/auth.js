@@ -126,7 +126,7 @@ async function login() {
     document.getElementById('login-error').style.display = 'block';
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Recevoir mon lien de connexion';
+    btn.textContent = 'Se connecter →';
   }
 }
 

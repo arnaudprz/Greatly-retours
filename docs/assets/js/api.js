@@ -21,12 +21,21 @@ const API = {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body,
-      redirect: 'follow',  // Apps Script redirige 302 vers le résultat
+      redirect: 'follow',
     });
 
     if (!res.ok) throw new Error(`Erreur réseau (${res.status})`);
 
-    const data = await res.json();
+    // Apps Script redirige 302 → le content-type peut être text/html
+    // On parse le texte brut en JSON
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.error('Réponse non-JSON:', text.substring(0, 200));
+      throw new Error('Réponse serveur invalide');
+    }
     if (data.error) throw new Error(data.error);
     return data;
   },
