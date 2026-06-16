@@ -234,22 +234,42 @@ function aggregateData() {
     D.sourcesData = sourceEntries.map(([, v]) => v);
     D.sourcesColors = sourceEntries.map((_, i) => ['#6B7D5C', '#C0814E', '#4F7C82', '#8B6E4E', '#9B8B7A', '#7A6B8C', '#E7E1D7'][i % 7]);
 
-    // Freins
+    // Valeurs canoniques (mêmes clés que prospect.html) — sert de filtre anti-pollution
+    // pour les anciennes soumissions où freins/attraits étaient mélangés.
+    const FREINS_KEYS   = ['prix', 'temps', 'distance', 'format', 'comprehension', 'sport', 'aucun'];
+    const ATTRAITS_KEYS = ['sport', 'reflexion', 'groupe', 'lieu', 'approche', 'pause'];
+    // Libellés humains (mêmes que ATTRAITS_OPTIONS / FREINS_OPTIONS dans charts.js)
+    const FREINS_LABEL = {
+      prix: "L'investissement financier", temps: 'Trouver le temps', distance: 'Le déplacement',
+      format: 'Le format en groupe', comprehension: 'Pas clair pour moi',
+      sport: 'Le côté sportif intimide', aucun: 'Rien de particulier',
+    };
+    const ATTRAITS_LABEL = {
+      sport: 'Bouger, prendre soin du corps', reflexion: 'Prendre du recul',
+      groupe: 'Échanger entre pairs', lieu: 'Le cadre, la Greatly House',
+      approche: "L'approche globale", pause: "S'accorder une pause",
+    };
+
+    // Freins (filtrés sur les clés autorisées)
     const freinCount = {};
     prospects.forEach(r => {
-      if (r.freins && Array.isArray(r.freins)) r.freins.forEach(f => { freinCount[f] = (freinCount[f] || 0) + 1; });
+      if (r.freins && Array.isArray(r.freins)) r.freins.forEach(f => {
+        if (FREINS_KEYS.includes(f)) freinCount[f] = (freinCount[f] || 0) + 1;
+      });
     });
     const freinEntries = Object.entries(freinCount).sort((a, b) => b[1] - a[1]);
-    D.freinsLabels = freinEntries.map(([k]) => k);
+    D.freinsLabels = freinEntries.map(([k]) => FREINS_LABEL[k] || k);
     D.freinsData = freinEntries.map(([, v]) => v);
 
-    // Attraits
+    // Attraits (filtrés sur les clés autorisées)
     const attraitCount = {};
     prospects.forEach(r => {
-      if (r.attraits && Array.isArray(r.attraits)) r.attraits.forEach(a => { attraitCount[a] = (attraitCount[a] || 0) + 1; });
+      if (r.attraits && Array.isArray(r.attraits)) r.attraits.forEach(a => {
+        if (ATTRAITS_KEYS.includes(a)) attraitCount[a] = (attraitCount[a] || 0) + 1;
+      });
     });
     const attraitEntries = Object.entries(attraitCount).sort((a, b) => b[1] - a[1]);
-    D.attraitsLabels = attraitEntries.map(([k]) => k);
+    D.attraitsLabels = attraitEntries.map(([k]) => ATTRAITS_LABEL[k] || k);
     D.attraitsData = attraitEntries.map(([, v]) => v);
   }
 

@@ -88,7 +88,7 @@
     <div class="q">
       <h3>Y a-t-il des choses qui vous retiennent aujourd'hui ?</h3>
       <div class="hint">C'est normal d'hésiter. Ce qui compte, c'est de pouvoir en tenir compte. Cochez tout ce qui vous parle — ou rien du tout.</div>
-      <div class="chips multi">
+      <div class="chips multi" id="chips-freins">
         <button type="button" class="chip" data-v="prix">💰 L'investissement financier</button>
         <button type="button" class="chip" data-v="temps">⏰ Trouver le temps</button>
         <button type="button" class="chip" data-v="distance">📍 Le déplacement</button>
@@ -101,7 +101,7 @@
     <div class="q">
       <h3>Et à l'inverse, qu'est-ce qui vous a touché ou donné envie ?</h3>
       <div class="hint">Ce qui a retenu votre attention, même furtivement. Cochez ce qui vous parle.</div>
-      <div class="chips multi">
+      <div class="chips multi" id="chips-attraits">
         <button type="button" class="chip" data-v="sport">⛷️ Bouger, prendre soin de son corps</button>
         <button type="button" class="chip" data-v="reflexion">🦉 Prendre du recul, réfléchir autrement</button>
         <button type="button" class="chip" data-v="groupe">👥 Échanger entre pairs, sortir de l'isolement</button>
@@ -276,8 +276,8 @@ function serializeProspect() {
     impression: getNPS('nps-impression'),
     clarte: getNPS('nps-clarte'),
     pertinence: getNPS('nps-pertinence'),
-    freins: Array.from(document.querySelectorAll('[data-step="2"] .chips.multi:first-of-type .chip.sel')).map(c => c.dataset.v),
-    attraits: Array.from(document.querySelectorAll('[data-step="2"] .chips.multi:last-of-type .chip.sel')).map(c => c.dataset.v),
+    freins: Array.from(document.querySelectorAll('#chips-freins .chip.sel')).map(c => c.dataset.v),
+    attraits: Array.from(document.querySelectorAll('#chips-attraits .chip.sel')).map(c => c.dataset.v),
     valeur: getNPS('nps-valeur'),
     projection: getNPS('nps-projection'),
     nps: getNPS('nps-reco'),
