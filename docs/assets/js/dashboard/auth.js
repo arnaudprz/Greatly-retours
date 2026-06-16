@@ -56,8 +56,8 @@ function renderProfile() {
   const welcome = document.getElementById('head-welcome');
   if (welcome) {
     const firstname = profile.firstname ? profile.firstname : '';
-    const greeting = firstname ? `Bonjour ${firstname}.` : 'Bonjour.';
-    welcome.textContent = `${greeting} Cet espace rassemble les ressentis partagés par les membres et les intervenants après chaque séance. Il vous aide à suivre ce qui fonctionne, repérer ce qui peut évoluer, et ajuster le programme au plus près des besoins du groupe.`;
+    const greeting = firstname ? `Bonjour <b>${firstname}</b>.` : 'Bonjour.';
+    welcome.innerHTML = `${greeting}<br>Cet espace rassemble les ressentis partagés par les membres et les intervenants après chaque séance. Il vous aide à suivre ce qui fonctionne, repérer ce qui peut évoluer, et ajuster le programme au plus près des besoins du groupe.`;
   }
 }
 
