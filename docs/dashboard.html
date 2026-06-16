@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=28">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=28">
+<link rel="stylesheet" href="assets/css/shared.css?v=29">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=29">
 </head>
 <body>
 
@@ -159,7 +159,7 @@
     <!-- Logo + Guide -->
     <div class="navbar-brand">GREATLY</div>
     <a class="guide-badge" href="guide.html">📖 Guide · À lire</a>
-    <a class="guide-badge" href="#" onclick="event.preventDefault();document.querySelectorAll('.navbar-item').forEach(x=>x.classList.remove('on'));document.querySelector('[data-view=community]').classList.add('on');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById('view-community').classList.add('active');renderChat();" style="background:var(--lucidite);animation:none">💬 Une question ?</a>
+    <a class="guide-badge" href="#" id="btn-question" style="background:var(--lucidite);animation:none">💬 Une question ?</a>
 
     <!-- Menu principal -->
     <div class="navbar-menu">
@@ -740,15 +740,15 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=28"></script>
-<script src="assets/js/api.js?v=28"></script>
-<script src="assets/js/dashboard/filters.js?v=28"></script>
-<script src="assets/js/dashboard/charts.js?v=28"></script>
-<script src="assets/js/dashboard/auth.js?v=28"></script>
-<script src="assets/js/dashboard/data.js?v=28"></script>
-<script src="assets/js/dashboard/admin.js?v=28"></script>
-<script src="assets/js/dashboard/alerts.js?v=28"></script>
-<script src="assets/js/dashboard/chat.js?v=28"></script>
+<script src="assets/js/config.js?v=29"></script>
+<script src="assets/js/api.js?v=29"></script>
+<script src="assets/js/dashboard/filters.js?v=29"></script>
+<script src="assets/js/dashboard/charts.js?v=29"></script>
+<script src="assets/js/dashboard/auth.js?v=29"></script>
+<script src="assets/js/dashboard/data.js?v=29"></script>
+<script src="assets/js/dashboard/admin.js?v=29"></script>
+<script src="assets/js/dashboard/alerts.js?v=29"></script>
+<script src="assets/js/dashboard/chat.js?v=29"></script>
 <script>
 // Navigation principale (navbar)
 document.querySelectorAll('.navbar-item[data-view]').forEach(btn => {
@@ -811,6 +811,15 @@ if (filtersBar) {
 }
 
 // Vérifier la session existante au chargement
+// Bouton "Une question ?" → ouvre la vue communauté
+document.getElementById('btn-question').addEventListener('click', e => {
+  e.preventDefault();
+  document.querySelectorAll('.navbar-item').forEach(x => x.classList.remove('on'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-community').classList.add('active');
+  if (typeof renderChat === 'function') renderChat();
+});
+
 checkSession();
 </script>
 </body>
