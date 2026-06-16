@@ -22,6 +22,8 @@ function doPost(e) {
     if (!session) return json({ error: 'Session invalide ou expirée. Reconnectez-vous.' });
 
     if (action === 'data')           return json(getData(body, session));
+    if (action === 'chat.send')      return json(sendChatMessage(body, session));
+    if (action === 'chat.list')      return json(getChatMessages(body));
 
     // Routes admin (Super-admin requis)
     if (!session.isAdmin) return json({ error: 'Accès réservé aux super-admins.' });

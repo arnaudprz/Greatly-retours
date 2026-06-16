@@ -793,7 +793,8 @@ document.querySelectorAll('.navbar-item[data-view]').forEach(btn => {
     btn.classList.add('on');
     switchView(btn.dataset.view);
     if (btn.dataset.view === 'admin') loadPeople();
-    if (btn.dataset.view === 'community') renderChat();
+    if (btn.dataset.view === 'community') { renderChat(); startChatRefresh(); }
+    else { stopChatRefresh(); }
   });
 });
 

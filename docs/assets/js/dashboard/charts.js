@@ -56,13 +56,19 @@ function htm(id, v) {
   if (el) el.innerHTML = v;
 }
 
+const EMPTY_SVG = `<svg width="48" height="32" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M2 24C6 24 8 8 12 8C16 8 18 20 22 20C26 20 28 12 32 12C36 12 38 18 42 18C44 18 46 16 46 16" stroke="#CDD8BE" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+
+const EMPTY_DEFAULT_MSG = 'Les données apparaîtront ici dès les premiers retours.';
+
 /** Affiche un état vide dans un conteneur */
 function emptyState(containerId, message) {
   const el = document.getElementById(containerId);
   if (!el) return;
   el.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--warm-grey)">
-    <div style="font-size:1.5rem;margin-bottom:8px">📊</div>
-    <p style="font-size:.88rem;line-height:1.5">${message}</p>
+    <div style="margin-bottom:12px">${EMPTY_SVG}</div>
+    <p style="font-size:.88rem;line-height:1.5">${message || EMPTY_DEFAULT_MSG}</p>
   </div>`;
 }
 
@@ -78,8 +84,8 @@ function emptyStateCanvas(canvasId, message) {
     const div = document.createElement('div');
     div.className = 'empty-state';
     div.style.cssText = 'text-align:center;padding:40px 20px;color:var(--warm-grey)';
-    div.innerHTML = `<div style="font-size:1.5rem;margin-bottom:8px">📊</div>
-      <p style="font-size:.88rem;line-height:1.5">${message}</p>`;
+    div.innerHTML = `<div style="margin-bottom:12px">${EMPTY_SVG}</div>
+      <p style="font-size:.88rem;line-height:1.5">${message || EMPTY_DEFAULT_MSG}</p>`;
     parent.appendChild(div);
   }
 }

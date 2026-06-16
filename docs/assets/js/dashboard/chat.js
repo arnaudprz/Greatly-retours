@@ -35,13 +35,52 @@ const DEMO_MESSAGES = [
     { name: 'Thomas Bernard', date: '2026-06-14T08:45:00', text: 'Bonne nouvelle : le club padel a rénové ses vestiaires. Ça devrait se voir dans les prochains retours.' },
 ];
 
-/** Charge les messages (demo + localStorage) */
+// Messages chargés depuis l'API (mode réel) ou démo
+let liveMessages = null;
+let chatRefreshTimer = null;
+
+/** Charge les messages (demo + localStorage, ou API en mode réel) */
 function getMessages() {
+  // En mode réel, utiliser les messages chargés depuis l'API
+  if (!CONFIG.DEMO_MODE && liveMessages !== null) {
+    return [...liveMessages];
+  }
+  // Fallback : démo + localStorage
   try {
     const userMsgs = JSON.parse(localStorage.getItem(CHAT_KEY) || '[]');
     return [...DEMO_MESSAGES, ...userMsgs].sort((a, b) => new Date(a.date) - new Date(b.date));
   } catch (_) {
     return [...DEMO_MESSAGES];
+  }
+}
+
+/** Charge les messages depuis l'API */
+async function loadChatMessages() {
+  if (CONFIG.DEMO_MODE) return;
+  try {
+    const res = await API.call('chat.list');
+    if (res.ok && res.messages) {
+      liveMessages = res.messages;
+      renderChat();
+    }
+  } catch (err) {
+    console.warn('Chat: erreur chargement messages', err.message);
+  }
+}
+
+/** Démarre le rafraîchissement automatique (toutes les 30s) */
+function startChatRefresh() {
+  stopChatRefresh();
+  if (CONFIG.DEMO_MODE) return;
+  loadChatMessages();
+  chatRefreshTimer = setInterval(loadChatMessages, 30000);
+}
+
+/** Arrête le rafraîchissement automatique */
+function stopChatRefresh() {
+  if (chatRefreshTimer) {
+    clearInterval(chatRefreshTimer);
+    chatRefreshTimer = null;
   }
 }
 
@@ -131,7 +170,7 @@ function escapeHtml(text) {
 }
 
 /** Envoyer un message */
-function sendMessage() {
+async function sendMessage() {
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
   if (!text) return;
@@ -139,15 +178,25 @@ function sendMessage() {
   const profile = getProfile();
   const name = [profile.firstname, profile.lastname].filter(Boolean).join(' ') || 'Anonyme';
 
-  const msg = {
-    name,
-    date: new Date().toISOString(),
-    text,
-  };
-
-  storeMessage(msg);
-  input.value = '';
-  renderChat();
+  if (!CONFIG.DEMO_MODE) {
+    // Mode réel : envoyer via l'API
+    input.value = '';
+    try {
+      await API.call('chat.send', { message: text });
+      await loadChatMessages();
+    } catch (err) {
+      console.warn('Chat: erreur envoi', err.message);
+      // Fallback : stocker localement
+      storeMessage({ name, date: new Date().toISOString(), text });
+      renderChat();
+    }
+  } else {
+    // Mode démo : stockage local
+    const msg = { name, date: new Date().toISOString(), text };
+    storeMessage(msg);
+    input.value = '';
+    renderChat();
+  }
 }
 
 // Envoi par Entrée
