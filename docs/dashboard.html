@@ -3,12 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Vos retours · Espace équipe — GREATLY</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>const _v = Date.now();</script>
 <link rel="stylesheet" href="assets/css/shared.css?v=44">
 <link rel="stylesheet" href="assets/css/dashboard.css?v=44">
+<script>
+// Auto cache-bust: réécrit les liens CSS et scripts avec un timestamp
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('link[rel="stylesheet"][href*="?v="], script[src*="?v="]').forEach(el => {
+    const attr = el.href ? 'href' : 'src';
+    const url = el.getAttribute(attr);
+    if (url && !url.includes('googleapis') && !url.includes('jsdelivr')) {
+      el.setAttribute(attr, url.replace(/\?v=\d+/, '?v=' + _v));
+    }
+  });
+});
+</script>
 </head>
 <body>
 
@@ -16,7 +32,7 @@
 <div id="gate">
   <!-- Photo gauche -->
   <div class="gate-photo">
-    <img src="assets/img/house.jpg?v=44" alt="Greatly House" id="gate-img">
+    <img src="assets/img/house.jpg" alt="Greatly House" id="gate-img">
   </div>
 
   <!-- Contenu droite -->
