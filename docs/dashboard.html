@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="assets/css/shared.css?v=33">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=33">
+<link rel="stylesheet" href="assets/css/shared.css?v=34">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=34">
 </head>
 <body>
 
@@ -745,34 +745,43 @@
 </div>
 
 <!-- Scripts -->
-<script src="assets/js/config.js?v=33"></script>
-<script src="assets/js/api.js?v=33"></script>
-<script src="assets/js/dashboard/filters.js?v=33"></script>
-<script src="assets/js/dashboard/charts.js?v=33"></script>
-<script src="assets/js/dashboard/auth.js?v=33"></script>
-<script src="assets/js/dashboard/data.js?v=33"></script>
-<script src="assets/js/dashboard/admin.js?v=33"></script>
-<script src="assets/js/dashboard/alerts.js?v=33"></script>
-<script src="assets/js/dashboard/chat.js?v=33"></script>
+<script src="assets/js/config.js?v=34"></script>
+<script src="assets/js/api.js?v=34"></script>
+<script src="assets/js/dashboard/filters.js?v=34"></script>
+<script src="assets/js/dashboard/charts.js?v=34"></script>
+<script src="assets/js/dashboard/auth.js?v=34"></script>
+<script src="assets/js/dashboard/data.js?v=34"></script>
+<script src="assets/js/dashboard/admin.js?v=34"></script>
+<script src="assets/js/dashboard/alerts.js?v=34"></script>
+<script src="assets/js/dashboard/chat.js?v=34"></script>
 <script>
 // Navigation principale (navbar)
+// Navigation principale (navbar views)
+function switchView(viewName) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + viewName).classList.add('active');
+}
+
 document.querySelectorAll('.navbar-item[data-view]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.navbar-item').forEach(x => x.classList.remove('on'));
+    // Reset visuels
+    document.querySelectorAll('.navbar-item[data-view]').forEach(x => x.classList.remove('on'));
     btn.classList.add('on');
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-' + btn.dataset.view).classList.add('active');
-    if (btn.dataset.view === 'dashboard') {
-      // Reset to "Tous" view
-      F.type = 'tous';
-      document.getElementById('nav-type-btn').textContent = '📊 Résultats ▾';
-      document.querySelectorAll('#nav-type-wrap .navbar-dropdown button').forEach(x => x.classList.remove('on'));
-      document.querySelector('#nav-type-wrap .navbar-dropdown button[data-type="tous"]').classList.add('on');
-      render();
-    }
+    switchView(btn.dataset.view);
     if (btn.dataset.view === 'admin') loadPeople();
     if (btn.dataset.view === 'community') renderChat();
   });
+});
+
+// Icône maison — toujours ramener à vue dashboard + reset "Tous"
+document.querySelector('.navbar-item[data-view="dashboard"]').addEventListener('click', () => {
+  F.type = 'tous';
+  document.getElementById('nav-type-btn').textContent = '📊 Résultats ▾';
+  document.querySelectorAll('#nav-type-wrap .navbar-dropdown button').forEach(x => x.classList.remove('on'));
+  const tousBtn = document.querySelector('#nav-type-wrap .navbar-dropdown button[data-type="tous"]');
+  if (tousBtn) tousBtn.classList.add('on');
+  switchView('dashboard');
+  render();
 });
 
 // Dropdowns navbar
