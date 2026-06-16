@@ -4,7 +4,7 @@
 
 const CONFIG = {
   // URL du Web App Google Apps Script
-  RELAY_URL: 'https://script.google.com/macros/s/AKfycbwqQ2n3wJdlrIyja5D1a4ePXgfESj9JLJtUD74W-12Z_MFZ6GJZgHJdOFQxTju82gmrgA/exec',
+  RELAY_URL: 'https://script.google.com/macros/s/AKfycbyxnTKKMvIFG_TUJIvOnRofGPeNUw04CKjUdRO40SVaOlutGB0TZfnBIaATRAWdbDfYKQ/exec',
 
   // Mode production
   DEMO_MODE: false,
