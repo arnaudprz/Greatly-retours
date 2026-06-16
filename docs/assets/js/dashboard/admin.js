@@ -31,33 +31,42 @@ const DEMO_LOG = [
 ];
 
 
+// Données live (remplies par loadPeople)
+let livePeople = [];
+let liveRequests = [];
+let liveLog = [];
+
 /** Charge et affiche la liste des personnes */
 async function loadPeople() {
   if (CONFIG.DEMO_MODE) {
-    renderPeopleTable(DEMO_PEOPLE);
-    renderPendingRequests(DEMO_REQUESTS);
-    renderActivityLog(DEMO_LOG);
-    renderAdminKPIs();
-    return;
+    livePeople = DEMO_PEOPLE;
+    liveRequests = DEMO_REQUESTS;
+    liveLog = DEMO_LOG;
+  } else {
+    try {
+      const res = await API.getPeople();
+      livePeople = res.people || [];
+      liveRequests = res.requests || [];
+      liveLog = res.log || [];
+    } catch (err) {
+      console.error('Erreur chargement admin:', err);
+      return;
+    }
   }
-  try {
-    const res = await API.getPeople();
-    renderPeopleTable(res.people || []);
-    renderPendingRequests(res.requests || []);
-    renderActivityLog(res.log || []);
-    renderAdminKPIs();
-  } catch (err) {
-    console.error('Erreur chargement admin:', err);
-  }
+  renderPeopleTable(livePeople);
+  renderPendingRequests(liveRequests);
+  renderActivityLog(liveLog);
+  renderAdminKPIs();
 }
 
 function renderAdminKPIs() {
-  const active = DEMO_PEOPLE.filter(p => p.status === 'actif').length;
-  const pending = DEMO_PEOPLE.filter(p => p.status === 'invité').length + DEMO_REQUESTS.length;
+  const active = livePeople.filter(p => p.status === 'actif').length;
+  const pending = livePeople.filter(p => p.status === 'invité').length + liveRequests.length;
+  const connexions = liveLog.filter(l => l.action && l.action.toLowerCase().includes('connexion')).length;
   document.getElementById('ak-active').textContent = active;
   document.getElementById('ak-pending').textContent = pending;
-  document.getElementById('ak-conn').textContent = DEMO_LOG.filter(l => l.action === 'Connexion').length;
-  document.getElementById('ak-time').textContent = '12 min';
+  document.getElementById('ak-conn').textContent = connexions;
+  document.getElementById('ak-time').textContent = '—';
 }
 
 function renderPeopleTable(people) {
