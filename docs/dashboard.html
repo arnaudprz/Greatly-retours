@@ -890,7 +890,41 @@ document.getElementById('btn-question').addEventListener('click', e => {
   if (typeof renderChat === 'function') renderChat();
 });
 
-checkSession();
+// Au chargement : d'abord vérifier un magic link dans l'URL, sinon check session
+(async function() {
+  const params = new URLSearchParams(window.location.search);
+  const magicToken = params.get('magic');
+
+  if (magicToken) {
+    // Nettoyer l'URL
+    window.history.replaceState({}, '', window.location.pathname);
+
+    // Afficher un état de chargement
+    document.getElementById('gate').innerHTML = '<div style="text-align:center;padding:30vh 20px"><div style="font-size:.82rem;letter-spacing:.32em;font-weight:700;color:#4f5e42;text-transform:uppercase;margin-bottom:12px">GREATLY</div><p style="color:#6B6460;font-size:.95rem">Connexion en cours…</p></div>';
+
+    try {
+      const res = await API.call('verify-token', { token: magicToken });
+      if (res.ok && res.token) {
+        localStorage.setItem(CONFIG.TOKEN_KEY, res.token);
+        localStorage.setItem(CONFIG.ROLE_KEY, res.role);
+        localStorage.setItem(CONFIG.SESSION_START_KEY, Date.now().toString());
+        const profile = { firstname: res.firstname || '', lastname: res.lastname || '', email: res.email || '' };
+        localStorage.setItem('greatly_retours_profile', JSON.stringify(profile));
+        enterDashboard(res.role);
+        return;
+      } else {
+        alert(res.error || 'Lien invalide ou expiré.');
+      }
+    } catch (err) {
+      console.error('Erreur magic link:', err);
+    }
+    location.reload();
+    return;
+  }
+
+  // Pas de magic link → check session classique
+  checkSession();
+})();
 </script>
 </body>
 </html>

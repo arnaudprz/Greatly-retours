@@ -249,20 +249,61 @@ document.addEventListener('input', e => {
 });
 
 /** Vérifier si une session existe au chargement */
-function checkSession() {
+async function checkSession() {
   const token = localStorage.getItem(CONFIG.TOKEN_KEY);
   const role = localStorage.getItem(CONFIG.ROLE_KEY);
   const start = localStorage.getItem(CONFIG.SESSION_START_KEY);
 
-  if (token && start) {
-    const elapsed = Date.now() - parseInt(start);
-    if (elapsed < CONFIG.SESSION_TTL) {
-      enterDashboard(role);
-      return;
-    }
+  if (!token || !start) return;
+
+  // Invalider les anciens tokens démo
+  if (token.startsWith('demo_')) {
     localStorage.removeItem(CONFIG.TOKEN_KEY);
     localStorage.removeItem(CONFIG.ROLE_KEY);
     localStorage.removeItem(CONFIG.SESSION_START_KEY);
+    return;
+  }
+
+  // Vérifier l'expiration locale
+  const elapsed = Date.now() - parseInt(start);
+  if (elapsed >= CONFIG.SESSION_TTL) {
+    localStorage.removeItem(CONFIG.TOKEN_KEY);
+    localStorage.removeItem(CONFIG.ROLE_KEY);
+    localStorage.removeItem(CONFIG.SESSION_START_KEY);
+    return;
+  }
+
+  // Session valide
+  enterDashboard(role);
+
+  // Vérifier aussi le magic token dans l'URL (au cas où on arrive via un magic link)
+  handleMagicLinkFromURL();
+}
+
+/** Vérifie si l'URL contient un magic token et le valide */
+async function handleMagicLinkFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const magicToken = params.get('magic');
+  if (!magicToken) return;
+
+  // Nettoyer l'URL
+  window.history.replaceState({}, '', window.location.pathname);
+
+  try {
+    const res = await API.call('verify-token', { token: magicToken });
+    if (res.ok && res.token) {
+      localStorage.setItem(CONFIG.TOKEN_KEY, res.token);
+      localStorage.setItem(CONFIG.ROLE_KEY, res.role);
+      localStorage.setItem(CONFIG.SESSION_START_KEY, Date.now().toString());
+
+      // Sauvegarder le profil
+      const profile = { firstname: res.firstname || '', lastname: res.lastname || '', email: res.email || '' };
+      localStorage.setItem('greatly_retours_profile', JSON.stringify(profile));
+
+      enterDashboard(res.role);
+    }
+  } catch (err) {
+    console.error('Erreur magic link:', err);
   }
 }
 
