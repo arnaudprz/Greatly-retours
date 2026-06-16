@@ -85,8 +85,22 @@
   font-weight: 700;
   color: var(--sage-dark);
   text-transform: uppercase;
-  margin-right: 16px;
+  margin-right: 8px;
   flex-shrink: 0;
+}
+.guide-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--energie); color: #fff;
+  font-size: .72rem; font-weight: 700; letter-spacing: .03em;
+  padding: 5px 12px; border-radius: 99px;
+  text-decoration: none; margin-right: 12px; flex-shrink: 0;
+  animation: pulse-guide 2s ease-in-out infinite;
+  transition: background .12s;
+}
+.guide-badge:hover { background: var(--energie-dark, #9a6235); }
+@keyframes pulse-guide {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(192,129,78,.4); }
+  50% { box-shadow: 0 0 0 6px rgba(192,129,78,0); }
 }
 .navbar-menu {
   display: flex;
