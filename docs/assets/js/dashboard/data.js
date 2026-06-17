@@ -66,9 +66,10 @@ function aggregateData() {
       intervenants: monthlyAvg(intervenants_l, nps),
     },
     house: {
-      tous: monthlyAvg(ghResponses, nps),
-      membres: monthlyAvg(ghResponses, nps),
-      intervenants: monthlyAvg(ghResponses, nps),
+      // GH n'a pas de champ r.nps : la note "Recommanderiez-vous ce lieu ?" est dans echelles.recommander
+      tous: monthlyAvg(ghResponses, r => r.echelles && r.echelles.recommander),
+      membres: monthlyAvg(ghResponses, r => r.echelles && r.echelles.recommander),
+      intervenants: monthlyAvg(ghResponses, r => r.echelles && r.echelles.recommander),
     },
     global: {
       tous: monthlyAvg(all, nps),
