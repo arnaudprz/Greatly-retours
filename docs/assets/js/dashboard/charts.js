@@ -44,25 +44,16 @@ function fr(n) {
   return String(n.toFixed(1)).replace('.', ',');
 }
 
-/** Extraire les m derniers éléments d'un tableau */
-// Index dans MOIS du mois courant (= nb de mois écoulés depuis PROGRAM_START)
-const CURRENT_MOIS_IDX = (() => {
-  const now = new Date();
-  const diff = (now.getFullYear() - PROGRAM_START_YEAR) * 12 + (now.getMonth() - PROGRAM_START_MONTH);
-  return Math.max(0, Math.min(MOIS.length - 1, diff));
-})();
-
 /**
  * Aligne un tableau renvoyé par monthlyAvg (12 mois glissants, dernier = mois courant)
  * sur MOIS (qui commence à PROGRAM_START et peut s'étendre dans le futur).
  * Les mois futurs sont laissés à null pour qu'aucune barre ne s'affiche.
+ * NB : MOIS et CURRENT_MOIS_IDX sont définis plus bas — last() n'est appelée qu'après ce point.
  */
 function last(arr, _m) {
   if (!arr || arr.length === 0) return [];
-  // Cas dégénéré : MOIS ne contient pas le mois courant (déjà spécial), on tronque simplement.
   if (arr.length === MOIS.length) return arr.slice();
   const result = new Array(MOIS.length).fill(null);
-  // Le dernier élément de arr correspond au mois courant, qui est à l'index CURRENT_MOIS_IDX dans MOIS.
   for (let i = 0; i <= CURRENT_MOIS_IDX; i++) {
     const arrIdx = arr.length - 1 - (CURRENT_MOIS_IDX - i);
     if (arrIdx >= 0 && arrIdx < arr.length) result[i] = arr[arrIdx];
@@ -174,6 +165,13 @@ const MOIS = (() => {
     if (m > 11) { m = 0; y++; }
   }
   return result;
+})();
+
+// Index dans MOIS du mois courant (= nb de mois écoulés depuis PROGRAM_START), clampé à [0, MOIS.length-1]
+const CURRENT_MOIS_IDX = (() => {
+  const now = new Date();
+  const diff = (now.getFullYear() - PROGRAM_START_YEAR) * 12 + (now.getMonth() - PROGRAM_START_MONTH);
+  return Math.max(0, Math.min(MOIS.length - 1, diff));
 })();
 
 const D = {
