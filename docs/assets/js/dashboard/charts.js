@@ -667,8 +667,9 @@ function renderAteliers() {
       datasets: [{
         label: 'Recommandation',
         data: D.ateliersNPS,
-        backgroundColor: D.ateliersNPS.map(v => v >= 75 ? C.good + 'CC' : v >= 60 ? C.mid + 'CC' : C.bad + 'CC'),
+        backgroundColor: D.ateliersNPS.map(v => v >= 8 ? C.good + 'CC' : v >= 6 ? C.mid + 'CC' : C.bad + 'CC'),
         borderRadius: 6,
+        maxBarThickness: 60,
       }],
     },
     options: {
@@ -676,11 +677,14 @@ function renderAteliers() {
       maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: { backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10 },
+        tooltip: {
+          backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10,
+          callbacks: { label: ctx => ctx.raw == null ? '—' : fr(ctx.raw) + '/10' },
+        },
       },
       scales: {
         x: { grid: { display: false }, ticks: { font: { size: 11 } } },
-        y: { min: 0, max: 100, grid: GRID_OPTS, ticks: { font: { size: 11 } } },
+        y: { min: 0, max: 10, grid: GRID_OPTS, ticks: { font: { size: 11 } } },
       },
     },
   });
@@ -698,8 +702,8 @@ function renderSports() {
     data: {
       labels: D.sportsNoms,
       datasets: [
-        { label: 'Recommandation', data: D.sportsNPS, backgroundColor: [C.lucidite + 'CC', C.energie + 'CC'], borderRadius: 6 },
-        { label: 'Note moyenne', data: D.sportsNote.map(v => v * 10), backgroundColor: [C.lucidite + '55', C.energie + '55'], borderRadius: 6 },
+        { label: 'Recommandation', data: D.sportsNPS, backgroundColor: [C.lucidite + 'CC', C.energie + 'CC'], borderRadius: 6, maxBarThickness: 60 },
+        { label: 'Plaisir à bouger', data: D.sportsNote, backgroundColor: [C.lucidite + '55', C.energie + '55'], borderRadius: 6, maxBarThickness: 60 },
       ],
     },
     options: {
@@ -710,15 +714,13 @@ function renderSports() {
         tooltip: {
           backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10,
           callbacks: {
-            label: ctx => ctx.dataset.label === 'Note moyenne'
-              ? ctx.dataset.label + ': ' + (ctx.raw / 10).toFixed(1) + '/10'
-              : ctx.dataset.label + ': +' + ctx.raw,
+            label: ctx => ctx.dataset.label + ': ' + (ctx.raw == null ? '—' : fr(ctx.raw) + '/10'),
           },
         },
       },
       scales: {
         x: { grid: { display: false } },
-        y: { min: 0, max: 100, grid: GRID_OPTS },
+        y: { min: 0, max: 10, grid: GRID_OPTS },
       },
     },
   });

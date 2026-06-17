@@ -165,7 +165,8 @@ function aggregateData() {
   const atelierEntries = Object.entries(atelierMap);
   if (atelierEntries.length > 0) {
     D.ateliersNoms = atelierEntries.map(([name]) => name);
-    D.ateliersNPS = atelierEntries.map(([, vals]) => Math.round(npsScore(vals)));
+    // Note moyenne /10 par atelier (au lieu du score NPS)
+    D.ateliersNPS = atelierEntries.map(([, vals]) => +(vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1));
   }
 
   // --- Yoga vs Padel ---
@@ -173,7 +174,8 @@ function aggregateData() {
   const padel = membres_e.filter(r => r.contexte && r.contexte.sport === 'Padel');
   if (yoga.length > 0 || padel.length > 0) {
     D.sportsNoms = ['Yoga', 'Padel'];
-    D.sportsNPS = [npsScore(yoga.map(r => r.nps).filter(n => n != null)), npsScore(padel.map(r => r.nps).filter(n => n != null))];
+    // Notes moyennes /10 (au lieu de score NPS)
+    D.sportsNPS = [avg(yoga.map(r => r.nps).filter(n => n != null)), avg(padel.map(r => r.nps).filter(n => n != null))];
     D.sportsNote = [avg(yoga.map(r => r.echelles && r.echelles.plaisir).filter(n => n != null)), avg(padel.map(r => r.echelles && r.echelles.plaisir).filter(n => n != null))];
   }
 
