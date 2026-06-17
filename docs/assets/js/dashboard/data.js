@@ -224,6 +224,12 @@ function aggregateData() {
     D.prospectValeur = monthlyAvg(prospects, r => r.valeur);
     D.prospectPertinence = monthlyAvg(prospects, r => r.pertinence);
 
+    // Notes brutes 0-10 pour les doughnuts de répartition
+    const num = v => (typeof v === 'number' && v >= 0 && v <= 10) ? v : null;
+    D.prospectNPSRaw        = prospects.map(r => num(r.nps)).filter(v => v !== null);
+    D.prospectPertinenceRaw = prospects.map(r => num(r.pertinence)).filter(v => v !== null);
+    D.prospectProjectionRaw = prospects.map(r => num(r.projection)).filter(v => v !== null);
+
     // Sources
     const sourceCount = {};
     prospects.forEach(r => {

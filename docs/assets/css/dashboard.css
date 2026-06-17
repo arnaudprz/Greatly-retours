@@ -2,7 +2,7 @@
    Greatly — Vos retours · Dashboard
    ============================================ */
 
-.wrap { max-width: 1080px; margin: 0 auto; padding: 28px 22px 80px; }
+.wrap { max-width: 90%; width: 100%; margin: 0 auto; padding: 28px 22px 80px; }
 
 /* --- Gate (split screen) --- */
 #gate {
@@ -189,7 +189,7 @@
   height: 56px;
 }
 .navbar-inner {
-  max-width: 1080px;
+  max-width: 90%;
   margin: 0 auto;
   padding: 0 22px;
   height: 100%;

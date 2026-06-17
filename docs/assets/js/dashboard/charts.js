@@ -210,6 +210,10 @@ const D = {
 
   // --- Prospect ---
   prospectNPS:        [],
+  // Notes brutes (0-10) de toutes les réponses prospect, pour les doughnuts de répartition
+  prospectNPSRaw:        [],
+  prospectPertinenceRaw: [],
+  prospectProjectionRaw: [],
   prospectImpression: [],
   prospectClarte:     [],
   prospectProjection: [],
@@ -1148,32 +1152,136 @@ function renderRatingHist(canvasId, _moisAll, m, dataArr, label, color) {
   });
 }
 
-/** Histogramme horizontal multi-choix. Empty state propre si aucune réponse. */
-function renderChoiceHist(canvasId, dataLabels, dataValues, _fallbackOptions, color) {
+// Palette pour les "freins" (tons chauds/alerte) et les "attraits" (tons frais/positifs)
+const FREINS_PALETTE = ['#B05F4A', '#C0814E', '#D4A574', '#A66B4F', '#8B5A3C', '#C49A6B', '#9B8B7A'];
+const ATTRAITS_PALETTE = ['#5D7D50', '#6B7D5C', '#4F7C82', '#7A9B82', '#8FA68A', '#A8B89E', '#C0CCB8'];
+
+/** Doughnut multi-choix — chaque part = une option, tooltip = % au hover. */
+function renderChoiceHist(canvasId, dataLabels, dataValues, _fallbackOptions, _color, palette) {
   const hasData = dataValues && dataValues.length > 0 && dataValues.some(v => v > 0);
   if (!hasData) {
     emptyStateCanvas(canvasId, 'Pas encore de réponses — les options choisies apparaîtront ici, classées de la plus citée à la moins citée.');
     return;
   }
+  const total = dataValues.reduce((a, b) => a + (b || 0), 0);
+  const palette_ = palette || ATTRAITS_PALETTE;
+  const colors = dataLabels.map((_, i) => palette_[i % palette_.length]);
+
   mk(canvasId, {
-    type: 'bar',
+    type: 'doughnut',
     data: {
       labels: dataLabels,
       datasets: [{
         data: dataValues,
-        backgroundColor: color + 'AA', borderColor: color, borderWidth: 1, borderRadius: 6,
+        backgroundColor: colors,
+        borderWidth: 2,
+        borderColor: '#fff',
       }],
     },
     options: {
-      indexAxis: 'y',
       responsive: true, maintainAspectRatio: false,
+      cutout: '55%',
       plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => (ctx.raw || 0) + '%' } },
+        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, font: { size: 11 } } },
+        tooltip: {
+          backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10,
+          callbacks: {
+            label: ctx => {
+              const v = ctx.raw || 0;
+              const pct = total > 0 ? Math.round((v / total) * 100) : 0;
+              return ctx.label + ' : ' + pct + '%';
+            },
+          },
+        },
       },
-      scales: {
-        x: { min: 0, max: 100, grid: { color: '#E7E1D720' }, ticks: { callback: v => v + '%', font: { size: 11 } } },
-        y: { grid: { display: false } },
+    },
+  });
+}
+
+/** Deux doughnuts concentriques : ring extérieur = Question 1, ring intérieur = Question 2.
+ *  Répartition Fort (8-10) / Moyen (5-7) / Faible (0-4). Tooltip = question + catégorie + %.
+ */
+function renderDualBreakdown(canvasId, raw1, label1, raw2, label2) {
+  const has1 = raw1 && raw1.length > 0;
+  const has2 = raw2 && raw2.length > 0;
+  if (!has1 && !has2) {
+    emptyStateCanvas(canvasId, 'Les répartitions apparaîtront ici dès les premiers retours (Fort 8-10 · Moyen 5-7 · Faible 0-4).');
+    return;
+  }
+  const breakdown = arr => {
+    let high = 0, mid = 0, low = 0;
+    arr.forEach(v => { if (v >= 8) high++; else if (v >= 5) mid++; else low++; });
+    return [high, mid, low];
+  };
+  const datasets = [];
+  if (has1) datasets.push({
+    label: label1,
+    data: breakdown(raw1),
+    backgroundColor: [C.good, C.mid, C.bad],
+    borderWidth: 2, borderColor: '#fff',
+  });
+  if (has2) datasets.push({
+    label: label2,
+    data: breakdown(raw2),
+    backgroundColor: [C.good + 'BB', C.mid + 'BB', C.bad + 'BB'],
+    borderWidth: 2, borderColor: '#fff',
+  });
+  mk(canvasId, {
+    type: 'doughnut',
+    data: {
+      labels: ['Fort (8-10)', 'Moyen (5-7)', 'Faible (0-4)'],
+      datasets,
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '40%',
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, font: { size: 11 } } },
+        tooltip: {
+          backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10,
+          callbacks: {
+            label: ctx => {
+              const ds = ctx.dataset;
+              const total = ds.data.reduce((a, b) => a + b, 0);
+              const pct = total > 0 ? Math.round((ctx.raw / total) * 100) : 0;
+              return ds.label + ' — ' + ctx.label + ' : ' + pct + '%';
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+/** Doughnut NPS Promoteurs / Passifs / Détracteurs à partir d'une note brute 0-10. */
+function renderNpsBreakdown(canvasId, ratingsArr) {
+  const vals = (ratingsArr || []).filter(v => v !== null && v !== undefined);
+  if (vals.length === 0) {
+    emptyStateCanvas(canvasId, 'La répartition apparaîtra ici dès les premiers retours (Promoteurs 9-10 · Passifs 7-8 · Détracteurs 0-6).');
+    return;
+  }
+  let promo = 0, passif = 0, detrac = 0;
+  vals.forEach(v => { if (v >= 9) promo++; else if (v >= 7) passif++; else detrac++; });
+  const total = promo + passif + detrac;
+  mk(canvasId, {
+    type: 'doughnut',
+    data: {
+      labels: ['Promoteurs (9-10)', 'Passifs (7-8)', 'Détracteurs (0-6)'],
+      datasets: [{
+        data: [promo, passif, detrac],
+        backgroundColor: [C.good, C.mid, C.bad],
+        borderWidth: 2, borderColor: '#fff',
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '55%',
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, font: { size: 11 } } },
+        tooltip: {
+          backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10,
+          callbacks: { label: ctx => ctx.label + ' : ' + Math.round((ctx.raw / total) * 100) + '%' },
+        },
       },
     },
   });
@@ -1248,6 +1356,7 @@ function renderProspect() {
   if (D.sourcesData.length === 0) {
     emptyStateCanvas('c-prospect-sources', 'Pas encore de données sur les sources de découverte.');
   } else {
+    const sourcesTotal = D.sourcesData.reduce((a, b) => a + b, 0);
     mk('c-prospect-sources', {
       type: 'doughnut',
       data: {
@@ -1267,7 +1376,12 @@ function renderProspect() {
           legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10, font: { size: 11 } } },
           tooltip: {
             backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10,
-            callbacks: { label: ctx => ctx.label + ' : ' + ctx.raw + '%' },
+            callbacks: {
+              label: ctx => {
+                const pct = sourcesTotal > 0 ? Math.round((ctx.raw / sourcesTotal) * 100) : 0;
+                return ctx.label + ' : ' + pct + '%';
+              },
+            },
           },
         },
       },
@@ -1277,20 +1391,20 @@ function renderProspect() {
   // --- Perception valeur (histogramme 0-10) ---
   renderRatingHist('c-prospect-valeur', mois, m, D.prospectValeur, 'Perception valeur', C.sage);
 
-  // --- Freins (histogramme % par option, échelle toujours visible) ---
-  renderChoiceHist('c-prospect-freins', D.freinsLabels, D.freinsData, FREINS_OPTIONS, C.bad);
+  // --- Freins (doughnut coloré, % au hover) ---
+  renderChoiceHist('c-prospect-freins', D.freinsLabels, D.freinsData, FREINS_OPTIONS, C.bad, FREINS_PALETTE);
 
-  // --- Attraits (histogramme % par option, échelle toujours visible) ---
-  renderChoiceHist('c-prospect-attraits', D.attraitsLabels, D.attraitsData, ATTRAITS_OPTIONS, C.good);
+  // --- Attraits (doughnut coloré, % au hover) ---
+  renderChoiceHist('c-prospect-attraits', D.attraitsLabels, D.attraitsData, ATTRAITS_OPTIONS, C.good, ATTRAITS_PALETTE);
 
-  // --- Recommandation prospect (histogramme 0-10 par mois) ---
-  renderRatingHist('c-prospect-nps', mois, m, D.prospectNPS, 'Recommandation', '#8B6E4E');
+  // --- Recommandation prospect (doughnut Promoteurs / Passifs / Détracteurs) ---
+  renderNpsBreakdown('c-prospect-nps', D.prospectNPSRaw);
 
-  // --- Pertinence vs Projection (histogramme groupé 0-10) ---
-  renderDualRatingHist(
-    'c-prospect-pertproj', mois, m,
-    D.prospectPertinence, 'Pertinence perçue', C.sage,
-    D.prospectProjection, 'Projection', '#8B6E4E'
+  // --- Pertinence vs Projection (deux doughnuts côte à côte : répartition par catégorie) ---
+  renderDualBreakdown(
+    'c-prospect-pertproj',
+    D.prospectPertinenceRaw, 'Pertinence perçue',
+    D.prospectProjectionRaw, 'Projection'
   );
 
   // --- Verbatims prospect ---
