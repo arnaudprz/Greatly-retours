@@ -45,12 +45,29 @@ function fr(n) {
 }
 
 /** Extraire les m derniers éléments d'un tableau */
+// Index dans MOIS du mois courant (= nb de mois écoulés depuis PROGRAM_START)
+const CURRENT_MOIS_IDX = (() => {
+  const now = new Date();
+  const diff = (now.getFullYear() - PROGRAM_START_YEAR) * 12 + (now.getMonth() - PROGRAM_START_MONTH);
+  return Math.max(0, Math.min(MOIS.length - 1, diff));
+})();
+
+/**
+ * Aligne un tableau renvoyé par monthlyAvg (12 mois glissants, dernier = mois courant)
+ * sur MOIS (qui commence à PROGRAM_START et peut s'étendre dans le futur).
+ * Les mois futurs sont laissés à null pour qu'aucune barre ne s'affiche.
+ */
 function last(arr, _m) {
-  // Aligne toujours sur MOIS (juin du programme → mois courant).
-  // L'ancien filtre périodique a été supprimé : m est ignoré pour éviter
-  // les décalages quand monthlyAvg renvoie 12 mois glissants et MOIS n'en a que N.
   if (!arr || arr.length === 0) return [];
-  return arr.slice(-MOIS.length);
+  // Cas dégénéré : MOIS ne contient pas le mois courant (déjà spécial), on tronque simplement.
+  if (arr.length === MOIS.length) return arr.slice();
+  const result = new Array(MOIS.length).fill(null);
+  // Le dernier élément de arr correspond au mois courant, qui est à l'index CURRENT_MOIS_IDX dans MOIS.
+  for (let i = 0; i <= CURRENT_MOIS_IDX; i++) {
+    const arrIdx = arr.length - 1 - (CURRENT_MOIS_IDX - i);
+    if (arrIdx >= 0 && arrIdx < arr.length) result[i] = arr[arrIdx];
+  }
+  return result;
 }
 
 /** Vérifie si un tableau contient au moins une vraie valeur (non null) */
@@ -136,6 +153,7 @@ function emptyStateCanvas(canvasId, message) {
 const MOIS_NOMS = ['Janv.', 'Févr.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'];
 const PROGRAM_START_YEAR = 2026;
 const PROGRAM_START_MONTH = 5; // juin (0-indexé)
+const MIN_MOIS_LABELS = 6; // pour éviter les bars qui flottent quand on n'a que 1-2 mois
 const MOIS = (() => {
   const now = new Date();
   const endYear = now.getFullYear();
@@ -148,8 +166,13 @@ const MOIS = (() => {
     m++;
     if (m > 11) { m = 0; y++; }
   }
-  // Filet : on garantit au moins juin 2026 si la date courante est antérieure (cas dev)
   if (result.length === 0) result.push(MOIS_NOMS[PROGRAM_START_MONTH]);
+  // Étend dans le futur jusqu'à atteindre MIN_MOIS_LABELS (mois à venir, vides).
+  while (result.length < MIN_MOIS_LABELS) {
+    result.push(MOIS_NOMS[m]);
+    m++;
+    if (m > 11) { m = 0; y++; }
+  }
   return result;
 })();
 
@@ -334,7 +357,9 @@ function barOpts(yMin, yMax) {
       tooltip: { backgroundColor: '#1A1A1A', titleFont: { weight: '600' }, bodyFont: { size: 13 }, cornerRadius: 10, padding: 10 },
     },
     scales: {
-      x: { grid: { display: false } },
+      // categoryPercentage resserre les groupes de barres autour du label
+      // (sinon, avec 1 seul mois, les bars s'étalent sur toute la largeur)
+      x: { grid: { display: false }, categoryPercentage: 0.5 },
       y: { min: yMin, max: yMax, grid: GRID_OPTS, ticks: { font: { size: 11 } } },
     },
   };
@@ -348,7 +373,7 @@ function bards(label, data, color) {
     borderColor: color,
     borderWidth: 1,
     borderRadius: 4,
-    maxBarThickness: 60,
+    maxBarThickness: 48,
   };
 }
 

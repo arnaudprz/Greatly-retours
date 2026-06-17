@@ -52,6 +52,25 @@ function aggregateData() {
   D.npsLucidite = monthlyNPS(membres_l);
   D.npsGlobal = monthlyNPS(allMembres);
 
+  // --- Reco par canal × audience pour les KPI cards de tête ---
+  D.npsCards = {
+    energie: {
+      tous: monthlyNPS([...membres_e, ...intervenants_e]),
+      membres: monthlyNPS(membres_e),
+      intervenants: monthlyNPS(intervenants_e),
+    },
+    lucidite: {
+      tous: monthlyNPS([...membres_l, ...intervenants_l]),
+      membres: monthlyNPS(membres_l),
+      intervenants: monthlyNPS(intervenants_l),
+    },
+    house: {
+      tous: monthlyNPS(ghResponses),
+      membres: monthlyNPS(ghResponses),
+      intervenants: monthlyNPS(ghResponses),
+    },
+  };
+
   // NPS répartition par mois (aligné sur 12 mois)
   const npsRepart = monthlyNPSRepart(all);
   D.npsPromo = npsRepart.promo;
