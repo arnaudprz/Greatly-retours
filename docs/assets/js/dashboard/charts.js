@@ -434,9 +434,11 @@ function render() {
   show('lieux-section', isGreatlyHouse);
 
   // 'card-opens' et 'card-feedbacks' sont en dehors de standard-section dans le DOM
-  // → on les rend conditionnellement visibles uniquement pour membres + intervenants.
+  // - card-opens (réponses libres par question) : uniquement membres + intervenants
+  // - card-feedbacks : membres, intervenants ET prospects (chacun voit les siens)
   show('card-opens', isStandard);
-  show('card-feedbacks', isStandard);
+  show('card-feedbacks', isStandard || isProspects);
+  if (isProspects) renderFeedbacksEcrits();
 
   if (isStandard) renderStandard(true, false, false); // overview de tout le form
   if (isProspects) renderProspect();
@@ -1104,11 +1106,12 @@ function renderFeedbacksEcrits() {
   const list = document.getElementById('feedbacks-list');
   if (!list) return;
 
-  // Filtrer par audience active (membres = role 'membre', intervenants = role 'intervenant')
-  const audience = F.who; // 'membres' | 'intervenants' | autre
+  // Filtrer par audience active (chacun voit les feedbacks taggés à son role)
+  const audience = F.who; // 'membres' | 'intervenants' | 'prospects' | autre
   const filtered = FEEDBACKS_ECRITS.filter(fb => {
     if (audience === 'membres') return fb.role === 'membre';
     if (audience === 'intervenants') return fb.role === 'intervenant';
+    if (audience === 'prospects') return fb.role === 'prospect';
     return true;
   });
 
