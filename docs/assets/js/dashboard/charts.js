@@ -433,11 +433,10 @@ function render() {
   show('ivgreatly-section', isGreatly);
   show('lieux-section', isGreatlyHouse);
 
-  // Les cartes "Derniers retours / Feedbacks écrits / Points d'attention"
-  // viennent des forms membres + intervenants — masquées hors de ces onglets.
-  show('card-verbatims', isStandard);
+  // Carte "Feedbacks écrits" : forms membres + intervenants uniquement.
+  // (Les anciens blocs "Derniers retours" et "Points d'attention" ont été
+  // remplacés par "Réponses libres par question" qui couvre les mêmes données.)
   show('card-feedbacks', isStandard);
-  show('card-alerts', isIntervenants); // Points d'attention = retours intervenants uniquement
 
   if (isStandard) renderStandard(true, false, false); // overview de tout le form
   if (isProspects) renderProspect();
@@ -466,8 +465,6 @@ function renderStandard(_isOverview, _isEnergie, _isLucidite) {
   show('card-phases-l',  true);
   show('card-lieux',     isMembres);
   show('card-perint',    isMembres);
-  show('card-verbatims', true);
-  show('card-alerts',    true);
 
   // --- KPIs ---
   renderKPIs(true, false, false, m);
@@ -505,14 +502,8 @@ function renderStandard(_isOverview, _isEnergie, _isLucidite) {
   // --- Réponses ouvertes par question ---
   renderOpens();
 
-  // --- Verbatims ---
-  renderVerbatims(true, false, false);
-
   // --- Feedbacks écrits ---
   renderFeedbacksEcrits();
-
-  // --- Alertes ---
-  renderAlertes();
 }
 
 
@@ -893,44 +884,69 @@ function renderLieuxSynthese() {
 
 /* ---- Verbatims ---- */
 /* ---- Réponses ouvertes groupées par question (Membres ou Intervenants) ---- */
+// Questions ouvertes du formulaire — alignées sur OPENS dans assets/js/form/scales.js
+const OPENS_BY_AUDIENCE = {
+  membres: {
+    energie: [
+      "Qu'emportez-vous avec vous après cette séance ?",
+      "Y a-t-il un moment qui vous a particulièrement marqué ?",
+      "Si vous pouviez changer une chose pour la prochaine fois ?",
+    ],
+    lucidite: [
+      "Qu'est-ce qui vous a le plus touché ou surpris aujourd'hui ?",
+      "Si vous pouviez changer une chose pour le prochain atelier ?",
+    ],
+  },
+  intervenants: {
+    energie: [
+      "Qu'est-ce qui a bien fonctionné dans cette séance ?",
+      "Avez-vous repéré des signaux à partager avec l'équipe ?",
+      "Qu'ajusteriez-vous pour la prochaine séance ?",
+    ],
+    lucidite: [
+      "Qu'est-ce qui a bien fonctionné dans cet atelier ?",
+      "Avez-vous perçu des signaux à partager avec l'équipe ?",
+      "Qu'ajusteriez-vous pour le prochain atelier ?",
+    ],
+  },
+};
+
 function renderOpens() {
   const list = document.getElementById('opens-list');
   if (!list) return;
   const audience = (F.who === 'intervenants') ? 'intervenants' : 'membres';
   const src = (D.openByQ && D.openByQ[audience]) || { energie: {}, lucidite: {} };
+  const tpl = OPENS_BY_AUDIENCE[audience];
   const escape = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
   const sections = [
-    { title: '⛷️ Parcours Énergie', color: C.energie, map: src.energie || {} },
-    { title: '🦉 Parcours Lucidité', color: C.lucidite, map: src.lucidite || {} },
+    { title: '⛷️ Parcours Énergie', color: C.energie, qs: tpl.energie, answers: src.energie || {} },
+    { title: '🦉 Parcours Lucidité', color: C.lucidite, qs: tpl.lucidite, answers: src.lucidite || {} },
   ];
 
   let html = '';
   sections.forEach(s => {
-    const entries = Object.entries(s.map).filter(([, answers]) => answers && answers.length > 0);
-    if (entries.length === 0) return;
     html += `<div class="opens-section">
       <div class="opens-section-title" style="border-left:3px solid ${s.color}">${s.title}</div>`;
-    entries.forEach(([q, answers]) => {
+    s.qs.forEach(q => {
+      const answers = s.answers[q] || [];
       html += `<div class="opens-q-block">
-        <div class="opens-q">« ${escape(q)} »</div>
-        <div class="opens-answers">${
+        <div class="opens-q">« ${escape(q)} »</div>`;
+      if (answers.length === 0) {
+        html += `<div class="opens-empty">Pas encore de réponse</div>`;
+      } else {
+        html += `<div class="opens-answers">${
           answers.map(a => `<div class="opens-a">
             <span class="opens-a-meta">${a.date || ''}</span>
             <p>${escape(a.text)}</p>
           </div>`).join('')
-        }</div>
-      </div>`;
+        }</div>`;
+      }
+      html += `</div>`;
     });
     html += `</div>`;
   });
 
-  if (!html) {
-    list.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
-      <p style="font-size:.88rem;line-height:1.5">Les réponses libres apparaîtront ici au fil des retours.</p>
-    </div>`;
-    return;
-  }
   list.innerHTML = html;
 }
 

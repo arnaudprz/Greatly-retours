@@ -416,6 +416,12 @@ body.is-admin .admin-only { display: inline-flex; }
 }
 .opens-a-meta { font-size: .72rem; color: var(--warm-grey); }
 .opens-a p { margin: 4px 0 0; font-size: .88rem; line-height: 1.5; color: var(--ink); }
+.opens-empty {
+  font-size: .82rem;
+  font-style: italic;
+  color: var(--warm-grey);
+  padding: 6px 0 0 12px;
+}
 
 .metric-headline {
   display: flex;
