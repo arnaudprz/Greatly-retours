@@ -185,6 +185,7 @@ const D = {
     energie:  { tous: [], membres: [], intervenants: [] },
     lucidite: { tous: [], membres: [], intervenants: [] },
     house:    { tous: [], membres: [], intervenants: [] },
+    global:   { tous: [], membres: [], intervenants: [] },
   },
 
   // --- Énergie avant/après (0-10) ---
@@ -372,6 +373,7 @@ function bards(label, data, color) {
     borderWidth: 1,
     borderRadius: 4,
     maxBarThickness: 48,
+    barPercentage: 1.0, // colle les barres d'un même mois (évite que la 2e bar déborde sur le mois suivant)
   };
 }
 
@@ -544,31 +546,37 @@ function renderKPIs(isTous, isEnergie, isLucidite, m) {
 
 /* ---- NPS évolution ---- */
 function renderNPS(mois, m, isTous, isEnergie, isLucidite) {
-  const hasEnergie = hasData(D.npsEnergie);
-  const hasLucidite = hasData(D.npsLucidite);
+  // Sélectionne les séries filtrées par audience (membres/intervenants/tous)
+  const audience = (F.who === 'membres' || F.who === 'intervenants') ? F.who : 'tous';
+  const sEnergie  = (D.npsCards.energie  && D.npsCards.energie[audience])  || [];
+  const sLucidite = (D.npsCards.lucidite && D.npsCards.lucidite[audience]) || [];
+  const sGlobal   = (D.npsCards.global   && D.npsCards.global[audience])   || [];
 
-  if (!hasEnergie && !hasLucidite) {
+  const hasEnergie  = hasData(sEnergie);
+  const hasLucidite = hasData(sLucidite);
+  const hasGlobal   = hasData(sGlobal);
+
+  if (!hasEnergie && !hasLucidite && !hasGlobal) {
     emptyStateCanvas('c-nps', 'Les données apparaîtront ici dès les premiers retours.');
     return;
   }
 
-  // Trouver les données à afficher et tronquer aux mois avec data
   const allSeries = [
-    (isTous || isEnergie) && hasEnergie ? last(D.npsEnergie, m) : null,
-    (isTous || isLucidite) && hasLucidite ? last(D.npsLucidite, m) : null,
-    isTous && hasData(D.npsGlobal) ? last(D.npsGlobal, m) : null,
+    (isTous || isEnergie) && hasEnergie ? last(sEnergie, m) : null,
+    (isTous || isLucidite) && hasLucidite ? last(sLucidite, m) : null,
+    isTous && hasGlobal ? last(sGlobal, m) : null,
   ].filter(Boolean);
   const t = trimToData(mois, ...allSeries);
 
   const datasets = [];
   if ((isTous || isEnergie) && hasEnergie) {
-    datasets.push(bards('Énergie', trimData(last(D.npsEnergie, m), t.start), C.energie));
+    datasets.push(bards('Énergie', trimData(last(sEnergie, m), t.start), C.energie));
   }
   if ((isTous || isLucidite) && hasLucidite) {
-    datasets.push(bards('Lucidité', trimData(last(D.npsLucidite, m), t.start), C.lucidite));
+    datasets.push(bards('Lucidité', trimData(last(sLucidite, m), t.start), C.lucidite));
   }
-  if (isTous && hasData(D.npsGlobal)) {
-    datasets.push(bards('Global', trimData(last(D.npsGlobal, m), t.start), C.sage));
+  if (isTous && hasGlobal) {
+    datasets.push(bards('Global', trimData(last(sGlobal, m), t.start), C.sage));
   }
   if (datasets.length === 0) {
     emptyStateCanvas('c-nps', 'Les données apparaîtront ici dès les premiers retours.');
@@ -1369,28 +1377,28 @@ function renderProspect() {
   const m = F.period;
   const mois = last(MOIS, m);
 
-  // --- KPIs ---
-  const npsArr = last(D.prospectNPS, m);
-  if (npsArr.length === 0) {
-    txt('pk-nps', '—');
-  } else {
-    txt('pk-nps', '+' + npsArr[npsArr.length - 1]);
-  }
+  // --- KPIs (dernier mois avec une valeur non-null, sinon —) ---
+  const lastVal = arr => {
+    for (let i = arr.length - 1; i >= 0; i--) if (arr[i] != null) return arr[i];
+    return null;
+  };
+  const np = lastVal(last(D.prospectNPS, m));
+  txt('pk-nps', np != null ? '+' + np : '—');
 
-  const impArr = last(D.prospectImpression, m);
-  txt('pk-impression', impArr.length > 0 ? fr(impArr[impArr.length - 1]) : '—');
+  const ip = lastVal(last(D.prospectImpression, m));
+  txt('pk-impression', ip != null ? fr(ip) : '—');
 
-  const clArr = last(D.prospectClarte, m);
-  txt('pk-clarte', clArr.length > 0 ? fr(clArr[clArr.length - 1]) : '—');
+  const cl = lastVal(last(D.prospectClarte, m));
+  txt('pk-clarte', cl != null ? fr(cl) : '—');
 
-  const pertArr = last(D.prospectPertinence, m);
-  txt('pk-pertinence', pertArr.length > 0 ? fr(pertArr[pertArr.length - 1]) : '—');
+  const pe = lastVal(last(D.prospectPertinence, m));
+  txt('pk-pertinence', pe != null ? fr(pe) : '—');
 
-  const valArr = last(D.prospectValeur, m);
-  txt('pk-valeur', valArr.length > 0 ? fr(valArr[valArr.length - 1]) : '—');
+  const va = lastVal(last(D.prospectValeur, m));
+  txt('pk-valeur', va != null ? fr(va) : '—');
 
-  const prArr = last(D.prospectProjection, m);
-  txt('pk-projection', prArr.length > 0 ? fr(prArr[prArr.length - 1]) : '—');
+  const pr = lastVal(last(D.prospectProjection, m));
+  txt('pk-projection', pr != null ? fr(pr) : '—');
 
   // --- Sources de découverte (doughnut) ---
   if (D.sourcesData.length === 0) {

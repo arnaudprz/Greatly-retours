@@ -52,7 +52,7 @@ function aggregateData() {
   D.npsLucidite = monthlyNPS(membres_l);
   D.npsGlobal = monthlyNPS(allMembres);
 
-  // --- Reco par canal × audience pour les KPI cards de tête ---
+  // --- Reco par canal × audience pour les KPI cards de tête + chart évolution ---
   D.npsCards = {
     energie: {
       tous: monthlyNPS([...membres_e, ...intervenants_e]),
@@ -68,6 +68,11 @@ function aggregateData() {
       tous: monthlyNPS(ghResponses),
       membres: monthlyNPS(ghResponses),
       intervenants: monthlyNPS(ghResponses),
+    },
+    global: {
+      tous: monthlyNPS(all),
+      membres: monthlyNPS(allMembres),
+      intervenants: monthlyNPS(allIntervenants),
     },
   };
 
