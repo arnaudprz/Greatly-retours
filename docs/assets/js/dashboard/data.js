@@ -203,17 +203,30 @@ function aggregateData() {
   const allSportNotes = [...yogaLieu, ...padelLieu];
 
   if (allHouseNotes.length > 0 || allSportNotes.length > 0) {
-    D.lieuxNoms = ['Greatly House', 'Lieu Yoga', 'Lieu Padel'];
-    D.lieuxNotes = [avg(allHouseNotes), avg(yogaLieu), avg(padelLieu)];
+    // Vue d'ensemble Greatly House : note moyenne donnée par chaque audience
+    // (phases "Greatly House" des ateliers Lucidité + form GH dédié)
+    const ghFormAvg = (r) => {
+      if (!r.echelles) return null;
+      const vals = Object.values(r.echelles).filter(v => v !== null && v !== undefined);
+      return vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+    };
+    const houseMembres = [
+      ...membres_l.map(r => phaseValue(r, 'Greatly House')).filter(n => n != null),
+      // GH form sans role → attribué aux membres (cible principale du lieu)
+      ...ghResponses.filter(r => !r.role || r.role === 'membre').map(ghFormAvg).filter(n => n != null),
+    ];
+    const houseIntervenants = [
+      ...intervenants_l.map(r => phaseValue(r, 'Greatly House')).filter(n => n != null),
+      ...ghResponses.filter(r => r.role === 'intervenant').map(ghFormAvg).filter(n => n != null),
+    ];
+    D.lieuxNoms = ['Membres', 'Intervenants'];
+    D.lieuxNotes = [avg(houseMembres), avg(houseIntervenants)];
 
     // Évolution mensuelle : combiner les deux sources pour Greatly House
     const houseMonthly = monthlyAvgMulti([
       { responses: membres_l, getter: r => phaseValue(r, 'Greatly House') },
-      { responses: ghResponses, getter: r => {
-        if (!r.echelles) return null;
-        const vals = Object.values(r.echelles).filter(v => v !== null && v !== undefined);
-        return vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
-      }},
+      { responses: intervenants_l, getter: r => phaseValue(r, 'Greatly House') },
+      { responses: ghResponses, getter: ghFormAvg },
     ]);
     D.lieuxHouse = houseMonthly;
     D.lieuxSport = monthlyAvg(membres_e, r => phaseValue(r, 'Lieu'));

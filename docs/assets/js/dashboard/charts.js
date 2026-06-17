@@ -1142,29 +1142,28 @@ function renderLieux() {
   const m = F.period;
   const mois = last(MOIS, m);
 
-  // KPIs (données déjà combinées dans l'agrégation)
+  // KPI Greatly House : moyenne globale (membres + intervenants)
   if (D.lieuxNotes.length >= 1) {
-    txt('lx-house', fr(D.lieuxNotes[0]));
-    const sportAvg = D.lieuxNotes.length >= 3 ? (D.lieuxNotes[1] + D.lieuxNotes[2]) / 2 : 0;
-    txt('lx-sport', sportAvg > 0 ? fr(sportAvg) : '—');
+    const vals = D.lieuxNotes.filter(v => v > 0);
+    const globalAvg = vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+    txt('lx-house', globalAvg > 0 ? fr(globalAvg) : '—');
   } else {
     txt('lx-house', '—');
-    txt('lx-sport', '—');
   }
 
-  // Vue d'ensemble (horizontal bar) — ne montrer que les lieux avec des données
+  // Vue d'ensemble Greatly House (horizontal bar) — Membres vs Intervenants
   const lieuxFiltered = D.lieuxNoms.map((n, i) => ({ name: n, val: D.lieuxNotes[i] })).filter(l => l.val > 0);
   if (lieuxFiltered.length === 0) {
-    emptyStateCanvas('c-lieux-overview', 'Pas encore de retours sur les lieux.');
+    emptyStateCanvas('c-lieux-overview', 'Pas encore de retours sur la Greatly House.');
   } else {
-    const colors = [C.sage + 'CC', C.lucidite + 'AA', C.energie + 'AA'];
+    const colors = { 'Membres': C.sage + 'CC', 'Intervenants': C.lucidite + 'CC' };
     mk('c-lieux-overview', {
       type: 'bar',
       data: {
         labels: lieuxFiltered.map(l => l.name),
         datasets: [{
           data: lieuxFiltered.map(l => l.val),
-          backgroundColor: lieuxFiltered.map((_, i) => colors[i % colors.length]),
+          backgroundColor: lieuxFiltered.map(l => colors[l.name] || C.sage + 'CC'),
           borderRadius: 6,
         }],
       },
