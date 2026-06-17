@@ -67,9 +67,10 @@ function aggregateData() {
     },
     house: {
       // GH n'a pas de champ r.nps : la note "Recommanderiez-vous ce lieu ?" est dans echelles.recommander
+      // Le formulaire GH n'envoie pas de role → on attribue par défaut aux membres (cible principale)
       tous: monthlyAvg(ghResponses, r => r.echelles && r.echelles.recommander),
       membres: monthlyAvg(ghResponses, r => r.echelles && r.echelles.recommander),
-      intervenants: monthlyAvg(ghResponses, r => r.echelles && r.echelles.recommander),
+      intervenants: [],
     },
     global: {
       tous: monthlyAvg(all, nps),
