@@ -362,6 +362,14 @@ body.is-admin .admin-only { display: inline-flex; }
   font-size: 2rem;
   margin: 2px 0;
 }
+.kpi .kpi-q {
+  font-size: .72rem;
+  font-style: italic;
+  color: var(--warm-grey);
+  line-height: 1.35;
+  margin: 4px 0 6px;
+  min-height: 2.7em;
+}
 .kpi .sub { font-size: .78rem; color: var(--warm-grey); }
 .kpi .up { color: var(--good); font-weight: 600; }
 .kpi.k-nps {
