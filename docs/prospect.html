@@ -35,10 +35,31 @@
     <div class="anon">🤍 100&nbsp;% anonyme · 3 minutes · sans engagement</div>
   </header>
 
-  <div class="progress" id="progress"></div>
+  <!-- INTRO : choix du type de retour (avant le formulaire prospect) -->
+  <section id="intro-section">
+    <div class="q">
+      <h3>De quoi souhaitez-vous nous parler ?</h3>
+      <div class="bigchoice">
+        <button type="button" class="bigbtn" onclick="startProspect()">
+          <span class="ico" style="background:var(--energie-pale)">🌿</span>
+          <span><b>Mon regard de futur membre</b><small>Vos impressions sur Greatly, ce qui vous attire ou vous freine</small></span>
+        </button>
+        <a href="greatlyhouse.html?role=prospect" class="bigbtn" style="text-decoration:none;color:inherit">
+          <span class="ico" style="background:var(--sage-pale)">🏡</span>
+          <span><b>La Greatly House</b><small>Votre ressenti sur le lieu — atmosphère, confort, accueil</small></span>
+        </a>
+        <a href="ecrit.html?role=prospect" class="bigbtn" style="text-decoration:none;color:inherit">
+          <span class="ico" style="background:var(--lucidite-pale)">✍️</span>
+          <span><b>Un feedback écrit</b><small>Un retour libre et détaillé, à votre rythme</small></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="progress" id="progress" style="display:none"></div>
 
   <!-- ÉTAPE 0 : Comment vous nous avez connus -->
-  <section class="step active" data-step="0">
+  <section class="step" data-step="0">
     <div class="q">
       <h3>Comment nos chemins se sont-ils croisés ?</h3>
       <div class="hint">Pas besoin de vous souvenir du détail — l'idée générale suffit.</div>
@@ -311,7 +332,13 @@ document.getElementById('btn-send-prospect').addEventListener('click', async () 
   }
 });
 
-go(0);
+// Le formulaire prospect ne démarre QUE quand l'utilisateur clique sur
+// "Mon regard de futur membre" depuis l'écran d'intro (3 choix).
+function startProspect() {
+  document.getElementById('intro-section').style.display = 'none';
+  document.getElementById('progress').style.display = '';
+  go(0);
+}
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}</script>
 </body>
