@@ -350,6 +350,29 @@
 
       <!-- ============ VUE LIEUX (filtre 📍 Lieux) ============ -->
       <div id="lieux-section" style="display:none">
+
+        <!-- KPIs Greatly House : reco membres + reco intervenants + nombre de retours -->
+        <div class="kpis">
+          <div class="kpi k-nps">
+            <div class="lab">Reco membres <a href="guide.html#lieux" target="_blank" class="help-link">?</a></div>
+            <div class="kpi-q">« Recommanderiez-vous ce lieu ? » — note des membres</div>
+            <div class="val" id="gh-reco-membres">—</div>
+            <div class="sub" id="gh-reco-membres-sub">sur la période</div>
+          </div>
+          <div class="kpi">
+            <div class="lab">Reco intervenants <a href="guide.html#lieux" target="_blank" class="help-link">?</a></div>
+            <div class="kpi-q">« Recommanderiez-vous ce lieu ? » — note des intervenants</div>
+            <div class="val" id="gh-reco-intervenants">—</div>
+            <div class="sub" id="gh-reco-intervenants-sub">sur la période</div>
+          </div>
+          <div class="kpi">
+            <div class="lab">Nombre de retours</div>
+            <div class="kpi-q">Total des réponses Greatly House reçues</div>
+            <div class="val" id="gh-nb">—</div>
+            <div class="sub" id="gh-nb-sub"></div>
+          </div>
+        </div>
+
         <div class="grid">
           <div class="card full">
             <h3>Vue d'ensemble — Greatly House <a href="guide.html#lieux" target="_blank" class="help-link">?</a></h3>

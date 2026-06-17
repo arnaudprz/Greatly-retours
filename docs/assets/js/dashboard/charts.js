@@ -1142,7 +1142,7 @@ function renderLieux() {
   const m = F.period;
   const mois = last(MOIS, m);
 
-  // KPI Greatly House : moyenne globale (membres + intervenants)
+  // KPI Greatly House : moyenne globale (legacy KPI lx-house qui peut exister ailleurs)
   if (D.lieuxNotes.length >= 1) {
     const vals = D.lieuxNotes.filter(v => v > 0);
     const globalAvg = vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
@@ -1150,6 +1150,25 @@ function renderLieux() {
   } else {
     txt('lx-house', '—');
   }
+
+  // KPI 3-en-1 en haut de l'onglet Greatly House : Reco Membres / Reco Intervenants / Nb retours
+  const recoMembres = (D.npsCards && D.npsCards.house && D.npsCards.house.membres) || [];
+  const recoIntervenants = (D.npsCards && D.npsCards.house && D.npsCards.house.intervenants) || [];
+  const lastNonNull = arr => { for (let i = arr.length - 1; i >= 0; i--) if (arr[i] != null) return arr[i]; return null; };
+  const rm = lastNonNull(last(recoMembres, m));
+  const ri = lastNonNull(last(recoIntervenants, m));
+  txt('gh-reco-membres', rm != null ? fr(rm) + '/10' : '—');
+  txt('gh-reco-intervenants', ri != null ? fr(ri) + '/10' : '—');
+
+  // Nombre total de retours qui concernent la Greatly House (form GH + phases GH des ateliers)
+  const all = (typeof rawResponses !== 'undefined' && rawResponses) ? rawResponses : [];
+  const nbGh = all.filter(r => r.type === 'greatly_house').length;
+  const nbPhase = all.filter(r => r.type === 'lucidite' && r.phases && r.phases['Greatly House'] != null).length;
+  const totalGh = nbGh + nbPhase;
+  txt('gh-nb', totalGh > 0 ? String(totalGh) : '—');
+  txt('gh-nb-sub', totalGh === 0 ? 'Pas encore de retours' :
+    (totalGh === 1 ? '1 retour' : totalGh + ' retours') +
+    (nbGh > 0 ? ' (' + nbGh + ' via formulaire dédié)' : ''));
 
   // Vue d'ensemble Greatly House (horizontal bar) — Membres vs Intervenants
   const lieuxFiltered = D.lieuxNoms.map((n, i) => ({ name: n, val: D.lieuxNotes[i] })).filter(l => l.val > 0);

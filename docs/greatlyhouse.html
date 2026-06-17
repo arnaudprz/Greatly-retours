@@ -247,9 +247,14 @@ document.getElementById('btn-send').addEventListener('click', async () => {
   const textarea = document.querySelector('textarea');
   const verbatim = textarea ? textarea.value.trim() : '';
 
+  // Role propagé depuis membre.html / intervenant.html via ?role=
+  const role = new URLSearchParams(location.search).get('role');
+  const validRole = (role === 'membre' || role === 'intervenant') ? role : null;
+
   try {
     await API.submit({
       type: 'greatly_house',
+      role: validRole,
       ts: new Date().toISOString(),
       echelles,
       verbatim: verbatim || null,
