@@ -1818,7 +1818,9 @@ function renderQChart(canvasId, q, mois, m, color) {
 
   if (hasAudienceSplit) {
     const labels = ['Membres', 'Intervenants', 'Prospects'];
-    const data = [q.membres, q.intervenants, q.prospects];
+    const raw = [q.membres, q.intervenants, q.prospects];
+    // null → mini barre fantôme visible pour montrer le slot "Pas encore de réponse"
+    const data = raw.map(v => v == null ? 0.15 : v);
     const colors = [C.sage, C.lucidite, C.energie];
     mk(canvasId, {
       type: 'bar',
@@ -1826,8 +1828,8 @@ function renderQChart(canvasId, q, mois, m, color) {
         labels,
         datasets: [{
           data,
-          backgroundColor: colors.map(c => c + '88'),
-          borderColor: colors,
+          backgroundColor: raw.map((v, i) => v == null ? '#E7E1D766' : colors[i] + '88'),
+          borderColor: raw.map((v, i) => v == null ? '#CFC8BC' : colors[i]),
           borderWidth: 1,
           borderRadius: 4,
           barPercentage: 0.9,
@@ -1839,7 +1841,7 @@ function renderQChart(canvasId, q, mois, m, color) {
         maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
-          tooltip: { callbacks: { label: ctx => (ctx.raw == null ? 'Pas de réponse' : ctx.raw.toFixed(1) + '/10') } },
+          tooltip: { callbacks: { label: ctx => (raw[ctx.dataIndex] == null ? 'Pas encore de réponse' : raw[ctx.dataIndex].toFixed(1) + '/10') } },
         },
         scales: {
           x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#666' } },
