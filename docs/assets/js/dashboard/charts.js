@@ -1658,44 +1658,44 @@ function renderIvGreatly() {
     const evolData = last(D.igEvol, m);
     const tEvol = trimToData(mois, evolData);
     mk('c-ig-evol', {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: tEvol.labels,
-        datasets: [lineds('Satisfaction moyenne', trimData(evolData, tEvol.start), C.sage)],
+        datasets: [bards('Satisfaction moyenne', trimData(evolData, tEvol.start), C.sage)],
       },
-      options: lineOpts(6, 10),
+      options: barOpts(0, 10),
     });
   }
 
-  // --- Administratif sparkline ---
+  // --- Administratif ---
   if (D.igAdmin.length === 0) {
     emptyStateCanvas('c-ig-admin', 'Pas encore de données.');
   } else {
     const adminData = last(D.igAdmin, m);
     const tAdmin = trimToData(mois, adminData);
     mk('c-ig-admin', {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: tAdmin.labels,
-        datasets: [lineds('Administratif', trimData(adminData, tAdmin.start), C.grey)],
+        datasets: [bards('Administratif', trimData(adminData, tAdmin.start), C.grey)],
       },
-      options: sparkOpts(6, 9),
+      options: barOpts(0, 10),
     });
   }
 
-  // --- Communication sparkline ---
+  // --- Communication ---
   if (D.igComm.length === 0) {
     emptyStateCanvas('c-ig-comm', 'Pas encore de données.');
   } else {
     const commData = last(D.igComm, m);
     const tComm = trimToData(mois, commData);
     mk('c-ig-comm', {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: tComm.labels,
-        datasets: [lineds('Communication', trimData(commData, tComm.start), C.energie)],
+        datasets: [bards('Communication', trimData(commData, tComm.start), C.energie)],
       },
-      options: sparkOpts(6, 9),
+      options: barOpts(0, 10),
     });
   }
 
