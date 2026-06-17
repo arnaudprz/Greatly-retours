@@ -1811,8 +1811,46 @@ function renderIvSeance(mois, m) {
 
 /** Affiche un mini-graphique adapté au nombre de points de données */
 function renderQChart(canvasId, q, mois, m, color) {
-  // Histogramme vertical : 1 barre par mois depuis juin 2026.
-  // Plus lisible que la sparkline quand peu de points, et garde la même grille de lecture en grandissant.
+  // Si la question expose les 3 audiences (questions Greatly House), on affiche
+  // 3 barres comparant Membres / Intervenants / Prospects. Sinon on garde le
+  // mini histogramme temporel (1 barre par mois).
+  const hasAudienceSplit = 'membres' in q || 'intervenants' in q || 'prospects' in q;
+
+  if (hasAudienceSplit) {
+    const labels = ['Membres', 'Intervenants', 'Prospects'];
+    const data = [q.membres, q.intervenants, q.prospects];
+    const colors = [C.sage, C.lucidite, C.energie];
+    mk(canvasId, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          data,
+          backgroundColor: colors.map(c => c + '88'),
+          borderColor: colors,
+          borderWidth: 1,
+          borderRadius: 4,
+          barPercentage: 0.9,
+          categoryPercentage: 0.7,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => (ctx.raw == null ? 'Pas de réponse' : ctx.raw.toFixed(1) + '/10') } },
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#666' } },
+          y: { min: 0, max: 10, grid: { color: '#E7E1D720' }, ticks: { display: false } },
+        },
+      },
+    });
+    return;
+  }
+
+  // Histogramme vertical temporel (1 barre par mois).
   const rawData = q.data && q.data.length > 0 ? last(q.data, m) : [q.val || 0];
   const labels = last(mois, rawData.length);
 

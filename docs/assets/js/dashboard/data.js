@@ -250,13 +250,22 @@ function aggregateData() {
       { id: 'recommander', label: 'Recommandation du lieu', q: 'Recommanderiez-vous ce lieu ?' },
     ];
     D.qGreatlyHouse = ghKeys.map(k => {
-      const vals = ghResponses.map(r => r.echelles && r.echelles[k.id]).filter(v => v !== null && v !== undefined);
-      const monthly = monthlyAvg(ghResponses, r => r.echelles && r.echelles[k.id]);
+      const getter = r => r.echelles && r.echelles[k.id];
+      const valsAll = ghResponses.map(getter).filter(v => v !== null && v !== undefined);
+      // 3 audiences (GH sans role → attribué membres par défaut)
+      const subset = filter => ghResponses.filter(filter).map(getter).filter(v => v !== null && v !== undefined);
+      const valsMembres      = subset(r => !r.role || r.role === 'membre');
+      const valsIntervenants = subset(r => r.role === 'intervenant');
+      const valsProspects    = subset(r => r.role === 'prospect');
+      const monthly = monthlyAvg(ghResponses, getter);
       return {
         label: k.label, q: k.q,
-        val: vals.length > 0 ? avg(vals) : 0,
+        val: valsAll.length > 0 ? avg(valsAll) : 0,
         delta: monthly.length >= 2 ? +(monthly[monthly.length - 1] - monthly[monthly.length - 2]).toFixed(1) : 0,
         data: monthly,
+        membres:      valsMembres.length > 0      ? avg(valsMembres)      : null,
+        intervenants: valsIntervenants.length > 0 ? avg(valsIntervenants) : null,
+        prospects:    valsProspects.length > 0    ? avg(valsProspects)    : null,
       };
     });
   }
