@@ -324,6 +324,11 @@ function aggregateData() {
     },
   };
 
+  // --- Questions « Greatly & vous » (r.greatly_ouvertes des intervenants) ---
+  D.openGreatly = groupOpensByQuestion(
+    allIntervenants.map(r => ({ ...r, ouvertes: r.greatly_ouvertes || {} }))
+  );
+
   // Verbatims prospect
   VERBATIMS.prospect.pas = prospects
     .filter(r => r.ouvertes)

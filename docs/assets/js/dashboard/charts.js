@@ -911,6 +911,48 @@ const OPENS_BY_AUDIENCE = {
   },
 };
 
+/** Rend une liste de questions ouvertes + réponses dans un container donné */
+function renderOpensList(elementId, sections) {
+  const list = document.getElementById(elementId);
+  if (!list) return;
+  const escape = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  let html = '';
+  sections.forEach(s => {
+    html += `<div class="opens-section">
+      <div class="opens-section-title" style="border-left:3px solid ${s.color}">${s.title}</div>`;
+    s.qs.forEach(q => {
+      const answers = (s.answers && s.answers[q]) || [];
+      html += `<div class="opens-q-block">
+        <div class="opens-q">« ${escape(q)} »</div>`;
+      if (answers.length === 0) {
+        html += `<div class="opens-empty">Pas encore de réponse</div>`;
+      } else {
+        html += `<div class="opens-answers">${
+          answers.map(a => `<div class="opens-a">
+            <span class="opens-a-meta">${a.date || ''}</span>
+            <p>${escape(a.text)}</p>
+          </div>`).join('')
+        }</div>`;
+      }
+      html += `</div>`;
+    });
+    html += `</div>`;
+  });
+  list.innerHTML = html;
+}
+
+const GREATLY_OPEN_QUESTIONS = [
+  "Y a-t-il quelque chose qui vous faciliterait la vie au quotidien ?",
+  "Qu'aimeriez-vous nous partager pour que notre collaboration grandisse ?",
+];
+
+/** Rend le bloc 'Réponses libres — Greatly & vous' (onglet Greatly) */
+function renderOpensGreatly() {
+  renderOpensList('opens-list-greatly', [
+    { title: '🤝 Greatly & vous', color: C.sage, qs: GREATLY_OPEN_QUESTIONS, answers: D.openGreatly || {} },
+  ]);
+}
+
 function renderOpens() {
   const list = document.getElementById('opens-list');
   if (!list) return;
@@ -1715,38 +1757,8 @@ function renderIvGreatly() {
   // --- Retours de séance des intervenants (détail par question) ---
   renderIvSeance(mois, m);
 
-  // --- Verbatims ---
-  const facList = document.getElementById('ig-verbatims-facilite');
-  if (facList) {
-    if (VERBATIMS_IG.facilite.length === 0) {
-      facList.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
-        <p style="font-size:.88rem;line-height:1.5">Les retours des intervenants apparaîtront ici au fil des réponses.</p>
-      </div>`;
-    } else {
-      facList.innerHTML = VERBATIMS_IG.facilite.map(v => `
-        <div class="verb">
-          <div class="meta"><span style="font-size:.74rem;color:var(--warm-grey)">${v.date}</span></div>
-          <p>« ${v.text} »</p>
-        </div>
-      `).join('');
-    }
-  }
-
-  const colList = document.getElementById('ig-verbatims-collab');
-  if (colList) {
-    if (VERBATIMS_IG.collab.length === 0) {
-      colList.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
-        <p style="font-size:.88rem;line-height:1.5">Les retours sur la collaboration apparaîtront ici au fil des réponses.</p>
-      </div>`;
-    } else {
-      colList.innerHTML = VERBATIMS_IG.collab.map(v => `
-        <div class="verb">
-          <div class="meta"><span style="font-size:.74rem;color:var(--warm-grey)">${v.date}</span></div>
-          <p>« ${v.text} »</p>
-        </div>
-      `).join('');
-    }
-  }
+  // --- Réponses libres « Greatly & vous » (2 questions ouvertes) ---
+  renderOpensGreatly();
 }
 
 
