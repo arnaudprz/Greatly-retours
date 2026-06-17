@@ -45,9 +45,12 @@ function fr(n) {
 }
 
 /** Extraire les m derniers éléments d'un tableau */
-function last(arr, m) {
+function last(arr, _m) {
+  // Aligne toujours sur MOIS (juin du programme → mois courant).
+  // L'ancien filtre périodique a été supprimé : m est ignoré pour éviter
+  // les décalages quand monthlyAvg renvoie 12 mois glissants et MOIS n'en a que N.
   if (!arr || arr.length === 0) return [];
-  return arr.slice(arr.length - m);
+  return arr.slice(-MOIS.length);
 }
 
 /** Vérifie si un tableau contient au moins une vraie valeur (non null) */
@@ -1126,8 +1129,8 @@ function renderRatingHist(canvasId, _moisAll, m, dataArr, label, color) {
     emptyStateCanvas(canvasId, 'Les notes apparaîtront ici dès les premiers retours.');
     return;
   }
+  let data = last(dataArr, m);
   const len = MOIS.length;
-  let data = dataArr.slice(-len);
   if (data.length < len) data = new Array(len - data.length).fill(null).concat(data);
   mk(canvasId, {
     type: 'bar',
@@ -1299,7 +1302,7 @@ function renderDualRatingHist(canvasId, _moisAll, m, data1, label1, color1, data
   const len = MOIS.length;
   const get = (arr) => {
     if (!arr || arr.length === 0) return new Array(len).fill(null);
-    let d = arr.slice(-len);
+    let d = last(arr, m);
     if (d.length < len) d = new Array(len - d.length).fill(null).concat(d);
     return d;
   };
