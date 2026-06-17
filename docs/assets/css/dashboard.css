@@ -390,6 +390,33 @@ body.is-admin .admin-only { display: inline-flex; }
 .card.full { grid-column: 1 / -1; }
 .chartbox { position: relative; height: 240px; }
 
+/* --- Réponses ouvertes par question --- */
+.opens-section { margin-top: 18px; }
+.opens-section:first-child { margin-top: 0; }
+.opens-section-title {
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--ink);
+  padding: 4px 0 4px 10px;
+  margin-bottom: 12px;
+}
+.opens-q-block { margin-bottom: 16px; }
+.opens-q {
+  font-size: .88rem;
+  font-style: italic;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.opens-answers { display: flex; flex-direction: column; gap: 8px; padding-left: 12px; }
+.opens-a {
+  background: #FAF7F1;
+  border-left: 2px solid var(--line);
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+.opens-a-meta { font-size: .72rem; color: var(--warm-grey); }
+.opens-a p { margin: 4px 0 0; font-size: .88rem; line-height: 1.5; color: var(--ink); }
+
 .metric-headline {
   display: flex;
   align-items: baseline;

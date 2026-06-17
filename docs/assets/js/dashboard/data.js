@@ -312,6 +312,18 @@ function aggregateData() {
   VERBATIMS.energie = extractVerbatims(membres_e);
   VERBATIMS.lucidite = extractVerbatims(membres_l);
 
+  // --- Réponses ouvertes groupées par question (par audience × type) ---
+  D.openByQ = {
+    membres: {
+      energie: groupOpensByQuestion(membres_e),
+      lucidite: groupOpensByQuestion(membres_l),
+    },
+    intervenants: {
+      energie: groupOpensByQuestion(intervenants_e),
+      lucidite: groupOpensByQuestion(intervenants_l),
+    },
+  };
+
   // Verbatims prospect
   VERBATIMS.prospect.pas = prospects
     .filter(r => r.ouvertes)
@@ -548,6 +560,20 @@ function aggregateScales(responses, definitions) {
 }
 
 /** Extrait les verbatims d'un ensemble de réponses */
+/** Regroupe les réponses ouvertes par question (key = texte de la question) */
+function groupOpensByQuestion(responses) {
+  const map = {};
+  responses.forEach(r => {
+    if (!r.ouvertes) return;
+    Object.entries(r.ouvertes).forEach(([q, v]) => {
+      if (!v || !String(v).trim()) return;
+      if (!map[q]) map[q] = [];
+      map[q].push({ date: formatDate(r.ts || r.ts_server), text: String(v).trim() });
+    });
+  });
+  return map;
+}
+
 function extractVerbatims(responses) {
   const verbs = [];
   responses.forEach(r => {

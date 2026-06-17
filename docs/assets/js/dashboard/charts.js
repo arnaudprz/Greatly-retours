@@ -502,6 +502,9 @@ function renderStandard(_isOverview, _isEnergie, _isLucidite) {
   // --- Les lieux (carte synthèse) ---
   if (isMembres) renderLieuxSynthese();
 
+  // --- Réponses ouvertes par question ---
+  renderOpens();
+
   // --- Verbatims ---
   renderVerbatims(true, false, false);
 
@@ -889,6 +892,48 @@ function renderLieuxSynthese() {
 
 
 /* ---- Verbatims ---- */
+/* ---- Réponses ouvertes groupées par question (Membres ou Intervenants) ---- */
+function renderOpens() {
+  const list = document.getElementById('opens-list');
+  if (!list) return;
+  const audience = (F.who === 'intervenants') ? 'intervenants' : 'membres';
+  const src = (D.openByQ && D.openByQ[audience]) || { energie: {}, lucidite: {} };
+  const escape = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+  const sections = [
+    { title: '⛷️ Parcours Énergie', color: C.energie, map: src.energie || {} },
+    { title: '🦉 Parcours Lucidité', color: C.lucidite, map: src.lucidite || {} },
+  ];
+
+  let html = '';
+  sections.forEach(s => {
+    const entries = Object.entries(s.map).filter(([, answers]) => answers && answers.length > 0);
+    if (entries.length === 0) return;
+    html += `<div class="opens-section">
+      <div class="opens-section-title" style="border-left:3px solid ${s.color}">${s.title}</div>`;
+    entries.forEach(([q, answers]) => {
+      html += `<div class="opens-q-block">
+        <div class="opens-q">« ${escape(q)} »</div>
+        <div class="opens-answers">${
+          answers.map(a => `<div class="opens-a">
+            <span class="opens-a-meta">${a.date || ''}</span>
+            <p>${escape(a.text)}</p>
+          </div>`).join('')
+        }</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  if (!html) {
+    list.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
+      <p style="font-size:.88rem;line-height:1.5">Les réponses libres apparaîtront ici au fil des retours.</p>
+    </div>`;
+    return;
+  }
+  list.innerHTML = html;
+}
+
 function renderVerbatims(isTous, isEnergie, isLucidite) {
   const list = document.getElementById('verbatims-list');
   if (!list) return;
