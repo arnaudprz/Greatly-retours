@@ -382,6 +382,27 @@ body.is-admin .admin-only { display: inline-flex; }
 .card.full { grid-column: 1 / -1; }
 .chartbox { position: relative; height: 240px; }
 
+.metric-headline {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: -4px 0 10px;
+}
+.metric-headline .metric-val {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: var(--ink);
+}
+.metric-headline .metric-unit { font-size: .95rem; color: var(--warm-grey); }
+.metric-headline .metric-lab {
+  font-size: .72rem;
+  color: var(--warm-grey);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-left: 8px;
+}
+
 /* --- Détail par question --- */
 .qgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
 .qdivider {

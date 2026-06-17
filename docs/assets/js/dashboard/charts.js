@@ -1397,8 +1397,12 @@ function renderProspect() {
   // --- Attraits (doughnut coloré, % au hover) ---
   renderChoiceHist('c-prospect-attraits', D.attraitsLabels, D.attraitsData, ATTRAITS_OPTIONS, C.good, ATTRAITS_PALETTE);
 
-  // --- Recommandation prospect (doughnut Promoteurs / Passifs / Détracteurs) ---
-  renderNpsBreakdown('c-prospect-nps', D.prospectNPSRaw);
+  // --- Recommandation prospect : note moyenne + évolution par mois ---
+  const npsRaw = D.prospectNPSRaw || [];
+  txt('prospect-nps-val', npsRaw.length > 0
+    ? fr(npsRaw.reduce((a, b) => a + b, 0) / npsRaw.length)
+    : '—');
+  renderRatingHist('c-prospect-nps', mois, m, D.prospectNPS, 'Recommandation', C.sage);
 
   // --- Pertinence vs Projection (deux doughnuts côte à côte : répartition par catégorie) ---
   renderDualBreakdown(
