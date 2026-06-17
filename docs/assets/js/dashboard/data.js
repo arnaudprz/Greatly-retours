@@ -47,32 +47,33 @@ function aggregateData() {
   const allIntervenants = [...intervenants_e, ...intervenants_l];
   const all = [...allMembres, ...allIntervenants];
 
-  // --- NPS par mois (score NPS calculé, pas la note brute) ---
-  D.npsEnergie = monthlyNPS(membres_e);
-  D.npsLucidite = monthlyNPS(membres_l);
-  D.npsGlobal = monthlyNPS(allMembres);
+  // --- Note moyenne de recommandation par mois (sur 10, plus lisible que le NPS %) ---
+  const nps = r => r.nps;
+  D.npsEnergie = monthlyAvg(membres_e, nps);
+  D.npsLucidite = monthlyAvg(membres_l, nps);
+  D.npsGlobal = monthlyAvg(allMembres, nps);
 
   // --- Reco par canal × audience pour les KPI cards de tête + chart évolution ---
   D.npsCards = {
     energie: {
-      tous: monthlyNPS([...membres_e, ...intervenants_e]),
-      membres: monthlyNPS(membres_e),
-      intervenants: monthlyNPS(intervenants_e),
+      tous: monthlyAvg([...membres_e, ...intervenants_e], nps),
+      membres: monthlyAvg(membres_e, nps),
+      intervenants: monthlyAvg(intervenants_e, nps),
     },
     lucidite: {
-      tous: monthlyNPS([...membres_l, ...intervenants_l]),
-      membres: monthlyNPS(membres_l),
-      intervenants: monthlyNPS(intervenants_l),
+      tous: monthlyAvg([...membres_l, ...intervenants_l], nps),
+      membres: monthlyAvg(membres_l, nps),
+      intervenants: monthlyAvg(intervenants_l, nps),
     },
     house: {
-      tous: monthlyNPS(ghResponses),
-      membres: monthlyNPS(ghResponses),
-      intervenants: monthlyNPS(ghResponses),
+      tous: monthlyAvg(ghResponses, nps),
+      membres: monthlyAvg(ghResponses, nps),
+      intervenants: monthlyAvg(ghResponses, nps),
     },
     global: {
-      tous: monthlyNPS(all),
-      membres: monthlyNPS(allMembres),
-      intervenants: monthlyNPS(allIntervenants),
+      tous: monthlyAvg(all, nps),
+      membres: monthlyAvg(allMembres, nps),
+      intervenants: monthlyAvg(allIntervenants, nps),
     },
   };
 

@@ -515,11 +515,11 @@ function renderStandard(_isOverview, _isEnergie, _isLucidite) {
 
 /* ---- KPIs ---- */
 function renderKPIs(isTous, isEnergie, isLucidite, m) {
-  // 3 cards de tête : Reco Énergie / Lucidité / Greatly House, filtrées par F.who
-  const audience = F.who; // 'tous' | 'membres' | 'intervenants'
+  // 3 cards de tête : note moyenne de recommandation /10 par canal, filtrées par F.who
+  const audience = F.who; // 'membres' | 'intervenants' | 'tous'
   ['energie', 'lucidite', 'house'].forEach(canal => {
     const series = (D.npsCards[canal] && D.npsCards[canal][audience]) || [];
-    const vals = last(series, m).filter(v => v !== null);
+    const vals = last(series, m).filter(v => v != null);
     const baseId = 'k-nps-' + canal;
     if (vals.length === 0) {
       txt(baseId, '—');
@@ -528,9 +528,9 @@ function renderKPIs(isTous, isEnergie, isLucidite, m) {
     }
     const curr = vals[vals.length - 1];
     const prev = vals[0];
-    const delta = curr - prev;
-    txt(baseId, '+' + curr);
-    txt(baseId + '-d', (delta >= 0 ? '+' : '') + delta + ' pts');
+    const delta = +(curr - prev).toFixed(1);
+    txt(baseId, fr(curr) + '/10');
+    txt(baseId + '-d', delta === 0 ? '—' : (delta > 0 ? '+' : '') + fr(delta) + ' pts');
     const dEl = document.getElementById(baseId + '-d');
     if (dEl) {
       dEl.className = delta >= 0 ? 'up' : 'down';
@@ -538,9 +538,16 @@ function renderKPIs(isTous, isEnergie, isLucidite, m) {
     }
   });
 
-  // Taux de réponse
-  txt('k-tx', '—');
-  txt('k-tx-sub', 'Pas encore de réponses');
+  // Nombre total de retours (audience filtrée)
+  const audienceFilter = audience === 'membres'
+    ? r => r.role === 'membre'
+    : audience === 'intervenants'
+      ? r => r.role === 'intervenant'
+      : () => true;
+  const all = (typeof rawResponses !== 'undefined' && rawResponses) ? rawResponses : [];
+  const total = all.filter(audienceFilter).length;
+  txt('k-tx', total > 0 ? String(total) : '—');
+  txt('k-tx-sub', total > 0 ? (total === 1 ? '1 retour' : total + ' retours') : 'Pas encore de retours');
 }
 
 
@@ -585,7 +592,7 @@ function renderNPS(mois, m, isTous, isEnergie, isLucidite) {
   mk('c-nps', {
     type: 'bar',
     data: { labels: t.labels, datasets },
-    options: barOpts(-100, 100),
+    options: barOpts(0, 10),
   });
 }
 
