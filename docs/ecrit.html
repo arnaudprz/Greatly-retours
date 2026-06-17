@@ -209,9 +209,9 @@ sendBtn.addEventListener('click', async () => {
   sendBtn.disabled = true;
   sendBtn.textContent = 'Envoi en cours…';
 
-  // Role propagé depuis membre.html / intervenant.html via ?role=
+  // Role propagé depuis membre.html / intervenant.html / prospect.html via ?role=
   const role = new URLSearchParams(location.search).get('role');
-  const validRole = (role === 'membre' || role === 'intervenant') ? role : null;
+  const validRole = (role === 'membre' || role === 'intervenant' || role === 'prospect') ? role : null;
 
   try {
     await API.submit({
