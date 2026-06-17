@@ -433,9 +433,9 @@ function render() {
   show('ivgreatly-section', isGreatly);
   show('lieux-section', isGreatlyHouse);
 
-  // Carte "Feedbacks écrits" : forms membres + intervenants uniquement.
-  // (Les anciens blocs "Derniers retours" et "Points d'attention" ont été
-  // remplacés par "Réponses libres par question" qui couvre les mêmes données.)
+  // 'card-opens' et 'card-feedbacks' sont en dehors de standard-section dans le DOM
+  // → on les rend conditionnellement visibles uniquement pour membres + intervenants.
+  show('card-opens', isStandard);
   show('card-feedbacks', isStandard);
 
   if (isStandard) renderStandard(true, false, false); // overview de tout le form
@@ -1191,65 +1191,22 @@ function renderLieux() {
     });
   }
 
-  // Lieux sportifs mini line
-  if (D.lieuxSport.length === 0) {
-    emptyStateCanvas('c-lieux-sport', 'Pas encore de retours sur les lieux sportifs.');
-  } else {
-    const sportData = last(D.lieuxSport, m);
-    const tS = trimToData(mois, sportData);
-    mk('c-lieux-sport', {
-      type: 'bar',
-      data: {
-        labels: tS.labels,
-        datasets: [bards('Lieux sportifs', trimData(sportData, tS.start), C.energie)],
-      },
-      options: {
-        ...barOpts(0, 10),
-        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10 } },
-      },
-    });
-  }
-
-  // Évolution par lieu
-  if (D.lieuxHouse.length === 0 && D.lieuxSport.length === 0) {
-    emptyStateCanvas('c-lieux-evol', 'Pas encore de données d\'évolution.');
-  } else {
-    const evolHouse = D.lieuxHouse.length > 0 ? last(D.lieuxHouse, m) : [];
-    const evolSport = D.lieuxSport.length > 0 ? last(D.lieuxSport, m) : [];
-    const tE = trimToData(mois, evolHouse, evolSport);
-    mk('c-lieux-evol', {
-      type: 'bar',
-      data: {
-        labels: tE.labels,
-        datasets: [
-          ...(D.lieuxHouse.length > 0 ? [bards('Greatly House', trimData(evolHouse, tE.start), C.sage)] : []),
-          ...(D.lieuxSport.length > 0 ? [bards('Lieux sportifs', trimData(evolSport, tE.start), C.energie)] : []),
-        ],
-      },
-      options: barOpts(0, 10),
-    });
-  }
-
   // Détail par question Greatly House
   renderGHDetail(mois, m);
 
-  // Verbatims lieux
-  const vList = document.getElementById('lieux-verbatims-list');
-  if (vList) {
-    if (VERBATIMS.lieux.length === 0) {
-      vList.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
-        <p style="font-size:.88rem;line-height:1.5">Les verbatims sur les lieux s'afficheront ici au fil des réponses.</p>
-      </div>`;
+  // Verbatim libre « Un mot sur la Greatly House ? » (champ r.verbatim du form GH)
+  const ghList = document.getElementById('gh-verbatim-list');
+  if (ghList) {
+    const verbs = VERBATIMS.lieux.filter(v => v.lieu === 'Greatly House' && v.text);
+    if (verbs.length === 0) {
+      ghList.innerHTML = `<div class="opens-empty">Pas encore de réponse</div>`;
     } else {
-      vList.innerHTML = VERBATIMS.lieux.map(v => `
-        <div class="verb">
-          <div class="meta">
-            <span class="tag ${v.lieu === 'Greatly House' ? 'lucidite' : 'energie'}">${v.lieu}</span>
-            <span>${v.date}</span>
-          </div>
-          <p>« ${v.text} »</p>
-        </div>
-      `).join('');
+      ghList.innerHTML = `<div class="opens-answers">${
+        verbs.map(v => `<div class="opens-a">
+          <span class="opens-a-meta">${v.date || ''}</span>
+          <p>${String(v.text).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])}</p>
+        </div>`).join('')
+      }</div>`;
     }
   }
 }
