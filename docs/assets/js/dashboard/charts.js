@@ -1159,14 +1159,17 @@ function renderLieux() {
     txt('lx-house', '—');
   }
 
-  // KPI 3-en-1 en haut de l'onglet Greatly House : Reco Membres / Reco Intervenants / Nb retours
+  // KPIs en haut de l'onglet GH : Reco Membres / Intervenants / Prospects / Nb retours
   const recoMembres = (D.npsCards && D.npsCards.house && D.npsCards.house.membres) || [];
   const recoIntervenants = (D.npsCards && D.npsCards.house && D.npsCards.house.intervenants) || [];
+  const recoProspects = (D.npsCards && D.npsCards.house && D.npsCards.house.prospects) || [];
   const lastNonNull = arr => { for (let i = arr.length - 1; i >= 0; i--) if (arr[i] != null) return arr[i]; return null; };
   const rm = lastNonNull(last(recoMembres, m));
   const ri = lastNonNull(last(recoIntervenants, m));
+  const rp = lastNonNull(last(recoProspects, m));
   txt('gh-reco-membres', rm != null ? fr(rm) + '/10' : '—');
   txt('gh-reco-intervenants', ri != null ? fr(ri) + '/10' : '—');
+  txt('gh-reco-prospects', rp != null ? fr(rp) + '/10' : '—');
 
   // Nombre total de retours qui concernent la Greatly House (form GH + phases GH des ateliers)
   const all = (typeof rawResponses !== 'undefined' && rawResponses) ? rawResponses : [];
@@ -1183,7 +1186,7 @@ function renderLieux() {
   if (lieuxFiltered.length === 0) {
     emptyStateCanvas('c-lieux-overview', 'Pas encore de retours sur la Greatly House.');
   } else {
-    const colors = { 'Membres': C.sage + 'CC', 'Intervenants': C.lucidite + 'CC' };
+    const colors = { 'Membres': C.sage + 'CC', 'Intervenants': C.lucidite + 'CC', 'Prospects': C.energie + 'CC' };
     mk('c-lieux-overview', {
       type: 'bar',
       data: {

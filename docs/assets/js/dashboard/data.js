@@ -67,10 +67,11 @@ function aggregateData() {
     },
     house: {
       // GH n'a pas de champ r.nps : la note "Recommanderiez-vous ce lieu ?" est dans echelles.recommander
-      // Le formulaire GH n'envoie pas de role → on attribue par défaut aux membres (cible principale)
+      // Le formulaire GH propage r.role depuis membre/intervenant/prospect.html (?role=)
       tous: monthlyAvg(ghResponses, r => r.echelles && r.echelles.recommander),
-      membres: monthlyAvg(ghResponses, r => r.echelles && r.echelles.recommander),
-      intervenants: [],
+      membres: monthlyAvg(ghResponses.filter(r => !r.role || r.role === 'membre'), r => r.echelles && r.echelles.recommander),
+      intervenants: monthlyAvg(ghResponses.filter(r => r.role === 'intervenant'), r => r.echelles && r.echelles.recommander),
+      prospects: monthlyAvg(ghResponses.filter(r => r.role === 'prospect'), r => r.echelles && r.echelles.recommander),
     },
     global: {
       tous: monthlyAvg(all, nps),
@@ -212,15 +213,18 @@ function aggregateData() {
     };
     const houseMembres = [
       ...membres_l.map(r => phaseValue(r, 'Greatly House')).filter(n => n != null),
-      // GH form sans role → attribué aux membres (cible principale du lieu)
+      // GH form sans role → attribué aux membres (legacy avant ?role=)
       ...ghResponses.filter(r => !r.role || r.role === 'membre').map(ghFormAvg).filter(n => n != null),
     ];
     const houseIntervenants = [
       ...intervenants_l.map(r => phaseValue(r, 'Greatly House')).filter(n => n != null),
       ...ghResponses.filter(r => r.role === 'intervenant').map(ghFormAvg).filter(n => n != null),
     ];
-    D.lieuxNoms = ['Membres', 'Intervenants'];
-    D.lieuxNotes = [avg(houseMembres), avg(houseIntervenants)];
+    const houseProspects = [
+      ...ghResponses.filter(r => r.role === 'prospect').map(ghFormAvg).filter(n => n != null),
+    ];
+    D.lieuxNoms = ['Membres', 'Intervenants', 'Prospects'];
+    D.lieuxNotes = [avg(houseMembres), avg(houseIntervenants), avg(houseProspects)];
 
     // Évolution mensuelle : combiner les deux sources pour Greatly House
     const houseMonthly = monthlyAvgMulti([
