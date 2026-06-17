@@ -323,6 +323,35 @@ function hbarOpts(max) {
   };
 }
 
+/** Options de base pour un bar chart vertical (séries groupées par mois) */
+function barOpts(yMin, yMax) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { position: 'bottom', labels: { boxWidth: 12, padding: 14, font: { size: 12 } } },
+      tooltip: { backgroundColor: '#1A1A1A', titleFont: { weight: '600' }, bodyFont: { size: 13 }, cornerRadius: 10, padding: 10 },
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: { min: yMin, max: yMax, grid: GRID_OPTS, ticks: { font: { size: 11 } } },
+    },
+  };
+}
+
+/** Dataset pour une barre (séries groupées) */
+function bards(label, data, color) {
+  return {
+    label, data,
+    backgroundColor: color + '88',
+    borderColor: color,
+    borderWidth: 1,
+    borderRadius: 4,
+    maxBarThickness: 60,
+  };
+}
+
 /** Dataset pour une ligne */
 function lineds(label, data, color, dashed) {
   // Si un seul point non-null, augmenter le radius pour le rendre visible
@@ -510,22 +539,22 @@ function renderNPS(mois, m, isTous, isEnergie, isLucidite) {
 
   const datasets = [];
   if ((isTous || isEnergie) && hasEnergie) {
-    datasets.push(lineds('Énergie', trimData(last(D.npsEnergie, m), t.start), C.energie));
+    datasets.push(bards('Énergie', trimData(last(D.npsEnergie, m), t.start), C.energie));
   }
   if ((isTous || isLucidite) && hasLucidite) {
-    datasets.push(lineds('Lucidité', trimData(last(D.npsLucidite, m), t.start), C.lucidite));
+    datasets.push(bards('Lucidité', trimData(last(D.npsLucidite, m), t.start), C.lucidite));
   }
   if (isTous && hasData(D.npsGlobal)) {
-    datasets.push(lineds('Global', trimData(last(D.npsGlobal, m), t.start), C.sage, true));
+    datasets.push(bards('Global', trimData(last(D.npsGlobal, m), t.start), C.sage));
   }
   if (datasets.length === 0) {
     emptyStateCanvas('c-nps', 'Les données apparaîtront ici dès les premiers retours.');
     return;
   }
   mk('c-nps', {
-    type: 'line',
+    type: 'bar',
     data: { labels: t.labels, datasets },
-    options: lineOpts(-100, 100),
+    options: barOpts(-100, 100),
   });
 }
 
@@ -540,15 +569,15 @@ function renderEnergie(mois, m) {
   }
   const t = trimToData(mois, av, ap);
   mk('c-energie', {
-    type: 'line',
+    type: 'bar',
     data: {
       labels: t.labels,
       datasets: [
-        lineds('Avant séance', trimData(av, t.start), C.bad),
-        lineds('Après séance', trimData(ap, t.start), C.good),
+        bards('Avant séance', trimData(av, t.start), C.bad),
+        bards('Après séance', trimData(ap, t.start), C.good),
       ],
     },
-    options: lineOpts(0, 10),
+    options: barOpts(0, 10),
   });
 }
 
@@ -1007,21 +1036,13 @@ function renderLieux() {
     const houseData = last(D.lieuxHouse, m);
     const tH = trimToData(mois, houseData);
     mk('c-lieux-house', {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: tH.labels,
-        datasets: [{
-          data: trimData(houseData, tH.start),
-          borderColor: C.sage,
-          backgroundColor: C.sage + '18',
-          borderWidth: 2,
-          pointRadius: 2,
-          tension: 0.35,
-          fill: true,
-        }],
+        datasets: [bards('Greatly House', trimData(houseData, tH.start), C.sage)],
       },
       options: {
-        ...lineOpts(7, 10),
+        ...barOpts(0, 10),
         plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10 } },
       },
     });
@@ -1034,21 +1055,13 @@ function renderLieux() {
     const sportData = last(D.lieuxSport, m);
     const tS = trimToData(mois, sportData);
     mk('c-lieux-sport', {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: tS.labels,
-        datasets: [{
-          data: trimData(sportData, tS.start),
-          borderColor: C.energie,
-          backgroundColor: C.energie + '18',
-          borderWidth: 2,
-          pointRadius: 2,
-          tension: 0.35,
-          fill: true,
-        }],
+        datasets: [bards('Lieux sportifs', trimData(sportData, tS.start), C.energie)],
       },
       options: {
-        ...lineOpts(6, 10),
+        ...barOpts(0, 10),
         plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1A1A1A', cornerRadius: 10, padding: 10 } },
       },
     });
@@ -1062,15 +1075,15 @@ function renderLieux() {
     const evolSport = D.lieuxSport.length > 0 ? last(D.lieuxSport, m) : [];
     const tE = trimToData(mois, evolHouse, evolSport);
     mk('c-lieux-evol', {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: tE.labels,
         datasets: [
-          ...(D.lieuxHouse.length > 0 ? [lineds('Greatly House', trimData(evolHouse, tE.start), C.sage)] : []),
-          ...(D.lieuxSport.length > 0 ? [lineds('Lieux sportifs', trimData(evolSport, tE.start), C.energie)] : []),
+          ...(D.lieuxHouse.length > 0 ? [bards('Greatly House', trimData(evolHouse, tE.start), C.sage)] : []),
+          ...(D.lieuxSport.length > 0 ? [bards('Lieux sportifs', trimData(evolSport, tE.start), C.energie)] : []),
         ],
       },
-      options: lineOpts(6, 10),
+      options: barOpts(0, 10),
     });
   }
 
@@ -1551,15 +1564,15 @@ function renderIvGreatly() {
     const sportIgData = D.lieuxSport.length > 0 ? last(D.lieuxSport, m) : [];
     const tCadre = trimToData(mois, cadreData, sportIgData);
     mk('c-ig-cadre', {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: tCadre.labels,
         datasets: [
-          ...(D.igCadre.length > 0 ? [lineds('Greatly House', trimData(cadreData, tCadre.start), C.lucidite)] : []),
-          ...(D.lieuxSport.length > 0 ? [lineds('Lieux sportifs', trimData(sportIgData, tCadre.start), C.energie)] : []),
+          ...(D.igCadre.length > 0 ? [bards('Greatly House', trimData(cadreData, tCadre.start), C.lucidite)] : []),
+          ...(D.lieuxSport.length > 0 ? [bards('Lieux sportifs', trimData(sportIgData, tCadre.start), C.energie)] : []),
         ],
       },
-      options: lineOpts(6, 10),
+      options: barOpts(0, 10),
     });
   }
 
