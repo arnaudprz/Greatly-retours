@@ -372,6 +372,7 @@ function aggregateData() {
   ecrits.forEach(r => {
     FEEDBACKS_ECRITS.push({
       date: formatDate(r.ts || r.ts_server),
+      role: r.role || null,
       titre: r.titre || null,
       html: r.contenu_html || '<p>' + (r.contenu_texte || '') + '</p>',
       texte: r.contenu_texte || '',

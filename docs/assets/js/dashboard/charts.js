@@ -1104,22 +1104,30 @@ function renderFeedbacksEcrits() {
   const list = document.getElementById('feedbacks-list');
   if (!list) return;
 
-  if (FEEDBACKS_ECRITS.length === 0) {
+  // Filtrer par audience active (membres = role 'membre', intervenants = role 'intervenant')
+  const audience = F.who; // 'membres' | 'intervenants' | autre
+  const filtered = FEEDBACKS_ECRITS.filter(fb => {
+    if (audience === 'membres') return fb.role === 'membre';
+    if (audience === 'intervenants') return fb.role === 'intervenant';
+    return true;
+  });
+
+  if (filtered.length === 0) {
     list.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
-      <p style="font-size:.88rem;line-height:1.5">Aucun feedback écrit pour le moment.</p>
+      <p style="font-size:.88rem;line-height:1.5">Aucun feedback écrit pour cette audience.</p>
     </div>`;
   } else {
-    list.innerHTML = FEEDBACKS_ECRITS.slice(0, 3).map(fb => feedbackCard(fb, true)).join('');
+    list.innerHTML = filtered.slice(0, 3).map(fb => feedbackCard(fb, true)).join('');
   }
 
   const detail = document.getElementById('feedbacks-detail');
   if (detail) {
-    if (FEEDBACKS_ECRITS.length === 0) {
+    if (filtered.length === 0) {
       detail.innerHTML = `<div style="text-align:center;padding:32px 20px;color:var(--warm-grey)">
-        <p style="font-size:.88rem;line-height:1.5">Aucun feedback écrit pour le moment.</p>
+        <p style="font-size:.88rem;line-height:1.5">Aucun feedback écrit pour cette audience.</p>
       </div>`;
     } else {
-      detail.innerHTML = FEEDBACKS_ECRITS.map(fb => feedbackCard(fb, false)).join('');
+      detail.innerHTML = filtered.map(fb => feedbackCard(fb, false)).join('');
     }
   }
 }
