@@ -9,15 +9,30 @@
  * 5. Au clic, le front envoie le token → on vérifie → on retourne un session token (4h)
  */
 
-const MAGIC_LINK_TTL = 15 * 60 * 1000;   // 15 minutes
-const SESSION_TTL    = 4 * 60 * 60 * 1000; // 4 heures
-const BASE_URL = 'https://arnaudprz.github.io/Greatly-retours/dashboard.html';
+var MAGIC_LINK_TTL = 15 * 60 * 1000;   // 15 minutes
+var SESSION_TTL    = 4 * 60 * 60 * 1000; // 4 heures
+var BASE_URL = 'https://arnaudprz.github.io/Greatly-retours/dashboard.html';
 
 /** Envoie un magic link par email */
 function sendMagicLink(body) {
   const email = (body.email || '').trim().toLowerCase();
   if (!email || !email.includes('@')) {
     return { error: 'Email invalide.' };
+  }
+
+  // Rate limit per email: max 3 per 15 min
+  var cache = CacheService.getScriptCache();
+  var emailKey = 'ml_' + email.replace(/[^a-z0-9]/g, '_');
+  var emailCount = parseInt(cache.get(emailKey) || '0');
+  if (emailCount >= 3) {
+    return { ok: true, message: 'Si un compte est associé à cette adresse, un lien de connexion a été envoyé.' };
+  }
+
+  // Rate limit global: max 20 per hour
+  var globalKey = 'ml_global';
+  var globalCount = parseInt(cache.get(globalKey) || '0');
+  if (globalCount >= 20) {
+    return { ok: true, message: 'Si un compte est associé à cette adresse, un lien de connexion a été envoyé.' };
   }
 
   // Vérifier que l'email est autorisé
@@ -43,6 +58,10 @@ function sendMagicLink(body) {
 
   // Envoyer l'email
   sendMagicLinkEmail(email, user.firstname || '', link);
+
+  // Incrémenter les compteurs de rate limit
+  cache.put(emailKey, String(emailCount + 1), 900);   // 15 min
+  cache.put(globalKey, String(globalCount + 1), 3600); // 1 hour
 
   // Logger
   logActivity('Magic link envoyé', email);

@@ -1,48 +1,64 @@
 /**
  * GREATLY — Vos retours · Soumission des réponses
- *
- * Les réponses sont stockées dans une feuille Google Sheets "responses".
- * Chaque réponse est une ligne avec le JSON sérialisé.
- * Aucune donnée nominative n'est stockée.
  */
 
-const SHEET_NAME_RESPONSES = 'responses';
+var SHEET_NAME_RESPONSES = 'responses';
 
 /** Traiter une soumission de formulaire */
 function submitFeedback(body) {
-  // Retirer les champs d'authentification
+  var cache = CacheService.getScriptCache();
+
+  // Rate limit par fingerprint: 1 soumission par 5 minutes
+  var fp = body._fp || 'unknown';
+  var fpKey = 'sub_' + fp;
+  if (cache.get(fpKey)) {
+    return { error: 'Vous avez déjà envoyé un retour récemment. Merci de patienter quelques minutes.' };
+  }
+
+  // Rate limit global: max 10 par minute
+  var globalKey = 'submit_global';
+  var globalCount = parseInt(cache.get(globalKey) || '0');
+  if (globalCount >= 10) {
+    return { error: 'Trop de soumissions. Réessayez dans quelques instants.' };
+  }
+
+  // Nettoyer les champs internes
   delete body.action;
   delete body.token;
-
-  // Ajouter le timestamp serveur
+  delete body._fp;
   body.ts_server = new Date().toISOString();
 
-  // Stocker dans la feuille
-  const sheet = getSheet(SHEET_NAME_RESPONSES);
-  const type = body.type || 'inconnu';
-  const role = body.role || '—';
-
+  // Stocker
+  var sheet = getSheet(SHEET_NAME_RESPONSES);
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['timestamp', 'type', 'role', 'json']);
+  }
   sheet.appendRow([
     body.ts_server,
-    type,
-    role,
+    body.type || 'inconnu',
+    body.role || '—',
     JSON.stringify(body),
   ]);
+
+  // Marquer le fingerprint (5 minutes = 300 secondes)
+  cache.put(fpKey, '1', 300);
+  cache.put(globalKey, String(globalCount + 1), 60);
 
   return { ok: true };
 }
 
-/** Lire et agréger les données pour le dashboard */
+/** Lire les données pour le dashboard */
 function getData(body, session) {
-  const sheet = getSheet(SHEET_NAME_RESPONSES);
-  const data = sheet.getDataRange().getValues();
+  var sheet = getSheet(SHEET_NAME_RESPONSES);
+  var data = sheet.getDataRange().getValues();
+  var responses = [];
 
-  // Pour le moment, retourner les données brutes
-  // TODO: implémenter l'agrégation par mois, par type, par période
-  const responses = [];
-  for (let i = 1; i < data.length; i++) {
+  for (var i = 0; i < data.length; i++) {
+    var cell = data[i][3];
+    if (!cell || typeof cell !== 'string') continue;
+    if (cell === 'json') continue;
     try {
-      responses.push(JSON.parse(data[i][3]));
+      responses.push(JSON.parse(cell));
     } catch (e) {}
   }
 

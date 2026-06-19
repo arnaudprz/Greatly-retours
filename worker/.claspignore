@@ -1,0 +1,11 @@
+# Tout ignorer par défaut...
+**/**
+
+# ...sauf les fichiers du backend Apps Script
+!Code.gs
+!auth.gs
+!chat.gs
+!email.gs
+!submit.gs
+!users.gs
+!appsscript.json

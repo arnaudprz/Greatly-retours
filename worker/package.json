@@ -1,0 +1,13 @@
+{
+  "name": "greatly-vos-retours-worker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Backend Google Apps Script — Greatly Vos retours (déployé via clasp)",
+  "scripts": {
+    "push": "clasp push -f",
+    "deploy": "clasp push -f && clasp deploy -i AKfycbyxnTKKMvIFG_TUJIvOnRofGPeNUw04CKjUdRO40SVaOlutGB0TZfnBIaATRAWdbDfYKQ -d \"maj\""
+  },
+  "dependencies": {
+    "@google/clasp": "^3.3.0"
+  }
+}

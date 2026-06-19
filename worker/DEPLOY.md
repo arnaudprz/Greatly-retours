@@ -1,5 +1,28 @@
 # Déploiement du backend — Greatly Vos retours
 
+## ⚡ Déploiement rapide (clasp déjà configuré)
+
+clasp est installé localement (`worker/node_modules`) et `.clasp.json` pointe sur le bon projet.
+**La prod = la version live Apps Script. Toujours partir d'elle, jamais écraser à l'aveugle.**
+
+```bash
+cd worker
+# 1. Récupérer la version live AVANT de modifier (le repo peut être en retard) :
+./node_modules/.bin/clasp pull
+# 2. Appliquer ses changements aux .gs, puis pousser + redéployer (garde la même URL) :
+./node_modules/.bin/clasp push -f
+./node_modules/.bin/clasp deploy -i AKfycbyxnTKKMvIFG_TUJIvOnRofGPeNUw04CKjUdRO40SVaOlutGB0TZfnBIaATRAWdbDfYKQ -d "maj"
+# 3. Committer les .gs pour garder repo == prod.
+```
+
+- **scriptId** : `1FAwTMKL5VDAxPl52GK8N86njUKURKzYjtUjRWfT5DPKCkhDNFlkGoYvr`
+- **deploymentId live** (URL de `config.js`) : `AKfycbyxnTKKMvIFG_TUJIvOnRofGPeNUw04CKjUdRO40SVaOlutGB0TZfnBIaATRAWdbDfYKQ`
+- Si `node_modules` disparaît : `cd worker && npm install`. Auth clasp : `~/.clasprc.json`.
+
+---
+
+## Installation initiale (pour mémoire)
+
 ## Étape 1 : Créer une Google Sheets
 
 1. Aller sur https://sheets.google.com

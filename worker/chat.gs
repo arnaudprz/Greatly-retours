@@ -5,7 +5,7 @@
  * Colonnes : timestamp | email | firstname | message
  */
 
-const SHEET_NAME_CHAT = 'chat';
+var SHEET_NAME_CHAT = 'chat';
 
 /**
  * Enregistre un message dans la feuille chat.

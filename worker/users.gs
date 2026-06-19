@@ -7,9 +7,9 @@
  * L'admin principal (ADMIN_EMAIL) est toujours Super-admin et ne peut pas être supprimé.
  */
 
-const SHEET_NAME_USERS = 'users';
-const SHEET_NAME_REQUESTS = 'requests';
-const SHEET_NAME_LOG = 'log';
+var SHEET_NAME_USERS = 'users';
+var SHEET_NAME_REQUESTS = 'requests';
+var SHEET_NAME_LOG = 'log';
 
 /** Obtient la spreadsheet de données */
 function getSheet(name) {
@@ -252,6 +252,15 @@ function rejectRequest(body, session) {
 
 /** Traiter une demande d'accès (depuis le formulaire public) */
 function handleAccessRequest(body) {
+  // Rate limit global: max 5 access requests per hour
+  var cache = CacheService.getScriptCache();
+  var reqKey = 'access_req_global';
+  var reqCount = parseInt(cache.get(reqKey) || '0');
+  if (reqCount >= 5) {
+    return { ok: true }; // Silent success to not reveal rate limiting
+  }
+  cache.put(reqKey, String(reqCount + 1), 3600); // 1 hour
+
   const sheet = getSheet(SHEET_NAME_REQUESTS);
   sheet.appendRow([
     (body.email || '').trim().toLowerCase(),
