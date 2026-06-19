@@ -19,7 +19,7 @@ function getSheet(name) {
   if (!sheet) {
     sheet = ss.insertSheet(name);
     if (name === SHEET_NAME_USERS) {
-      sheet.appendRow(['email', 'firstname', 'lastname', 'role', 'status', 'lastLogin', 'createdAt']);
+      sheet.appendRow(['email', 'firstname', 'lastname', 'role', 'status', 'lastLogin', 'createdAt', 'totalMinutes']);
     } else if (name === SHEET_NAME_REQUESTS) {
       sheet.appendRow(['email', 'firstname', 'lastname', 'role', 'message', 'date', 'status']);
     } else if (name === SHEET_NAME_LOG) {
@@ -64,9 +64,32 @@ function updateLastLogin(email) {
   for (let i = 1; i < data.length; i++) {
     if (data[i][0].toLowerCase() === email.toLowerCase()) {
       sheet.getRange(i + 1, 6).setValue(new Date().toISOString());
+      // Première connexion : passer le statut de 'invité' à 'actif'
+      if (data[i][4] === 'invité') {
+        sheet.getRange(i + 1, 5).setValue('actif');
+      }
       return;
     }
   }
+}
+
+/** Incrémente le temps cumulé (minutes) passé sur la plateforme par l'utilisateur */
+function trackTime(body, session) {
+  // Heartbeat : on ajoute au plus quelques minutes par appel pour éviter tout gonflage
+  let minutes = Number(body.minutes) || 0;
+  if (minutes <= 0) return { ok: true };
+  if (minutes > 5) minutes = 5;
+
+  const sheet = getSheet(SHEET_NAME_USERS);
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0].toLowerCase() === session.email.toLowerCase()) {
+      const current = Number(data[i][7]) || 0;
+      sheet.getRange(i + 1, 8).setValue(current + minutes);
+      return { ok: true, totalMinutes: current + minutes };
+    }
+  }
+  return { ok: true };
 }
 
 /** Liste tous les utilisateurs + demandes + log (pour l'admin) */
@@ -82,6 +105,7 @@ function getPeople() {
       role: usersData[i][3],
       status: usersData[i][4],
       lastLogin: usersData[i][5] || '—',
+      totalMinutes: Number(usersData[i][7]) || 0,
     });
   }
 

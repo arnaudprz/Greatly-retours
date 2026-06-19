@@ -45,9 +45,6 @@
           <div id="login-error" style="display:none;color:var(--bad);font-size:.82rem;margin-bottom:8px"></div>
           <button class="btn-solid" id="btn-login" onclick="login()">Se connecter →</button>
           <p class="gate-hint">Nous vous enverrons un lien de connexion par email.</p>
-          <div class="panel-links">
-            <span class="panel-link" onclick="showPanel('request')">Pas encore d'accès ? Faire une demande</span>
-          </div>
         </div>
 
         <!-- Confirmation magic link -->
@@ -60,33 +57,6 @@
           </div>
         </div>
 
-        <!-- Demande d'accès -->
-        <div class="panel" id="panel-request">
-          <div class="gate-row">
-            <div><label class="gate-label">Prénom</label><input type="text" placeholder="Prénom" id="req-firstname"></div>
-            <div><label class="gate-label">Nom</label><input type="text" placeholder="Nom" id="req-lastname"></div>
-          </div>
-          <label class="gate-label">Email</label>
-          <input type="email" placeholder="votre@email.com" id="req-email">
-          <label class="gate-label">Fonction</label>
-          <input type="text" placeholder="Coach, coordinatrice, équipe Greatly…" id="req-role">
-          <label class="gate-label">Message <span style="font-weight:400;color:var(--warm-grey)">(facultatif)</span></label>
-          <textarea id="req-message" placeholder="Quelques mots sur votre demande…"></textarea>
-          <button class="btn-solid" onclick="requestAccess()">Envoyer ma demande →</button>
-          <div class="panel-links">
-            <span class="panel-link" onclick="showPanel('login')">← J'ai déjà un accès</span>
-          </div>
-        </div>
-
-        <!-- Confirmation demande -->
-        <div class="panel" id="panel-request-confirm">
-          <div class="confirm-msg">
-            <div class="ico">🤍</div>
-            <h3>Demande envoyée</h3>
-            <p>Vous recevrez un email dès que votre accès sera validé par l'équipe Greatly.</p>
-            <span class="panel-link" onclick="showPanel('login')">Retour</span>
-          </div>
-        </div>
       </div>
 
       <div class="gate-foot">🤍 100 % anonyme · GREATLY · Verlinghem</div>
@@ -645,7 +615,7 @@
       <div class="kpi"><div class="lab">Membres actifs</div><div class="val" id="ak-active">—</div></div>
       <div class="kpi"><div class="lab">Invitations en attente</div><div class="val" id="ak-pending">—</div></div>
       <div class="kpi"><div class="lab">Connexions (30 j)</div><div class="val" id="ak-conn">—</div></div>
-      <div class="kpi"><div class="lab">Temps moyen / session</div><div class="val" id="ak-time">—</div></div>
+      <div class="kpi"><div class="lab">Temps moyen / personne</div><div class="val" id="ak-time">—</div></div>
     </div>
 
     <!-- Inviter -->
@@ -660,12 +630,6 @@
       <h3>Personnes</h3>
       <div class="sub">Comptes d'accès au dashboard</div>
       <div id="people-container" style="overflow-x:auto;margin-top:10px"></div>
-    </div>
-
-    <!-- Demandes en attente -->
-    <div class="card" style="margin-bottom:14px">
-      <h3>Demandes d'accès en attente</h3>
-      <div id="requests-container"></div>
     </div>
 
     <!-- Journal d'activité -->

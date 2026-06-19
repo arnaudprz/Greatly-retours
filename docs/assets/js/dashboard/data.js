@@ -26,6 +26,45 @@ async function loadData() {
 async function initDashboard() {
   await loadData();
   render();
+  startTimeTracking();
+}
+
+/* =============================================
+   SUIVI DU TEMPS PASSÉ (heartbeat)
+   Compte uniquement le temps où l'onglet est visible,
+   et envoie les minutes entières au backend au fil de l'eau.
+   ============================================= */
+let _timeTrackingStarted = false;
+
+function startTimeTracking() {
+  if (_timeTrackingStarted || CONFIG.DEMO_MODE) return;
+  _timeTrackingStarted = true;
+
+  let activeMs = 0;
+  let lastTick = Date.now();
+  let pendingMinutes = 0;
+
+  const accumulate = () => {
+    const now = Date.now();
+    if (document.visibilityState === 'visible') activeMs += now - lastTick;
+    lastTick = now;
+  };
+
+  const flush = () => {
+    accumulate();
+    const minutes = Math.floor(activeMs / 60000);
+    if (minutes < 1) return;
+    activeMs -= minutes * 60000;
+    pendingMinutes += minutes;
+    API.trackTime(pendingMinutes)
+      .then(() => { pendingMinutes = 0; })
+      .catch(() => { /* on retentera au prochain flush */ });
+  };
+
+  document.addEventListener('visibilitychange', accumulate);
+  // Vérifie chaque minute, et tente un dernier envoi à la fermeture
+  setInterval(flush, 60000);
+  window.addEventListener('pagehide', flush);
 }
 
 /* =============================================

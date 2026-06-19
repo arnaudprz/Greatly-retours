@@ -9,13 +9,23 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
+/** Formate un nombre de minutes en durée lisible (ex: 0 → '—', 45 → '45 min', 130 → '2 h 10') */
+function formatMinutes(min) {
+  const m = Number(min) || 0;
+  if (m < 1) return '—';
+  if (m < 60) return m + ' min';
+  const h = Math.floor(m / 60);
+  const r = m % 60;
+  return r === 0 ? h + ' h' : h + ' h ' + r;
+}
+
 // --- Données démo ---
 const DEMO_PEOPLE = [
-  { firstname: 'Arnaud', lastname: 'P.', email: 'arnaud@greatly.fr', role: 'Super-admin', status: 'actif', lastLogin: '15 juin 2026' },
-  { firstname: 'Julie', lastname: 'L.', email: 'julie@greatly.fr', role: 'Super-admin', status: 'actif', lastLogin: '14 juin 2026' },
-  { firstname: 'Marc', lastname: 'D.', email: 'marc@example.com', role: 'Membre', status: 'actif', lastLogin: '12 juin 2026' },
-  { firstname: 'Sophie', lastname: 'B.', email: 'sophie@example.com', role: 'Membre', status: 'actif', lastLogin: '10 juin 2026' },
-  { firstname: 'Thomas', lastname: 'R.', email: 'thomas@example.com', role: 'Membre', status: 'invité', lastLogin: '—' },
+  { firstname: 'Arnaud', lastname: 'P.', email: 'arnaud@greatly.fr', role: 'Super-admin', status: 'actif', lastLogin: '15 juin 2026', totalMinutes: 312 },
+  { firstname: 'Julie', lastname: 'L.', email: 'julie@greatly.fr', role: 'Super-admin', status: 'actif', lastLogin: '14 juin 2026', totalMinutes: 187 },
+  { firstname: 'Marc', lastname: 'D.', email: 'marc@example.com', role: 'Membre', status: 'actif', lastLogin: '12 juin 2026', totalMinutes: 42 },
+  { firstname: 'Sophie', lastname: 'B.', email: 'sophie@example.com', role: 'Membre', status: 'actif', lastLogin: '10 juin 2026', totalMinutes: 15 },
+  { firstname: 'Thomas', lastname: 'R.', email: 'thomas@example.com', role: 'Membre', status: 'invité', lastLogin: '—', totalMinutes: 0 },
 ];
 
 const DEMO_REQUESTS = [
@@ -62,11 +72,25 @@ async function loadPeople() {
 function renderAdminKPIs() {
   const active = livePeople.filter(p => p.status === 'actif').length;
   const pending = livePeople.filter(p => p.status === 'invité').length + liveRequests.length;
-  const connexions = liveLog.filter(l => l.action && l.action.toLowerCase().includes('connexion')).length;
+
+  // Connexions des 30 derniers jours (les dates non parsables — démo — sont comptées par défaut)
+  const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+  const now = Date.now();
+  const connexions = liveLog.filter(l => {
+    if (!l.action || !l.action.toLowerCase().includes('connexion')) return false;
+    const t = new Date(l.date).getTime();
+    return isNaN(t) ? true : (now - t) <= THIRTY_DAYS;
+  }).length;
+
+  // Temps moyen par personne (parmi celles ayant passé du temps)
+  const withTime = livePeople.filter(p => (Number(p.totalMinutes) || 0) > 0);
+  const totalMin = withTime.reduce((s, p) => s + (Number(p.totalMinutes) || 0), 0);
+  const avgMin = withTime.length ? Math.round(totalMin / withTime.length) : 0;
+
   document.getElementById('ak-active').textContent = active;
   document.getElementById('ak-pending').textContent = pending;
   document.getElementById('ak-conn').textContent = connexions;
-  document.getElementById('ak-time').textContent = '—';
+  document.getElementById('ak-time').textContent = formatMinutes(avgMin);
 }
 
 function renderPeopleTable(people) {
@@ -75,6 +99,12 @@ function renderPeopleTable(people) {
 
   const roleColor = r => r === 'Super-admin' ? 'background:var(--sage-pale);color:var(--sage-dark)' : 'background:var(--energie-pale);color:#8a5a30';
   const statusDot = s => s === 'actif' ? '🟢' : s === 'invité' ? '🟡' : '🔴';
+  const formatLogin = v => {
+    if (!v || v === '—') return '—';
+    const d = new Date(v);
+    if (isNaN(d)) return v;
+    return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' }).replace(':', 'h');
+  };
 
   container.innerHTML = `
     <table style="width:100%;border-collapse:collapse;font-size:.85rem">
@@ -84,6 +114,7 @@ function renderPeopleTable(people) {
           <th style="padding:10px 8px;font-weight:600;color:var(--warm-grey)">Rôle</th>
           <th style="padding:10px 8px;font-weight:600;color:var(--warm-grey)">Statut</th>
           <th style="padding:10px 8px;font-weight:600;color:var(--warm-grey)">Dernière connexion</th>
+          <th style="padding:10px 8px;font-weight:600;color:var(--warm-grey)">Temps cumulé</th>
           <th style="padding:10px 8px"></th>
         </tr>
       </thead>
@@ -96,7 +127,8 @@ function renderPeopleTable(people) {
             </td>
             <td style="padding:10px 8px"><span class="tag" style="${roleColor(p.role)}">${escapeHtml(p.role)}</span></td>
             <td style="padding:10px 8px">${statusDot(p.status)} ${escapeHtml(p.status)}</td>
-            <td style="padding:10px 8px;color:var(--warm-grey)">${escapeHtml(p.lastLogin)}</td>
+            <td style="padding:10px 8px;color:var(--warm-grey)">${escapeHtml(formatLogin(p.lastLogin))}</td>
+            <td style="padding:10px 8px;color:var(--warm-grey)">${escapeHtml(formatMinutes(p.totalMinutes))}</td>
             <td style="padding:10px 8px;text-align:right">
               ${p.status === 'invité' ? `<button class="btn-ghost" style="padding:6px 12px;font-size:.78rem" onclick="adminAction('resend','${escapeHtml(p.email)}')">Relancer</button>` : ''}
               ${p.status === 'actif' ? `<button class="btn-ghost" style="padding:6px 12px;font-size:.78rem" onclick="adminAction('suspend','${escapeHtml(p.email)}','Suspendre l\\'accès de ${escapeHtml(p.firstname)} ?')">Suspendre</button>` : ''}
@@ -222,7 +254,7 @@ async function submitInvite() {
 
   try {
     if (!CONFIG.DEMO_MODE) {
-      await API.invite(email, selectedInviteRole);
+      await API.invite(email, selectedInviteRole, firstname, lastname);
     }
 
     // En démo, ajouter à la liste

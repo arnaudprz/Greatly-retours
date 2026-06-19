@@ -131,27 +131,6 @@ async function login() {
   }
 }
 
-/** Demande d'accès */
-async function requestAccess() {
-  const firstname = document.getElementById('req-firstname').value.trim();
-  const lastname = document.getElementById('req-lastname').value.trim();
-  const email = document.getElementById('req-email').value.trim();
-  const role = document.getElementById('req-role').value.trim();
-  const message = document.getElementById('req-message').value.trim();
-
-  if (!firstname || !lastname || !email) return;
-
-  const form = {
-    name: firstname + ' ' + lastname,
-    firstname, lastname, email, role, message,
-  };
-
-  if (!CONFIG.DEMO_MODE) {
-    try { await API.requestAccess(form); } catch (_) {}
-  }
-  showPanel('request-confirm');
-}
-
 /** Vérifie si le profil est complet (onboarding terminé) */
 function isProfileComplete() {
   const p = getProfile();

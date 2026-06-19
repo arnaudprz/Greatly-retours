@@ -59,14 +59,14 @@ const API = {
   // --- Authentification ---
   login(password)            { return this.call('login', { password }); },
   forgot(email)              { return this.call('forgot', { email }); },
-  requestAccess(form)        { return this.call('request-access', form); },
 
   // --- Dashboard ---
   getData(filtres = {})      { return this.call('data', filtres); },
+  trackTime(minutes)         { return this.call('track-time', { minutes }); },
 
   // --- Admin ---
   getPeople()                { return this.call('admin.people'); },
-  invite(email, role)        { return this.call('admin.invite', { email, role }); },
+  invite(email, role, firstname, lastname) { return this.call('admin.invite', { email, role, firstname, lastname }); },
   resend(email)              { return this.call('admin.resend', { email }); },
   suspend(email)             { return this.call('admin.suspend', { email }); },
   restore(email)             { return this.call('admin.restore', { email }); },

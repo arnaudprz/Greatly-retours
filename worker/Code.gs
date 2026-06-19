@@ -15,13 +15,13 @@ function doPost(e) {
     if (action === 'magic-link')     return json(sendMagicLink(body));
     if (action === 'verify-token')   return json(verifyMagicToken(body));
     if (action === 'submit')         return json(submitFeedback(body));
-    if (action === 'request-access') return json(handleAccessRequest(body));
 
     // Routes authentifiées (token requis)
     const session = verifySessionToken(body.token);
     if (!session) return json({ error: 'Session invalide ou expirée. Reconnectez-vous.' });
 
     if (action === 'data')           return json(getData(body, session));
+    if (action === 'track-time')     return json(trackTime(body, session));
     if (action === 'chat.send')      return json(sendChatMessage(body, session));
     if (action === 'chat.list')      return json(getChatMessages(body));
 
