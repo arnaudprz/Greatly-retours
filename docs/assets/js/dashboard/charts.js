@@ -417,9 +417,6 @@ function sparkOpts() {
    ============================================= */
 
 function render() {
-  // Fil des derniers retours — global, indépendant du filtre d'audience.
-  renderDerniersRetours();
-
   // 5 onglets plats. Chaque onglet = une source de retours = une section dédiée.
   const who = F.who;
   const isMembres      = who === 'membres';
@@ -997,6 +994,47 @@ function renderOpens() {
   list.innerHTML = html;
 }
 
+/* =============================================
+   SÉCURITÉ — échappement / assainissement du contenu utilisateur
+   Les retours proviennent d'un formulaire PUBLIC non authentifié ; tout
+   contenu réinjecté dans le dashboard doit être neutralisé (anti-XSS).
+   ============================================= */
+function escHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+/** Assainit du HTML riche : liste blanche de balises de mise en forme, AUCUN attribut. */
+function sanitizeRichHtml(dirty) {
+  const ALLOWED = new Set(['B', 'STRONG', 'I', 'EM', 'U', 'P', 'BR', 'UL', 'OL', 'LI', 'H3', 'H4', 'H5', 'BLOCKQUOTE']);
+  const DROP = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'EMBED', 'SVG', 'MATH', 'TEMPLATE', 'NOSCRIPT', 'LINK', 'META', 'IMG', 'VIDEO', 'AUDIO', 'SOURCE', 'FORM', 'INPUT', 'BUTTON']);
+  let doc;
+  try {
+    doc = new DOMParser().parseFromString(String(dirty || ''), 'text/html');
+  } catch (e) {
+    return escHtml(dirty);
+  }
+  const walk = node => {
+    Array.from(node.childNodes).forEach(child => {
+      if (child.nodeType === 8) { child.remove(); return; } // commentaires
+      if (child.nodeType !== 1) return;                     // texte : laissé tel quel
+      const tag = child.tagName;
+      walk(child);
+      if (DROP.has(tag)) {
+        child.remove();                                     // élément dangereux : supprimé avec son contenu
+      } else if (!ALLOWED.has(tag)) {
+        while (child.firstChild) node.insertBefore(child.firstChild, child); // balise inconnue : on garde le texte
+        child.remove();
+      } else {
+        Array.from(child.attributes).forEach(a => child.removeAttribute(a.name)); // tous attributs retirés
+      }
+    });
+  };
+  walk(doc.body);
+  return doc.body.innerHTML;
+}
+
 function renderVerbatims(isTous, isEnergie, isLucidite) {
   const list = document.getElementById('verbatims-list');
   if (!list) return;
@@ -1020,7 +1058,7 @@ function renderVerbatims(isTous, isEnergie, isLucidite) {
           <span class="tag ${v.tag.toLowerCase().includes('yoga') || v.tag.toLowerCase().includes('padel') ? 'energie' : 'lucidite'}">${v.tag}</span>
           <span>${v.date}</span>
         </div>
-        <p>« ${v.text} »</p>
+        <p>« ${escHtml(v.text)} »</p>
       </div>
     `).join('');
   }
@@ -1040,144 +1078,12 @@ function renderVerbatims(isTous, isEnergie, isLucidite) {
             <span class="tag ${v.tag.toLowerCase().includes('yoga') || v.tag.toLowerCase().includes('padel') ? 'energie' : 'lucidite'}">${v.tag}</span>
             <span>${v.date}</span>
           </div>
-          <p>« ${v.text} »</p>
+          <p>« ${escHtml(v.text)} »</p>
         </div>
       `).join('');
     }
   }
 }
-
-
-/* =============================================
-   DERNIERS RETOURS — fil chronologique en haut du dashboard
-   Liste les retours les plus récents (tous formulaires), filtrable,
-   pour les traiter au fil de l'eau sans les noyer dans les agrégats.
-   ============================================= */
-let _drFilter = 'tous';
-let _drBound = false;
-
-/** Libellé + couleur de tag pour un retour */
-function _drLabel(r) {
-  if (r.type === 'greatly_house') return { txt: 'Greatly House', cls: 'coach' };
-  if (r.type === 'prospect' || r.role === 'prospect') return { txt: 'Prospect', cls: 'coach' };
-  if (r.type === 'feedback_ecrit') {
-    const who = r.role === 'intervenant' ? 'Intervenant' : 'Membre';
-    return { txt: 'Écrit · ' + who, cls: 'coach' };
-  }
-  const disc = r.type === 'lucidite' ? 'Lucidité' : 'Énergie';
-  const cls = r.type === 'lucidite' ? 'lucidite' : 'energie';
-  const who = r.role === 'intervenant' ? 'Intervenant' : 'Membre';
-  return { txt: who + ' · ' + disc, cls };
-}
-
-/** Premier texte libre non vide d'un retour */
-function _drText(r) {
-  if (r.type === 'greatly_house') return (r.verbatim || '').trim();
-  if (r.type === 'feedback_ecrit') {
-    const html = r.html ? String(r.html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ') : '';
-    return (r.texte || html || r.titre || '').trim();
-  }
-  if (r.ouvertes) {
-    for (const v of Object.values(r.ouvertes)) {
-      if (v && String(v).trim()) return String(v).trim();
-    }
-  }
-  return '';
-}
-
-/** Score de recommandation lisible, si disponible */
-function _drScore(r) {
-  if (typeof r.nps === 'number') return 'Reco ' + r.nps + '/10';
-  if (r.echelles && typeof r.echelles.recommander === 'number') return 'Reco ' + r.echelles.recommander + '/10';
-  return '';
-}
-
-/** Date + heure courtes : "23 juin · 14h32" */
-function _drDate(iso) {
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return '—';
-  const mois = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
-  const hh = String(d.getHours()).padStart(2, '0');
-  const mm = String(d.getMinutes()).padStart(2, '0');
-  return d.getDate() + ' ' + mois[d.getMonth()] + ' · ' + hh + 'h' + mm;
-}
-
-/** Le retour correspond-il au filtre actif ? */
-function _drMatch(r, f) {
-  if (f === 'tous') return true;
-  if (f === 'greatlyhouse') return r.type === 'greatly_house';
-  if (f === 'prospects') return r.type === 'prospect' || r.role === 'prospect';
-  if (f === 'membres') return r.role === 'membre';
-  if (f === 'intervenants') return r.role === 'intervenant';
-  return true;
-}
-
-function renderDerniersRetours() {
-  const list = document.getElementById('dr-list');
-  if (!list) return;
-
-  // Brancher les chips de filtre une seule fois
-  if (!_drBound) {
-    const bar = document.getElementById('dr-filter');
-    if (bar) {
-      bar.addEventListener('click', e => {
-        const btn = e.target.closest('button[data-dr]');
-        if (!btn) return;
-        _drFilter = btn.dataset.dr;
-        bar.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
-        renderDerniersRetours();
-      });
-      _drBound = true;
-    }
-  }
-
-  try {
-  const all = (typeof rawResponses !== 'undefined' && rawResponses) ? rawResponses.slice() : [];
-  all.sort((a, b) => new Date(b.ts_server || b.ts || 0) - new Date(a.ts_server || a.ts || 0));
-  const filtered = all.filter(r => _drMatch(r, _drFilter));
-
-  const countEl = document.getElementById('dr-count');
-  if (countEl) countEl.textContent = filtered.length + (filtered.length > 1 ? ' retours' : ' retour');
-
-  if (filtered.length === 0) {
-    list.innerHTML = `<div style="text-align:center;padding:28px 20px;color:var(--warm-grey)">
-      <p style="font-size:.88rem;line-height:1.5">Aucun retour pour cette sélection.</p>
-    </div>`;
-    return;
-  }
-
-  const LIMIT = 25;
-  const shown = filtered.slice(0, LIMIT);
-
-  list.innerHTML = shown.map(r => {
-    const lab = _drLabel(r);
-    const score = _drScore(r);
-    const text = _drText(r);
-    const body = text
-      ? `<p>« ${escapeHtml(text.length > 180 ? text.slice(0, 180) + '…' : text)} »</p>`
-      : `<p style="color:var(--warm-grey);font-style:italic">Sans commentaire écrit</p>`;
-    return `
-      <div class="verb">
-        <div class="meta">
-          <span class="tag ${lab.cls}">${lab.txt}</span>
-          <span>${_drDate(r.ts_server || r.ts)}</span>
-          ${score ? `<span style="margin-left:auto;font-weight:600;color:var(--ink,#1A1A1A)">${score}</span>` : ''}
-        </div>
-        ${body}
-      </div>`;
-  }).join('');
-
-  if (filtered.length > LIMIT) {
-    list.innerHTML += `<div style="text-align:center;padding:12px 0 2px;color:var(--warm-grey);font-size:.8rem">
-      + ${filtered.length - LIMIT} autres retours plus anciens
-    </div>`;
-  }
-  } catch (err) {
-    console.error('Erreur renderDerniersRetours:', err);
-    list.innerHTML = `<div style="text-align:center;padding:20px;color:var(--warm-grey);font-size:.85rem">Impossible d'afficher les derniers retours.</div>`;
-  }
-}
-
 
 /* ---- Alertes ---- */
 function renderAlertes() {
@@ -1225,12 +1131,12 @@ function renderAlertes() {
 /* ---- Feedbacks écrits ---- */
 function feedbackCard(fb, truncate) {
   const content = truncate
-    ? `<p style="font-size:.88rem;color:var(--warm-grey);margin-top:6px">${fb.texte}</p>`
-    : `<div style="font-size:.92rem;margin-top:8px;line-height:1.6">${fb.html}</div>`;
+    ? `<p style="font-size:.88rem;color:var(--warm-grey);margin-top:6px">${escHtml(fb.texte)}</p>`
+    : `<div style="font-size:.92rem;margin-top:8px;line-height:1.6">${sanitizeRichHtml(fb.html)}</div>`;
   return `
     <div class="verb" style="padding:16px 0">
-      <div class="meta"><span>${fb.date}</span></div>
-      ${fb.titre ? `<div style="font-weight:600;font-size:.95rem;margin-top:6px">${fb.titre}</div>` : ''}
+      <div class="meta"><span>${escHtml(fb.date)}</span></div>
+      ${fb.titre ? `<div style="font-weight:600;font-size:.95rem;margin-top:6px">${escHtml(fb.titre)}</div>` : ''}
       ${content}
     </div>
   `;
@@ -1703,7 +1609,7 @@ function renderProspect() {
       </div>`;
     } else {
       pasList.innerHTML = VERBATIMS.prospect.pas.map(t => `
-        <div class="verb"><p>« ${t} »</p></div>
+        <div class="verb"><p>« ${escHtml(t)} »</p></div>
       `).join('');
     }
   }
@@ -1716,7 +1622,7 @@ function renderProspect() {
       </div>`;
     } else {
       sugList.innerHTML = VERBATIMS.prospect.suggestions.map(t => `
-        <div class="verb"><p>« ${t} »</p></div>
+        <div class="verb"><p>« ${escHtml(t)} »</p></div>
       `).join('');
     }
   }

@@ -208,25 +208,6 @@
   <!-- ============ VUE TABLEAU DE BORD ============ -->
   <div class="view active" id="view-dashboard">
 
-    <!-- Derniers retours : fil chronologique, tous formulaires confondus -->
-    <div class="card full" id="card-derniers-retours" style="margin-bottom:14px">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
-        <div>
-          <h3>Derniers retours</h3>
-          <div class="sub">Les retours les plus récents, à traiter au fil de l'eau</div>
-        </div>
-        <span class="tag coach" id="dr-count"></span>
-      </div>
-      <div class="fgroup" id="dr-filter" style="margin-top:12px">
-        <button class="on" data-dr="tous">Tous</button>
-        <button data-dr="membres">Membres</button>
-        <button data-dr="intervenants">Intervenants</button>
-        <button data-dr="prospects">Prospects</button>
-        <button data-dr="greatlyhouse">Greatly House</button>
-      </div>
-      <div id="dr-list" style="margin-top:8px;max-height:440px;overflow-y:auto"></div>
-    </div>
-
     <!-- Onglets plats : 1 par questionnaire / source de retours -->
     <div class="filters" id="filters-bar">
       <div class="fgroup" id="f-who">

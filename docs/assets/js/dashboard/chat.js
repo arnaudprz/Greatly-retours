@@ -143,10 +143,10 @@ function renderChat() {
 
     const col = avatarColor(msg.name);
     html += `<div class="chat-msg">
-      <div class="chat-msg-avatar" style="background:${col.bg};color:${col.color}">${chatInitials(msg.name)}</div>
+      <div class="chat-msg-avatar" style="background:${col.bg};color:${col.color}">${escapeHtml(chatInitials(msg.name))}</div>
       <div class="chat-msg-body">
         <div class="chat-msg-header">
-          <span class="chat-msg-name">${msg.name}</span>
+          <span class="chat-msg-name">${escapeHtml(msg.name)}</span>
           <span class="chat-msg-time">${fmtTime(msg.date)}</span>
         </div>
         <div class="chat-msg-text">${escapeHtml(msg.text)}</div>
