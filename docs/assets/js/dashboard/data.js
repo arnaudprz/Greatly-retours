@@ -74,6 +74,10 @@ function startTimeTracking() {
 function aggregateData() {
   if (!rawResponses || rawResponses.length === 0) return;
 
+  // Trier du plus récent au plus ancien : toutes les listes de retours/verbatims
+  // en héritent (les agrégats mensuels regroupent par mois, indépendants de l'ordre).
+  rawResponses.sort((a, b) => new Date(b.ts || b.ts_server || 0) - new Date(a.ts || a.ts_server || 0));
+
   // Séparer par type
   const membres_e = rawResponses.filter(r => r.role === 'membre' && r.type === 'energie');
   const membres_l = rawResponses.filter(r => r.role === 'membre' && r.type === 'lucidite');
@@ -634,7 +638,10 @@ function aggregateScales(responses, definitions) {
 /** Regroupe les réponses ouvertes par question (key = texte de la question) */
 function groupOpensByQuestion(responses) {
   const map = {};
-  responses.forEach(r => {
+  // Plus récents en premier
+  const sorted = responses.slice().sort((a, b) =>
+    new Date(b.ts || b.ts_server || 0) - new Date(a.ts || a.ts_server || 0));
+  sorted.forEach(r => {
     if (!r.ouvertes) return;
     Object.entries(r.ouvertes).forEach(([q, v]) => {
       if (!v || !String(v).trim()) return;
