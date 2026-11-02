@@ -1,576 +1,102 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Guide — Vos retours · GREATLY</title>
-<meta name="description" content="Tout comprendre sur l'outil Vos retours de Greatly : formulaires, dashboard, indicateurs.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- aidez-nous.greatly.club, après le vote : la DA est choisie, la page renvoie vers le nouveau site, avec Montaigne (Arnaud, 3 nov 2026) -->
+<title>Découvrez le nouveau site de Greatly</title>
+<meta name="description" content="Découvrez le nouveau site de Greatly : greatly.club.">
+<meta name="theme-color" content="#FF6B61">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://greatly.club/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Greatly">
+<meta property="og:title" content="Découvrez le nouveau site de Greatly.">
+<meta property="og:description" content="« Frotter et limer notre cervelle contre celle d’autrui. » Montaigne. Le nouveau site de Greatly est en ligne.">
+<meta property="og:url" content="https://arnaudprz.github.io/Greatly-retours/">
+<meta property="og:image" content="https://arnaudprz.github.io/Greatly-retours/partage/accueil-montaigne.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Montaigne en gravure, et sa phrase : « Frotter et limer notre cervelle contre celle d’autrui. »">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/Greatly-retours/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/Greatly-retours/apple-touch-icon.png">
 <style>
-  :root {
-    --sage:#6B7D5C; --sage-dark:#4f5e42; --sage-pale:#CDD8BE;
-    --energie:#C0814E; --energie-pale:#F0DFCC;
-    --lucidite:#4F7C82; --lucidite-pale:#D3E2E4;
-    --cream:#F7F4EF; --ink:#1A1A1A; --warm-grey:#6B6460; --line:#E7E1D7;
-  }
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
-
-  /* --- Layout --- */
-  .layout{display:flex;min-height:100vh;padding-top:56px}
-  .sidebar{
-    position:sticky;top:56px;height:calc(100vh - 56px);width:280px;flex-shrink:0;
-    background:#fff;border-right:1.5px solid var(--line);
-    padding:28px 20px;overflow-y:auto;
-  }
-  .sidebar .brand{font-size:.72rem;letter-spacing:.18em;font-weight:700;color:var(--sage-dark);text-transform:uppercase}
-  .sidebar h2{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:1.3rem;margin:6px 0 20px}
-  .sidebar .badge{display:inline-block;background:var(--sage-pale);color:var(--sage-dark);font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:.04em;margin-left:6px;vertical-align:middle}
-  .sidebar nav{display:flex;flex-direction:column;gap:2px}
-  .sidebar nav a{
-    display:block;padding:8px 12px;border-radius:10px;
-    font-size:.84rem;font-weight:500;color:var(--warm-grey);
-    text-decoration:none;transition:all .12s;
-  }
-  .sidebar nav a:hover{background:var(--cream);color:var(--ink)}
-  .sidebar nav a.active{background:var(--sage-pale);color:var(--sage-dark);font-weight:600}
-  .sidebar nav .sep{height:1px;background:var(--line);margin:10px 0}
-  .sidebar .back{
-    display:inline-flex;align-items:center;gap:6px;margin-top:20px;
-    font-size:.82rem;font-weight:600;color:var(--sage-dark);text-decoration:none;
-  }
-
-  /* --- Main --- */
-  .main{flex:1;max-width:780px;padding:40px 48px 100px;margin:0 auto}
-  .main h1{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:2.1rem;letter-spacing:-.4px;margin-bottom:8px}
-  .main .lead{font-size:1.05rem;color:var(--warm-grey);max-width:600px;margin-bottom:36px;line-height:1.6}
-  .main h2{font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:1.5rem;margin:48px 0 12px;padding-top:20px;border-top:1.5px solid var(--line)}
-  .main h2:first-of-type{border-top:none;margin-top:0}
-  .main h3{font-size:1.05rem;font-weight:600;margin:28px 0 8px}
-  .main p{margin-bottom:14px;max-width:640px}
-  .main ul,.main ol{margin:0 0 14px 20px;max-width:640px}
-  .main li{margin-bottom:6px}
-  .main strong{color:var(--ink)}
-  .main a{color:var(--sage-dark);font-weight:600}
-
-  /* --- Encarts --- */
-  .callout{
-    background:#fff;border:1.5px solid var(--line);border-radius:16px;
-    padding:18px 20px;margin:18px 0 22px;max-width:640px;
-  }
-  .callout.sage{border-color:var(--sage);background:linear-gradient(135deg,#fff,var(--sage-pale))}
-  .callout.energie{border-color:var(--energie);background:linear-gradient(135deg,#fff,var(--energie-pale))}
-  .callout.lucidite{border-color:var(--lucidite);background:linear-gradient(135deg,#fff,var(--lucidite-pale))}
-  .callout h4{font-size:.9rem;font-weight:700;margin-bottom:6px}
-  .callout p{margin-bottom:0;font-size:.9rem}
-
-  /* --- Screenshots --- */
-  .screenshot{
-    background:#fff;border:1.5px solid var(--line);border-radius:16px;
-    overflow:hidden;margin:18px 0 22px;max-width:640px;
-    box-shadow:0 4px 16px rgba(26,26,26,.06);
-  }
-  .screenshot iframe{width:100%;height:420px;border:none;pointer-events:none}
-  .screenshot .caption{padding:10px 16px;font-size:.78rem;color:var(--warm-grey);border-top:1px solid var(--line)}
-
-  /* --- FAQ --- */
-  .faq{max-width:640px}
-  .faq details{border-bottom:1px solid var(--line);padding:14px 0}
-  .faq summary{
-    font-weight:600;font-size:.95rem;cursor:pointer;
-    list-style:none;display:flex;align-items:center;gap:10px;
-  }
-  .faq summary::before{content:'▸';color:var(--sage);font-size:1.1rem;transition:transform .2s}
-  .faq details[open] summary::before{transform:rotate(90deg)}
-  .faq details p{margin-top:10px;font-size:.9rem;color:var(--warm-grey)}
-
-  /* --- Liens formulaires --- */
-  .form-links{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:640px;margin:16px 0 22px}
-  .form-link{
-    display:flex;align-items:center;gap:12px;
-    background:#fff;border:1.5px solid var(--line);border-radius:14px;
-    padding:14px 16px;text-decoration:none;color:var(--ink);transition:all .12s;
-  }
-  .form-link:hover{border-color:var(--sage);background:var(--sage-pale)}
-  .form-link .ico{font-size:1.3rem}
-  .form-link b{font-size:.88rem;display:block}
-  .form-link small{font-size:.76rem;color:var(--warm-grey)}
-
-  /* --- Mobile --- */
-  @media(max-width:900px){
-    .sidebar{display:none}
-    .main{padding:28px 20px 80px}
-    .form-links{grid-template-columns:1fr}
-  }
+@font-face{font-family:B;font-weight:300 800;font-display:swap;src:url(/Greatly-retours/polices/bricolage-latin.woff2) format("woff2")}
+@font-face{font-family:D;font-weight:400 700;font-display:swap;src:url(/Greatly-retours/polices/dmsans-latin.woff2) format("woff2")}
+@font-face{font-family:I;font-style:italic;font-display:swap;src:url(/Greatly-retours/polices/instrument-italique-latin.woff2) format("woff2")}
+:root{--corail:#FF6B61;--encre:#0E2A2F;--vif:#B4F25C;--creme:#F4F2EA}
+*{margin:0;box-sizing:border-box}
+html{background:var(--corail)}
+body{min-height:100svh;display:flex;flex-direction:column;background:var(--corail) repeating-linear-gradient(90deg,transparent 0 calc(20% - 1px),rgba(255,255,255,.22) calc(20% - 1px) 20%);color:var(--encre);font-family:D,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+header{display:flex;justify-content:center;padding:28px 24px 0}
+.logo{display:inline-flex;align-items:center;gap:12px;color:var(--creme);font:500 20px/1 D;letter-spacing:.32em;text-decoration:none}
+.logo svg{width:34px;height:34px}
+main{flex:1;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;gap:clamp(32px,6vw,96px);width:min(1200px,100%);margin:0 auto;padding:clamp(24px,5vw,64px) 24px}
+.mont{justify-self:end;width:min(420px,100%);aspect-ratio:572/763;background:var(--encre);padding:10px;box-shadow:0 30px 60px -30px rgba(14,42,47,.6)}
+.mont img{display:block;width:100%;height:100%}
+.tag{display:inline-block;margin-bottom:20px;padding:9px 12px;background:var(--encre);color:var(--creme);font:700 13px/1 D;letter-spacing:.16em;text-transform:uppercase}
+blockquote{font:italic 400 clamp(38px,5.4vw,72px)/1.04 I;letter-spacing:-.01em;color:var(--creme)}
+blockquote>span{display:block}
+/* « cervelle » encadré de vert vif avec ses quatre poignées, comme sur l'accueil de greatly.club */
+.cadre{position:relative;display:inline-block;padding:0 .1em;outline:2px solid var(--vif);outline-offset:-.02em}
+.cadre>i{position:absolute;width:10px;height:10px;background:var(--vif)}
+.cadre>i:nth-of-type(1){left:-5px;top:-5px}.cadre>i:nth-of-type(2){right:-5px;top:-5px}.cadre>i:nth-of-type(3){left:-5px;bottom:-5px}.cadre>i:nth-of-type(4){right:-5px;bottom:-5px}
+/* l'arrivée, celle de greatly.club : le rideau bleu-vert et son logo (le soleil tourne), qui monte ; les lignes de Montaigne sortent de leur
+   masque une à une, puis le cadre de « cervelle » et ses poignées, puis le reste */
+.rideau{position:fixed;inset:0;z-index:10;display:grid;place-content:center;background:#23545B;color:#fff;animation:rideau .9s cubic-bezier(.76,0,.24,1) 1.1s forwards}
+.rideau p{display:flex;align-items:center;gap:.4em;font:500 clamp(34px,6vw,96px)/1 D;letter-spacing:.32em;margin-right:-.32em;animation:logo .7s cubic-bezier(.22,1,.36,1) .1s both}
+.rideau svg{width:1.6em;height:1.6em;animation:soleil 1.6s cubic-bezier(.22,1,.36,1) .1s both}
+blockquote>span{animation:ligne 1s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(1.5s + var(--i,0) * .11s)}
+blockquote>span:nth-child(2){--i:1}blockquote>span:nth-child(3){--i:2}
+.cadre{animation:cadre .5s ease 2.2s both}.cadre>i{animation:poignee .4s cubic-bezier(.34,1.56,.64,1) 2.35s both}
+.mont{animation:apparait 1s cubic-bezier(.22,1,.36,1) 1.6s both}
+.src,h1,.cta{animation:apparait .8s ease both}.src{animation-delay:2.1s}h1{animation-delay:2.4s}.cta{animation-delay:2.6s}
+@keyframes rideau{to{transform:translate3d(0,-100%,0);visibility:hidden}}
+@keyframes logo{from{opacity:0;letter-spacing:.6em}}
+@keyframes soleil{from{transform:rotate(-90deg) scale(.6)}}
+@keyframes ligne{from{clip-path:inset(100% -10% -30% -10%);transform:translate3d(0,.45em,0)}to{clip-path:inset(-30% -10% -30% -10%);transform:none}}
+@keyframes cadre{from{outline-color:transparent}}
+@keyframes poignee{from{transform:scale(0)}}
+@keyframes apparait{from{opacity:0;transform:translate3d(0,14px,0)}}
+.src{margin-top:16px;font:700 13px/1 D;letter-spacing:.16em;text-transform:uppercase}
+h1{margin-top:clamp(28px,4vw,44px);font:800 clamp(30px,3.6vw,48px)/1 B;letter-spacing:-.045em;color:var(--encre)}
+h1 span{color:var(--creme)}
+.merci{margin-top:12px;font:400 17px/1.45 D;max-width:34em}
+.cta{display:flex;align-items:center;justify-content:space-between;gap:16px;width:min(460px,100%);min-height:64px;margin-top:28px;padding:0 8px 0 24px;border:2px solid var(--creme);color:var(--creme);text-decoration:none;font:800 22px/1 B;letter-spacing:-.04em;transition:transform .35s cubic-bezier(.22,1,.36,1)}
+.cta i{display:grid;place-items:center;flex:none;width:48px;height:48px;background:var(--vif);color:var(--encre)}
+.cta svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.cta:hover{transform:translateY(-3px)}
+.cta:focus-visible{outline:3px solid var(--encre);outline-offset:4px}
+@media (max-width:820px){
+  body{min-height:100svh}
+  header{padding-top:20px}
+  main{grid-template-columns:1fr;gap:20px;padding:20px 24px 28px;align-content:center}
+  .mont{justify-self:center;width:min(200px,50vw,26svh);padding:7px}
+  blockquote{font-size:clamp(30px,9vw,40px)}
+  .src{font-size:11px;letter-spacing:.12em}
+  h1{margin-top:22px;font-size:clamp(26px,7.4vw,32px)}
+  .cta{width:100%;font-size:20px;min-height:56px}
+}
+@media (max-width:820px) and (max-height:640px){
+  header{padding-top:14px}main{gap:14px;padding:12px 24px 18px}
+  .mont{width:min(150px,22svh)}blockquote{font-size:28px}h1{margin-top:14px;font-size:24px}.cta{margin-top:18px;min-height:50px}.cta i{width:40px;height:40px}
+}
+@media (prefers-reduced-motion:reduce){.cta{transition:none}.rideau{display:none}*{animation:none!important}}
 </style>
 </head>
 <body>
-<script>
-if (!localStorage.getItem('greatly_retours_token')) {
-  window.location.replace('dashboard.html');
-} else {
-  document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('guide-content').style.display = '';
-    document.getElementById('guide-navbar').style.display = '';
-  });
-}
-</script>
-<!-- NAVBAR (même structure que le dashboard) -->
-<nav id="guide-navbar" class="guide-nav" style="display:none">
-  <div class="guide-nav-inner">
-    <a href="dashboard.html" class="guide-nav-brand">GREATLY</a>
-    <a href="guide.html" class="guide-nav-badge" style="background:#C0814E">📖 Guide · À lire</a>
-    <a href="dashboard.html" class="guide-nav-badge" style="background:#4F7C82">💬 Une question ?</a>
-
-    <div class="guide-nav-menu">
-      <a href="dashboard.html" class="guide-nav-item" title="Tableau de bord"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></a>
-      <a href="dashboard.html" class="guide-nav-item">📊 Résultats</a>
-      <a href="dashboard.html" class="guide-nav-item">🏃 Activités</a>
-      <a href="dashboard.html" class="guide-nav-item">📋 Formulaires</a>
-      <a href="dashboard.html" class="guide-nav-item">🔒 Administration</a>
-    </div>
-
-    <a href="dashboard.html" class="guide-nav-profile">
-      <span id="guide-avatar" style="width:30px;height:30px;border-radius:50%;background:var(--sage-pale);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--sage-dark)"></span>
-    </a>
+<div class="rideau" aria-hidden="true"><p>GREATLY<svg viewBox="0 0 24 24" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="12" y1="4" x2="12" y2="1.4"/><line x1="17.66" y1="6.34" x2="19.5" y2="4.5"/><line x1="20" y1="12" x2="22.6" y2="12"/><line x1="17.66" y1="17.66" x2="19.5" y2="19.5"/><line x1="12" y1="20" x2="12" y2="22.6"/><line x1="6.34" y1="17.66" x2="4.5" y2="19.5"/><line x1="4" y1="12" x2="1.4" y2="12"/><line x1="6.34" y1="6.34" x2="4.5" y2="4.5"/></g><circle cx="12" cy="12" r="5.4" fill="#B4F25C"/></svg></p></div>
+<header><a class="logo" href="https://greatly.club/" aria-label="Greatly, l’accueil du nouveau site">GREATLY<svg viewBox="0 0 24 24" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="12" y1="4" x2="12" y2="1.4"/><line x1="17.66" y1="6.34" x2="19.5" y2="4.5"/><line x1="20" y1="12" x2="22.6" y2="12"/><line x1="17.66" y1="17.66" x2="19.5" y2="19.5"/><line x1="12" y1="20" x2="12" y2="22.6"/><line x1="6.34" y1="17.66" x2="4.5" y2="19.5"/><line x1="4" y1="12" x2="1.4" y2="12"/><line x1="6.34" y1="6.34" x2="4.5" y2="4.5"/></g><circle cx="12" cy="12" r="5.4" fill="#B4F25C"/></svg></a></header>
+<main>
+  <figure class="mont"><img src="/Greatly-retours/montaigne-anime.svg" alt="Michel de Montaigne, gravure : il regarde deux points d’interrogation, sourit et fait un clin d’œil" width="572" height="763"></figure>
+  <div>
+    <blockquote><span>« Frotter et limer</span><span>notre <span class="cadre">cervelle<i></i><i></i><i></i><i></i></span></span><span>contre celle d’autrui. »</span></blockquote>
+    <p class="src">Montaigne · Essais, livre I, chapitre 26</p>
+    <h1>Découvrez le nouveau site <span>de Greatly.</span></h1>
+    <a class="cta" href="https://greatly.club/">greatly.club<i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></i></a>
   </div>
-</nav>
-<script>
-// Afficher les initiales dans la navbar du guide
-document.addEventListener('DOMContentLoaded', function() {
-  try {
-    const p = JSON.parse(localStorage.getItem('greatly_retours_profile') || '{}');
-    const f = (p.firstname || '').trim();
-    const l = (p.lastname || '').trim();
-    const ini = f && l ? (f[0]+l[0]).toUpperCase() : f ? f.slice(0,2).toUpperCase() : '?';
-    const el = document.getElementById('guide-avatar');
-    if (el) el.textContent = ini;
-  } catch(e) {}
-});
-</script>
-<style>
-  .guide-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#fff;border-bottom:1.5px solid var(--line);height:56px}
-  .guide-nav-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;height:100%;padding:0 20px;gap:8px}
-  .guide-nav-brand{font-size:.72rem;letter-spacing:.22em;font-weight:700;color:var(--sage-dark);text-transform:uppercase;text-decoration:none;margin-right:8px;flex-shrink:0}
-  .guide-nav-badge{display:inline-flex;align-items:center;gap:4px;color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.03em;padding:5px 12px;border-radius:99px;text-decoration:none;flex-shrink:0}
-  .guide-nav-menu{display:flex;align-items:center;gap:2px;background:var(--cream);border-radius:12px;padding:3px 4px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
-  .guide-nav-menu::-webkit-scrollbar{display:none}
-  .guide-nav-item{font-size:.84rem;font-weight:500;padding:8px 14px;border-radius:10px;color:var(--warm-grey);text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap;transition:all .12s}
-  .guide-nav-item:hover{background:#fff;color:var(--ink)}
-  .guide-nav-profile{text-decoration:none;flex-shrink:0;margin-left:6px}
-  @media(max-width:700px){.guide-nav-menu{display:none}.guide-nav-badge:nth-child(3){display:none}}
-</style>
-
-<div class="layout" id="guide-content" style="display:none">
-
-<!-- ============ SIDEBAR ============ -->
-<aside class="sidebar">
-  <div class="brand">Greatly</div>
-  <h2>Guide <span class="badge">À lire</span></h2>
-  <nav id="sidebar-nav">
-    <a href="#contexte">Pourquoi cet outil ?</a>
-    <a href="#nps">Le score de recommandation</a>
-    <div class="sep"></div>
-    <a href="#formulaires">Les formulaires</a>
-    <a href="#form-membre">Formulaire membres</a>
-    <a href="#form-intervenant">Formulaire intervenants</a>
-    <a href="#form-prospect">Formulaire futurs membres</a>
-    <a href="#form-house">Formulaire Greatly House</a>
-    <a href="#form-ecrit">Feedback écrit</a>
-    <div class="sep"></div>
-    <a href="#dashboard">Le tableau de bord</a>
-    <a href="#kpis">Les indicateurs clés</a>
-    <a href="#graphiques">Les graphiques</a>
-    <a href="#detail">Le détail par question</a>
-    <a href="#lieux">La vue Lieux</a>
-    <a href="#intervenants">La vue Intervenants</a>
-    <a href="#prospects">La vue Futurs membres</a>
-    <a href="#verbatims">Les verbatims</a>
-    <a href="#filtres">Les filtres</a>
-    <div class="sep"></div>
-    <a href="#faq">Questions fréquentes</a>
-  </nav>
-  <a class="back" href="dashboard.html">← Retour au dashboard</a>
-</aside>
-
-<!-- ============ MAIN ============ -->
-<main class="main">
-
-<h1>Guide — Vos retours</h1>
-<p class="lead">Cet espace rassemble les ressentis partagés après chaque séance, chaque atelier, chaque rencontre. Il nous aide à comprendre ce qui fonctionne, repérer ce qui peut évoluer, et ajuster le programme au plus près de vos besoins. Voici comment il fonctionne.</p>
-
-<!-- ========== CONTEXTE ========== -->
-<h2 id="contexte">Pourquoi cet outil ?</h2>
-
-<p>Greatly accompagne ses membres dans deux dimensions : <strong>l'Énergie</strong> (le corps, le mouvement, la vitalité) et <strong>la Lucidité</strong> (le recul, la réflexion, la clarté). Ce programme vit grâce à ceux qui le vivent.</p>
-
-<p>Pour le faire grandir avec justesse, nous avons besoin de <strong>votre regard</strong>. Pas de cases à cocher par obligation. Pas de formulaires qui finissent dans un tiroir. Un espace simple, anonyme, où chaque ressenti compte et alimente directement notre capacité à ajuster le programme.</p>
-
-<p>Cet outil repose sur un principe : <strong>ce qui se mesure avec bienveillance peut évoluer avec précision</strong>. Chaque note, chaque mot, chaque silence nous aide à comprendre ce que vous vivez vraiment — et à y répondre.</p>
-
-<div class="callout sage">
-  <h4>100 % anonyme</h4>
-  <p>Aucun nom n'est demandé, aucune réponse n'est rattachée à une personne. Les retours sont agrégés pour donner une vision d'ensemble, jamais pour identifier quelqu'un.</p>
-</div>
-
-<!-- ========== NPS ========== -->
-<h2 id="nps">Le score de recommandation</h2>
-
-<p>Le <strong>score de recommandation</strong> (aussi appelé Net Promoter Score ou NPS) est un indicateur simple et puissant. Il repose sur une seule question :</p>
-
-<div class="callout">
-  <h4>La question de recommandation</h4>
-  <p><em>« Si quelqu'un de votre entourage cherchait à cultiver son énergie et sa lucidité, lui parleriez-vous de Greatly ? »</em></p>
-</div>
-
-<p>Chaque personne répond sur une échelle de 0 à 10. Les réponses sont ensuite réparties en trois groupes :</p>
-
-<ul>
-  <li><strong>Promoteurs (9-10)</strong> — Enthousiastes. Ils recommanderaient sans hésiter.</li>
-  <li><strong>Passifs (7-8)</strong> — Satisfaits mais pas porteurs. Ils ne parleront pas spontanément de l'expérience.</li>
-  <li><strong>Détracteurs (0-6)</strong> — Quelque chose n'a pas fonctionné pour eux. C'est un signal précieux.</li>
-</ul>
-
-<p>Le score se calcule ainsi : <strong>% de promoteurs − % de détracteurs</strong>. Le résultat va de −100 à +100.</p>
-
-<div class="callout sage">
-  <h4>À quoi ça nous sert ?</h4>
-  <p>Le score de recommandation ne dit pas tout, mais il dit l'essentiel : <strong>est-ce que cette expérience donne envie d'en parler autour de soi ?</strong> C'est le marqueur le plus fiable de la valeur ressentie. Quand il progresse, c'est que quelque chose de juste se passe. Quand il stagne ou recule, c'est qu'il faut écouter plus attentivement.</p>
-</div>
-
-<p>Dans le dashboard, vous retrouverez le score de recommandation sous plusieurs formes : un score global, une évolution mois par mois, une répartition promoteurs/passifs/détracteurs, et un détail par parcours (Énergie, Lucidité) et par activité (Yoga, Padel, chaque atelier).</p>
-
-
-<!-- ========== FORMULAIRES ========== -->
-<h2 id="formulaires">Les formulaires</h2>
-
-<p>Cinq formulaires permettent de recueillir des retours adaptés à chaque situation. Tous sont anonymes, accessibles sur mobile, et prennent entre 2 et 5 minutes.</p>
-
-<div class="form-links">
-  <a href="membre.html" target="_blank" class="form-link">
-    <span class="ico">🌱</span>
-    <span><b>Membres</b><small>Après une séance ou un atelier</small></span>
-  </a>
-  <a href="intervenant.html" target="_blank" class="form-link">
-    <span class="ico">🧭</span>
-    <span><b>Intervenants</b><small>Après une animation</small></span>
-  </a>
-  <a href="prospect.html" target="_blank" class="form-link">
-    <span class="ico">🌿</span>
-    <span><b>Futurs membres</b><small>Première impression</small></span>
-  </a>
-  <a href="greatlyhouse.html" target="_blank" class="form-link">
-    <span class="ico">🏡</span>
-    <span><b>Greatly House</b><small>Le lieu</small></span>
-  </a>
-  <a href="ecrit.html" target="_blank" class="form-link">
-    <span class="ico">✍️</span>
-    <span><b>Feedback écrit</b><small>Retour libre et détaillé</small></span>
-  </a>
-</div>
-
-<!-- Form membre -->
-<h3 id="form-membre">🌱 Formulaire membres</h3>
-
-<p>C'est le formulaire principal, rempli après chaque séance Énergie ou atelier Lucidité. Il s'adapte automatiquement au parcours choisi.</p>
-
-<p><strong>Ce qu'il contient :</strong></p>
-<ul>
-  <li><strong>Le contexte</strong> — Énergie ou Lucidité, activité (Yoga/Padel) ou atelier concerné</li>
-  <li><strong>Le déroulé, étape par étape</strong> — Chaque temps de la séance est noté de 0 à 10 (accueil, échauffement, cœur de séance, récupération, clôture, lieu)</li>
-  <li><strong>Des questions sur le ressenti</strong> — Énergie avant/après, rythme, plaisir, accompagnement du coach (Énergie) ou clarté, échanges, outils, élan, animation (Lucidité)</li>
-  <li><strong>Le score de recommandation</strong> — La question clé : en parleriez-vous autour de vous ?</li>
-  <li><strong>Des questions ouvertes</strong> — Ce que vous emportez, ce qui vous a marqué, ce que vous changeriez</li>
-</ul>
-
-<div class="screenshot">
-  <iframe src="membre.html" loading="lazy"></iframe>
-  <div class="caption">Formulaire membres — première étape (choix du parcours)</div>
-</div>
-
-<!-- Form intervenant -->
-<h3 id="form-intervenant">🧭 Formulaire intervenants</h3>
-
-<p>Rempli par les coachs et animateurs après chaque intervention. Il capture leur regard professionnel sur la séance et sur la collaboration avec Greatly.</p>
-
-<p><strong>Ce qu'il contient :</strong></p>
-<ul>
-  <li><strong>Le déroulé vu par l'intervenant</strong> — Les mêmes temps de séance, mais avec un regard d'animateur (dynamique du groupe, réceptivité, ajustements)</li>
-  <li><strong>Des échelles de séance</strong> — Ressenti du groupe, adaptation, conditions de travail, ressenti d'animation</li>
-  <li><strong>Le score de recommandation intervenant</strong> — Recommanderait-il l'expérience d'intervention chez Greatly ?</li>
-  <li><strong>Des questions ouvertes</strong> — Ce qui a fonctionné, les signaux à partager, les ajustements proposés</li>
-  <li><strong>Greatly & vous</strong> — 6 dimensions sur la collaboration (logistique, administratif, pédagogie, communication, cadre, relation) + questions ouvertes</li>
-</ul>
-
-<div class="screenshot">
-  <iframe src="intervenant.html" loading="lazy"></iframe>
-  <div class="caption">Formulaire intervenants — choix du type de séance</div>
-</div>
-
-<!-- Form prospect -->
-<h3 id="form-prospect">🌿 Formulaire futurs membres</h3>
-
-<p>Destiné aux personnes qui ont croisé la route de Greatly sans encore rejoindre le programme. Leur regard extérieur est précieux pour comprendre ce qui attire, ce qui freine, et ce qui pourrait faire la différence.</p>
-
-<p><strong>Ce qu'il contient :</strong></p>
-<ul>
-  <li><strong>La source de découverte</strong> — Bouche-à-oreille, réseaux sociaux, site web, événement, presse, contact direct</li>
-  <li><strong>Impression, clarté, pertinence</strong> — Trois notes 0-10 sur la première impression</li>
-  <li><strong>Freins et attraits</strong> — Ce qui retient et ce qui donne envie (choix multiples)</li>
-  <li><strong>Valeur et projection</strong> — Le programme semble-t-il à la hauteur ? Se projette-t-on ?</li>
-  <li><strong>Score de recommandation prospect</strong> — En parlerait-on à quelqu'un qui cherche à cultiver son énergie et sa lucidité ?</li>
-  <li><strong>Questions ouvertes</strong> — Ce qui ferait franchir le pas, un dernier mot</li>
-</ul>
-
-<div class="screenshot">
-  <iframe src="prospect.html" loading="lazy"></iframe>
-  <div class="caption">Formulaire futurs membres — sources de découverte</div>
-</div>
-
-<!-- Form Greatly House -->
-<h3 id="form-house">🏡 Formulaire Greatly House</h3>
-
-<p>Un formulaire dédié au lieu. La Greatly House fait partie de l'expérience — ce formulaire nous aide à en prendre soin et à le faire évoluer avec vous.</p>
-
-<p><strong>9 questions, toutes notées de 0 à 10 :</strong></p>
-<ul>
-  <li>L'arrivée et l'accueil</li>
-  <li>La capacité du lieu à aider à déconnecter</li>
-  <li>L'atmosphère de la maison</li>
-  <li>L'aisance à échanger librement</li>
-  <li>Le confort des espaces</li>
-  <li>L'accès au lieu</li>
-  <li>L'adéquation entre le lieu et l'expérience</li>
-  <li>L'envie de rester plus longtemps</li>
-  <li>La recommandation du lieu</li>
-</ul>
-<p>Plus une question ouverte pour partager un mot libre sur le lieu.</p>
-
-<div class="screenshot">
-  <iframe src="greatlyhouse.html" loading="lazy"></iframe>
-  <div class="caption">Formulaire Greatly House — les 5 premières questions</div>
-</div>
-
-<!-- Feedback écrit -->
-<h3 id="form-ecrit">✍️ Feedback écrit</h3>
-
-<p>Pour les retours qui ne tiennent pas dans un formulaire. Un espace libre, sans question imposée, avec un éditeur de texte qui permet de mettre en forme ses idées (gras, italique, listes, citations, sous-titres).</p>
-
-<p>Pas de rôle à choisir, pas de catégorie obligatoire. Juste un titre facultatif et un espace pour écrire ce qui compte. Ces retours apparaissent dans le dashboard sous forme de verbatims enrichis.</p>
-
-<div class="screenshot">
-  <iframe src="ecrit.html" loading="lazy"></iframe>
-  <div class="caption">Feedback écrit — éditeur avec mise en forme</div>
-</div>
-
-
-<!-- ========== DASHBOARD ========== -->
-<h2 id="dashboard">Le tableau de bord</h2>
-
-<p>Le dashboard rassemble toutes les réponses et les transforme en indicateurs visuels. C'est l'endroit où l'on suit ce qui se passe, mois après mois, pour chaque parcours et chaque activité.</p>
-
-<p>Il est organisé en plusieurs vues, accessibles via les filtres en haut de page :</p>
-<ul>
-  <li><strong>Tous</strong> — Vue d'ensemble, tous parcours confondus</li>
-  <li><strong>Énergie</strong> — Séances Yoga et Padel</li>
-  <li><strong>Lucidité</strong> — Ateliers réflexifs</li>
-  <li><strong>Lieux</strong> — Greatly House et lieux sportifs</li>
-  <li><strong>Intervenants + Greatly</strong> — La collaboration vue par les coachs</li>
-  <li><strong>Futurs membres</strong> — Le regard des prospects</li>
-</ul>
-
-<!-- KPIs -->
-<h3 id="kpis">Les indicateurs clés (KPIs)</h3>
-
-<p>En haut du dashboard, quatre indicateurs donnent une photo instantanée :</p>
-
-<ul>
-  <li><strong>Recommandation</strong> — Le score de recommandation global, avec sa progression sur la période</li>
-  <li><strong>Énergie avant → après</strong> — L'écart moyen entre l'énergie déclarée en arrivant et en repartant (parcours Énergie)</li>
-  <li><strong>Recul & clarté</strong> — La note moyenne sur la question "Cet atelier vous a-t-il aidé à voir plus clair ?" (parcours Lucidité)</li>
-  <li><strong>Taux de réponse</strong> — Le pourcentage de personnes ayant déposé un retour</li>
-</ul>
-
-<p>Ces KPIs s'adaptent automatiquement au filtre sélectionné. En vue Énergie, le troisième KPI devient "Plaisir à bouger". En vue Lucidité, il devient "Qualité des échanges".</p>
-
-<!-- Graphiques -->
-<h3 id="graphiques">Les graphiques</h3>
-
-<p>Plusieurs graphiques permettent de suivre les tendances :</p>
-
-<ul>
-  <li><strong>Évolution du score de recommandation</strong> — Courbe mensuelle, par parcours (Énergie vs Lucidité vs Global)</li>
-  <li><strong>Énergie avant / après séance</strong> — Deux courbes qui montrent l'impact de chaque séance sur l'énergie ressentie</li>
-  <li><strong>Répartition des recommandations</strong> — Barres empilées : promoteurs, passifs, détracteurs mois par mois</li>
-  <li><strong>Recommandation par atelier Lucidité</strong> — Le score de chaque atelier du programme (Le cadre, Les décisions, L'énergie…)</li>
-  <li><strong>Yoga vs Padel</strong> — Comparaison des notes et du score de recommandation entre les deux activités</li>
-  <li><strong>Étape par étape</strong> — La note moyenne de chaque temps de séance (accueil, échauffement, cœur, récupération, clôture, lieu)</li>
-  <li><strong>Par intervenant</strong> — L'évolution de la note du coach Yoga et du coach Padel</li>
-  <li><strong>Les lieux</strong> — Note comparative entre la Greatly House et les lieux sportifs</li>
-</ul>
-
-<!-- Détail -->
-<h3 id="detail">Le détail par question</h3>
-
-<p>Chaque question du formulaire a sa propre carte dans la section "Détail par question". On y trouve :</p>
-
-<ul>
-  <li>Le <strong>label court</strong> de la question</li>
-  <li>La <strong>question exacte</strong> telle qu'elle est posée dans le formulaire (en italique)</li>
-  <li>La <strong>note actuelle</strong> et sa <strong>progression</strong> par rapport au début de la période</li>
-  <li>Une <strong>sparkline</strong> qui montre l'évolution mois par mois</li>
-</ul>
-
-<p>C'est l'endroit le plus précis du dashboard : il permet de voir, question par question, ce qui progresse et ce qui stagne.</p>
-
-<!-- Lieux -->
-<h3 id="lieux">La vue Lieux</h3>
-
-<p>Accessible en cliquant sur le filtre 📍 Lieux, cette vue rassemble tout ce qui concerne les espaces :</p>
-
-<ul>
-  <li><strong>Vue d'ensemble</strong> — Comparaison Greatly House / Lieu Yoga / Lieu Padel</li>
-  <li><strong>KPIs</strong> — Note moyenne de la Greatly House et des lieux sportifs</li>
-  <li><strong>Évolution par lieu</strong> — Courbes mensuelles</li>
-  <li><strong>Détail Greatly House</strong> — Les 9 questions du formulaire dédié, avec sparklines et questions exactes</li>
-  <li><strong>Verbatims</strong> — Les retours qui mentionnent les lieux</li>
-</ul>
-
-<!-- Intervenants -->
-<h3 id="intervenants">La vue Intervenants + Greatly</h3>
-
-<p>Cette vue montre comment les intervenants vivent la collaboration avec Greatly. Elle contient :</p>
-
-<ul>
-  <li><strong>Les 6 dimensions Greatly & vous</strong> — Logistique, administratif, pédagogie, communication, cadre, relation (radar + évolution)</li>
-  <li><strong>Détail par dimension</strong> — Administratif et communication avec sparklines</li>
-  <li><strong>Cadre & lieux vu par les intervenants</strong></li>
-  <li><strong>Étape par étape</strong> — Le déroulé des séances vu par les intervenants (Énergie et Lucidité)</li>
-  <li><strong>Retours de séance</strong> — Les échelles des intervenants (groupe, adaptation, conditions, animation)</li>
-  <li><strong>Verbatims</strong> — "Ce qui faciliterait la vie" et "Pour que la collaboration grandisse"</li>
-</ul>
-
-<!-- Prospects -->
-<h3 id="prospects">La vue Futurs membres</h3>
-
-<p>Accessible via le filtre 🌱 Futurs membres, cette vue analyse le regard des personnes qui n'ont pas encore rejoint le programme :</p>
-
-<ul>
-  <li><strong>KPIs</strong> — Recommandation prospect, première impression, clarté de l'offre, projection</li>
-  <li><strong>Sources de découverte</strong> — D'où viennent les prospects (bouche-à-oreille, réseaux sociaux, contact direct…)</li>
-  <li><strong>Ce qui freine / ce qui attire</strong> — Les freins et les attraits les plus cités</li>
-  <li><strong>Perception de la valeur</strong> — Le programme semble-t-il justifié ?</li>
-  <li><strong>Pertinence vs projection</strong> — Ça résonne, mais est-ce qu'on se projette ?</li>
-  <li><strong>Verbatims</strong> — "Ce qui ferait franchir le pas" et "Un dernier mot"</li>
-</ul>
-
-<!-- Verbatims -->
-<h3 id="verbatims">Les verbatims et feedbacks écrits</h3>
-
-<p>Les verbatims sont les réponses aux questions ouvertes des formulaires. Ils apparaissent dans deux espaces :</p>
-
-<ul>
-  <li><strong>Derniers retours</strong> — Les verbatims les plus récents des membres, avec le tag de l'activité et la date</li>
-  <li><strong>Points d'attention</strong> — Les signaux remontés par les intervenants (fatigue du groupe, demandes spécifiques, observations)</li>
-  <li><strong>Feedbacks écrits</strong> — Les retours longs et détaillés, rédigés librement via le formulaire dédié</li>
-</ul>
-
-<p>Chaque bloc a un bouton "Voir tous les retours" qui ouvre l'ensemble des verbatims dans une popup.</p>
-
-<!-- Filtres -->
-<h3 id="filtres">Les filtres</h3>
-
-<p>La barre de filtres, juste sous le titre, permet d'affiner la lecture :</p>
-
-<ul>
-  <li><strong>Type</strong> — Tous / Énergie / Lucidité / Lieux / Intervenants + Greatly / Futurs membres</li>
-  <li><strong>Activités</strong> (dans la navbar) — Toutes / Yoga / Padel</li>
-  <li><strong>Qui</strong> — Membres + intervenants / Membres seuls / Intervenants seuls</li>
-  <li><strong>Période</strong> — 3 mois / 6 mois / 12 mois</li>
-</ul>
-
-<p>Les filtres restent visibles quand vous scrollez (barre sticky) pour pouvoir changer de vue à tout moment.</p>
-
-
-<!-- ========== FAQ ========== -->
-<h2 id="faq">Questions fréquentes</h2>
-
-<div class="faq">
-
-<details>
-  <summary>Mes réponses sont-elles vraiment anonymes ?</summary>
-  <p>Oui, totalement. Aucun nom, email ou identifiant n'est collecté. Aucun cookie identifiant n'est déposé. Les réponses sont stockées de façon agrégée — il est techniquement impossible de relier une réponse à une personne.</p>
-</details>
-
-<details>
-  <summary>Combien de temps prend un formulaire ?</summary>
-  <p>Les formulaires membres et intervenants prennent environ 2 minutes. Le formulaire prospect environ 3 minutes. Le formulaire Greatly House environ 2 minutes. Le feedback écrit n'a pas de limite de temps — c'est vous qui décidez.</p>
-</details>
-
-<details>
-  <summary>À quelle fréquence faut-il remplir un retour ?</summary>
-  <p>Idéalement après chaque séance ou atelier. Mais il n'y a aucune obligation. Un retour de temps en temps est déjà précieux. L'important, c'est la régularité du groupe dans son ensemble, pas celle d'une personne en particulier.</p>
-</details>
-
-<details>
-  <summary>Qui peut voir les résultats dans le dashboard ?</summary>
-  <p>L'accès au dashboard est protégé par mot de passe. Seules les personnes invitées par l'équipe Greatly peuvent le consulter. Les résultats sont toujours présentés de façon agrégée — jamais individuellement.</p>
-</details>
-
-<details>
-  <summary>Que signifie une note de 7 ou 8 ?</summary>
-  <p>Dans la logique du score de recommandation, 7 et 8 sont des notes "passives" — la personne est satisfaite mais pas enthousiaste. Ce n'est pas une mauvaise note, mais elle ne génère pas de bouche-à-oreille spontané. L'objectif est de comprendre ce qui transformerait un 7 en 9.</p>
-</details>
-
-<details>
-  <summary>Les intervenants voient-ils les retours des membres ?</summary>
-  <p>Les intervenants invités au dashboard voient les données agrégées (moyennes, tendances), mais jamais les réponses individuelles. Les verbatims sont présentés sans aucune indication d'identité.</p>
-</details>
-
-<details>
-  <summary>Comment sont utilisés les verbatims ?</summary>
-  <p>Les réponses aux questions ouvertes sont lues par l'équipe Greatly pour identifier les signaux forts, les idées d'amélioration et les moments marquants. Elles ne sont jamais partagées hors du dashboard, et jamais attribuées à quelqu'un.</p>
-</details>
-
-<details>
-  <summary>Puis-je modifier ou supprimer une réponse ?</summary>
-  <p>Les réponses sont anonymes et ne sont pas rattachées à un compte. Il n'est donc pas possible de les modifier après envoi. Si vous souhaitez compléter un retour, vous pouvez simplement en déposer un nouveau ou utiliser le feedback écrit.</p>
-</details>
-
-<details>
-  <summary>Le formulaire fonctionne-t-il sur mobile ?</summary>
-  <p>Oui, tous les formulaires sont conçus pour être remplis sur téléphone. L'interface s'adapte automatiquement à la taille de l'écran.</p>
-</details>
-
-<details>
-  <summary>Que se passe-t-il si je ne réponds pas à une question ?</summary>
-  <p>Toutes les questions notées (0-10) sont obligatoires — le formulaire vous le signalera si une réponse manque. Les questions ouvertes (texte libre) sont toujours facultatives.</p>
-</details>
-
-</div>
-
 </main>
-</div>
-
-<script>
-// Sidebar active state on scroll
-const sections = document.querySelectorAll('h2[id], h3[id]');
-const links = document.querySelectorAll('#sidebar-nav a');
-
-function updateActive() {
-  let current = '';
-  sections.forEach(s => {
-    if (s.getBoundingClientRect().top <= 100) current = s.id;
-  });
-  links.forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-  });
-}
-
-window.addEventListener('scroll', updateActive, { passive: true });
-updateActive();
-</script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}</script>
 </body>
 </html>

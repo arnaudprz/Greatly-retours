@@ -1,195 +1,102 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Vos retours intervenants — GREATLY</title>
-<meta name="description" content="Partagez votre ressenti après une séance ou un atelier. Réservé aux intervenants et coachs.">
-
-<!-- Open Graph (partage WhatsApp, LinkedIn, iMessage…) -->
-<meta property="og:title" content="Greatly — Vos retours intervenants">
-<meta property="og:description" content="Partagez votre ressenti après une séance ou un atelier.">
-<meta property="og:image" content="https://arnaudprz.github.io/Greatly-retours/assets/og-retours.svg">
-<meta property="og:url" content="https://arnaudprz.github.io/Greatly-retours/intervenant.html">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- aidez-nous.greatly.club, après le vote : la DA est choisie, la page renvoie vers le nouveau site, avec Montaigne (Arnaud, 3 nov 2026) -->
+<title>Découvrez le nouveau site de Greatly</title>
+<meta name="description" content="Découvrez le nouveau site de Greatly : greatly.club.">
+<meta name="theme-color" content="#FF6B61">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://greatly.club/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="GREATLY">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Greatly">
+<meta property="og:title" content="Découvrez le nouveau site de Greatly.">
+<meta property="og:description" content="« Frotter et limer notre cervelle contre celle d’autrui. » Montaigne. Le nouveau site de Greatly est en ligne.">
+<meta property="og:url" content="https://arnaudprz.github.io/Greatly-retours/">
+<meta property="og:image" content="https://arnaudprz.github.io/Greatly-retours/partage/accueil-montaigne.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Montaigne en gravure, et sa phrase : « Frotter et limer notre cervelle contre celle d’autrui. »">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Greatly — Vos retours intervenants">
-<meta name="twitter:description" content="Partagez votre ressenti après une séance ou un atelier.">
-<meta name="twitter:image" content="https://arnaudprz.github.io/Greatly-retours/assets/og-retours.svg">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/shared.css">
-<link rel="stylesheet" href="assets/css/form.css">
+<link rel="icon" href="/Greatly-retours/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/Greatly-retours/apple-touch-icon.png">
+<style>
+@font-face{font-family:B;font-weight:300 800;font-display:swap;src:url(/Greatly-retours/polices/bricolage-latin.woff2) format("woff2")}
+@font-face{font-family:D;font-weight:400 700;font-display:swap;src:url(/Greatly-retours/polices/dmsans-latin.woff2) format("woff2")}
+@font-face{font-family:I;font-style:italic;font-display:swap;src:url(/Greatly-retours/polices/instrument-italique-latin.woff2) format("woff2")}
+:root{--corail:#FF6B61;--encre:#0E2A2F;--vif:#B4F25C;--creme:#F4F2EA}
+*{margin:0;box-sizing:border-box}
+html{background:var(--corail)}
+body{min-height:100svh;display:flex;flex-direction:column;background:var(--corail) repeating-linear-gradient(90deg,transparent 0 calc(20% - 1px),rgba(255,255,255,.22) calc(20% - 1px) 20%);color:var(--encre);font-family:D,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+header{display:flex;justify-content:center;padding:28px 24px 0}
+.logo{display:inline-flex;align-items:center;gap:12px;color:var(--creme);font:500 20px/1 D;letter-spacing:.32em;text-decoration:none}
+.logo svg{width:34px;height:34px}
+main{flex:1;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;gap:clamp(32px,6vw,96px);width:min(1200px,100%);margin:0 auto;padding:clamp(24px,5vw,64px) 24px}
+.mont{justify-self:end;width:min(420px,100%);aspect-ratio:572/763;background:var(--encre);padding:10px;box-shadow:0 30px 60px -30px rgba(14,42,47,.6)}
+.mont img{display:block;width:100%;height:100%}
+.tag{display:inline-block;margin-bottom:20px;padding:9px 12px;background:var(--encre);color:var(--creme);font:700 13px/1 D;letter-spacing:.16em;text-transform:uppercase}
+blockquote{font:italic 400 clamp(38px,5.4vw,72px)/1.04 I;letter-spacing:-.01em;color:var(--creme)}
+blockquote>span{display:block}
+/* « cervelle » encadré de vert vif avec ses quatre poignées, comme sur l'accueil de greatly.club */
+.cadre{position:relative;display:inline-block;padding:0 .1em;outline:2px solid var(--vif);outline-offset:-.02em}
+.cadre>i{position:absolute;width:10px;height:10px;background:var(--vif)}
+.cadre>i:nth-of-type(1){left:-5px;top:-5px}.cadre>i:nth-of-type(2){right:-5px;top:-5px}.cadre>i:nth-of-type(3){left:-5px;bottom:-5px}.cadre>i:nth-of-type(4){right:-5px;bottom:-5px}
+/* l'arrivée, celle de greatly.club : le rideau bleu-vert et son logo (le soleil tourne), qui monte ; les lignes de Montaigne sortent de leur
+   masque une à une, puis le cadre de « cervelle » et ses poignées, puis le reste */
+.rideau{position:fixed;inset:0;z-index:10;display:grid;place-content:center;background:#23545B;color:#fff;animation:rideau .9s cubic-bezier(.76,0,.24,1) 1.1s forwards}
+.rideau p{display:flex;align-items:center;gap:.4em;font:500 clamp(34px,6vw,96px)/1 D;letter-spacing:.32em;margin-right:-.32em;animation:logo .7s cubic-bezier(.22,1,.36,1) .1s both}
+.rideau svg{width:1.6em;height:1.6em;animation:soleil 1.6s cubic-bezier(.22,1,.36,1) .1s both}
+blockquote>span{animation:ligne 1s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(1.5s + var(--i,0) * .11s)}
+blockquote>span:nth-child(2){--i:1}blockquote>span:nth-child(3){--i:2}
+.cadre{animation:cadre .5s ease 2.2s both}.cadre>i{animation:poignee .4s cubic-bezier(.34,1.56,.64,1) 2.35s both}
+.mont{animation:apparait 1s cubic-bezier(.22,1,.36,1) 1.6s both}
+.src,h1,.cta{animation:apparait .8s ease both}.src{animation-delay:2.1s}h1{animation-delay:2.4s}.cta{animation-delay:2.6s}
+@keyframes rideau{to{transform:translate3d(0,-100%,0);visibility:hidden}}
+@keyframes logo{from{opacity:0;letter-spacing:.6em}}
+@keyframes soleil{from{transform:rotate(-90deg) scale(.6)}}
+@keyframes ligne{from{clip-path:inset(100% -10% -30% -10%);transform:translate3d(0,.45em,0)}to{clip-path:inset(-30% -10% -30% -10%);transform:none}}
+@keyframes cadre{from{outline-color:transparent}}
+@keyframes poignee{from{transform:scale(0)}}
+@keyframes apparait{from{opacity:0;transform:translate3d(0,14px,0)}}
+.src{margin-top:16px;font:700 13px/1 D;letter-spacing:.16em;text-transform:uppercase}
+h1{margin-top:clamp(28px,4vw,44px);font:800 clamp(30px,3.6vw,48px)/1 B;letter-spacing:-.045em;color:var(--encre)}
+h1 span{color:var(--creme)}
+.merci{margin-top:12px;font:400 17px/1.45 D;max-width:34em}
+.cta{display:flex;align-items:center;justify-content:space-between;gap:16px;width:min(460px,100%);min-height:64px;margin-top:28px;padding:0 8px 0 24px;border:2px solid var(--creme);color:var(--creme);text-decoration:none;font:800 22px/1 B;letter-spacing:-.04em;transition:transform .35s cubic-bezier(.22,1,.36,1)}
+.cta i{display:grid;place-items:center;flex:none;width:48px;height:48px;background:var(--vif);color:var(--encre)}
+.cta svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.cta:hover{transform:translateY(-3px)}
+.cta:focus-visible{outline:3px solid var(--encre);outline-offset:4px}
+@media (max-width:820px){
+  body{min-height:100svh}
+  header{padding-top:20px}
+  main{grid-template-columns:1fr;gap:20px;padding:20px 24px 28px;align-content:center}
+  .mont{justify-self:center;width:min(200px,50vw,26svh);padding:7px}
+  blockquote{font-size:clamp(30px,9vw,40px)}
+  .src{font-size:11px;letter-spacing:.12em}
+  h1{margin-top:22px;font-size:clamp(26px,7.4vw,32px)}
+  .cta{width:100%;font-size:20px;min-height:56px}
+}
+@media (max-width:820px) and (max-height:640px){
+  header{padding-top:14px}main{gap:14px;padding:12px 24px 18px}
+  .mont{width:min(150px,22svh)}blockquote{font-size:28px}h1{margin-top:14px;font-size:24px}.cta{margin-top:18px;min-height:50px}.cta i{width:40px;height:40px}
+}
+@media (prefers-reduced-motion:reduce){.cta{transition:none}.rideau{display:none}*{animation:none!important}}
+</style>
 </head>
 <body>
-<div class="wrap">
-
-  <header class="head">
-    <div class="brand">Greatly</div>
-    <h1>Vos retours intervenants</h1>
-    <p>Quelques instants pour partager votre regard sur la séance ou l'atelier que vous venez d'animer. Votre ressenti nous est précieux.</p>
-    <div class="anon">🧭 Espace intervenants · 2 minutes</div>
-  </header>
-
-  <div class="progress" id="progress"></div>
-
-  <!-- ÉTAPE 0 : type de séance -->
-  <section class="step active" data-step="0">
-    <div class="q">
-      <h3>Quelle séance venez-vous d'animer ?</h3>
-      <div class="bigchoice">
-        <button type="button" class="bigbtn" data-type="energie">
-          <span class="ico" style="background:var(--energie-pale)">⛷️</span>
-          <span><b>Une séance Énergie</b><small>Activité physique — Yoga, Padel…</small></span>
-        </button>
-        <button type="button" class="bigbtn" data-type="lucidite">
-          <span class="ico" style="background:var(--lucidite-pale)">🦉</span>
-          <span><b>Un atelier Lucidité</b><small>Atelier réflexif autour d'un déjeuner</small></span>
-        </button>
-        <a href="greatlyhouse.html?role=intervenant" class="bigbtn" style="text-decoration:none;color:inherit">
-          <span class="ico" style="background:var(--sage-pale)">🏡</span>
-          <span><b>La Greatly House</b><small>Votre ressenti sur le lieu — atmosphère, confort, accueil</small></span>
-        </a>
-        <a href="ecrit.html?role=intervenant" class="bigbtn" style="text-decoration:none;color:inherit">
-          <span class="ico" style="background:var(--lucidite-pale)">✍️</span>
-          <span><b>Un feedback écrit</b><small>Un retour libre et détaillé, à votre rythme</small></span>
-        </a>
-      </div>
-    </div>
-    <div class="nav">
-      <button type="button" class="btn-solid" id="start" disabled>Commencer</button>
-    </div>
-  </section>
-
-  <!-- ÉTAPE 1 : contexte -->
-  <section class="step" data-step="1">
-    <div class="q" id="q-sport">
-      <h3>Quelle activité avez-vous animée ?</h3>
-      <div class="chips">
-        <button type="button" class="chip" data-v="Yoga">🧘 Yoga</button>
-        <button type="button" class="chip" data-v="Padel">🎾 Padel</button>
-      </div>
-    </div>
-    <div class="q" id="q-atelier" style="display:none">
-      <h3>Quel atelier avez-vous animé ?</h3>
-      <div class="hint">Le programme compte 6 ateliers de juin à décembre 2026, puis le bilan en janvier 2027.</div>
-      <div class="chips" id="ateliers"></div>
-    </div>
-    <div class="nav">
-      <button type="button" class="btn-ghost nav-back">Retour</button>
-      <button type="button" class="btn-solid nav-next">Continuer</button>
-    </div>
-  </section>
-
-  <!-- ÉTAPE 2 : déroulé + échelles (généré dynamiquement) -->
-  <section class="step" data-step="2"></section>
-
-  <!-- ÉTAPE 3 : NPS + questions ouvertes (généré dynamiquement) -->
-  <section class="step" data-step="3"></section>
-
-  <!-- ÉTAPE 4 : Greatly & vous (généré dynamiquement) -->
-  <section class="step" data-step="4"></section>
-
-  <!-- ÉTAPE 5 : merci -->
-  <section class="step" data-step="5">
-    <div class="merci">
-      <div class="big">🧭</div>
-      <h2>Merci d'avoir pris ce temps</h2>
-      <p>Votre regard rejoint ceux de l'équipe. Il nous aide à ajuster le programme et notre collaboration au plus près de vos besoins.</p>
-      <button type="button" class="btn-solid" style="max-width:260px" onclick="location.reload()">Déposer un autre retour</button>
-    </div>
-  </section>
-
-  <div class="foot">GREATLY · 10 rue de Lambersart, Verlinghem<br>Vos retours sont confidentiels et servent uniquement à améliorer le programme.</div>
-</div>
-
-<!-- Scripts -->
-<script src="assets/js/config.js?v=12"></script>
-<script src="assets/js/api.js?v=12"></script>
-<script src="assets/js/form/scales.js?v=12"></script>
-<script src="assets/js/form/state.js?v=12"></script>
-<script src="assets/js/form/ui.js?v=12"></script>
-<script src="assets/js/form/steps.js?v=12"></script>
-<script src="assets/js/form/submit.js?v=12"></script>
-<script>
-// --- Rôle fixe : intervenant, 5 étapes ---
-state.role = 'intervenant';
-// 5 étapes (séance + NPS + Greatly & vous)
-TOTAL_STEPS = 5;
-
-// --- Étape 0 : sélection du type ---
-document.querySelectorAll('[data-type]').forEach(btn =>
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-type]').forEach(x => x.classList.remove('sel'));
-    btn.classList.add('sel');
-    state.type = btn.dataset.type;
-    document.body.className = 't-' + state.type;
-    document.getElementById('start').disabled = false;
-  })
-);
-
-document.getElementById('start').addEventListener('click', () => {
-  buildContext();
-  buildScales();
-  buildOpens();
-  buildGreatly();
-  go(1);
-});
-
-// --- Construction de l'étape 4 : Greatly & vous ---
-function buildGreatly() {
-  const host = document.querySelector('[data-step="4"]');
-  host.innerHTML = '';
-
-  // Titre
-  host.insertAdjacentHTML('beforeend',
-    `<div class="q" style="border:none;background:transparent;padding:0 0 8px">
-      <h3 style="font-family:'Playfair Display',Georgia,serif;font-size:1.3rem;font-weight:400">Greatly & vous</h3>
-      <div class="hint">Au-delà de la séance, comment vivez-vous la collaboration avec Greatly ? Votre ressenti nous aide à grandir ensemble.</div>
-    </div>`);
-
-  // Échelles 0-10
-  GREATLY_SCALES.forEach(scale => {
-    const card = document.createElement('div');
-    card.className = 'q';
-    card.innerHTML = `<h3>${scale.t}</h3>${scale.hint ? `<div class="hint">${scale.hint}</div>` : ''}`;
-    createNPS(card);
-    createScaleLabels(card, scale.labels);
-    host.appendChild(card);
-  });
-
-  // Questions ouvertes
-  GREATLY_OPENS.forEach(open => {
-    const card = document.createElement('div');
-    card.className = 'q';
-    card.innerHTML = `<h3>${open.t}</h3><div class="hint">${open.h}</div><textarea placeholder="Écrivez librement…"></textarea>`;
-    host.appendChild(card);
-  });
-
-  // Navigation
-  host.insertAdjacentHTML('beforeend',
-    '<div class="nav"><button type="button" class="btn-ghost nav-back">Retour</button><button type="button" class="btn-solid" id="btn-send-greatly">Envoyer mon retour</button></div>');
-  bindNav(host);
-
-  // Bouton envoi final
-  host.querySelector('#btn-send-greatly').addEventListener('click', () => {
-    if (validateStep(4)) submitForm();
-  });
-}
-
-// Sélection des chips statiques (Yoga / Padel)
-document.querySelectorAll('#q-sport .chip').forEach(c =>
-  c.addEventListener('click', () => {
-    document.querySelectorAll('#q-sport .chip').forEach(x => x.classList.remove('sel'));
-    c.classList.add('sel');
-  })
-);
-
-bindNav(document.querySelector('[data-step="1"]'));
-go(0);
-</script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}</script>
+<div class="rideau" aria-hidden="true"><p>GREATLY<svg viewBox="0 0 24 24" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="12" y1="4" x2="12" y2="1.4"/><line x1="17.66" y1="6.34" x2="19.5" y2="4.5"/><line x1="20" y1="12" x2="22.6" y2="12"/><line x1="17.66" y1="17.66" x2="19.5" y2="19.5"/><line x1="12" y1="20" x2="12" y2="22.6"/><line x1="6.34" y1="17.66" x2="4.5" y2="19.5"/><line x1="4" y1="12" x2="1.4" y2="12"/><line x1="6.34" y1="6.34" x2="4.5" y2="4.5"/></g><circle cx="12" cy="12" r="5.4" fill="#B4F25C"/></svg></p></div>
+<header><a class="logo" href="https://greatly.club/" aria-label="Greatly, l’accueil du nouveau site">GREATLY<svg viewBox="0 0 24 24" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="12" y1="4" x2="12" y2="1.4"/><line x1="17.66" y1="6.34" x2="19.5" y2="4.5"/><line x1="20" y1="12" x2="22.6" y2="12"/><line x1="17.66" y1="17.66" x2="19.5" y2="19.5"/><line x1="12" y1="20" x2="12" y2="22.6"/><line x1="6.34" y1="17.66" x2="4.5" y2="19.5"/><line x1="4" y1="12" x2="1.4" y2="12"/><line x1="6.34" y1="6.34" x2="4.5" y2="4.5"/></g><circle cx="12" cy="12" r="5.4" fill="#B4F25C"/></svg></a></header>
+<main>
+  <figure class="mont"><img src="/Greatly-retours/montaigne-anime.svg" alt="Michel de Montaigne, gravure : il regarde deux points d’interrogation, sourit et fait un clin d’œil" width="572" height="763"></figure>
+  <div>
+    <blockquote><span>« Frotter et limer</span><span>notre <span class="cadre">cervelle<i></i><i></i><i></i><i></i></span></span><span>contre celle d’autrui. »</span></blockquote>
+    <p class="src">Montaigne · Essais, livre I, chapitre 26</p>
+    <h1>Découvrez le nouveau site <span>de Greatly.</span></h1>
+    <a class="cta" href="https://greatly.club/">greatly.club<i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></i></a>
+  </div>
+</main>
 </body>
 </html>

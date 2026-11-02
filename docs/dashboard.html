@@ -1,850 +1,102 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<title>Vos retours · Espace équipe — GREATLY</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script>
-// Cache-bust synchrone : timestamp frais à chaque chargement (évite les caches Safari)
-(function(){
-  var v = '?v=' + Date.now();
-  document.write('<link rel="stylesheet" href="assets/css/shared.css' + v + '">');
-  document.write('<link rel="stylesheet" href="assets/css/dashboard.css' + v + '">');
-})();
-</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- aidez-nous.greatly.club, après le vote : la DA est choisie, la page renvoie vers le nouveau site, avec Montaigne (Arnaud, 3 nov 2026) -->
+<title>Découvrez le nouveau site de Greatly</title>
+<meta name="description" content="Découvrez le nouveau site de Greatly : greatly.club.">
+<meta name="theme-color" content="#FF6B61">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://greatly.club/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Greatly">
+<meta property="og:title" content="Découvrez le nouveau site de Greatly.">
+<meta property="og:description" content="« Frotter et limer notre cervelle contre celle d’autrui. » Montaigne. Le nouveau site de Greatly est en ligne.">
+<meta property="og:url" content="https://arnaudprz.github.io/Greatly-retours/">
+<meta property="og:image" content="https://arnaudprz.github.io/Greatly-retours/partage/accueil-montaigne.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Montaigne en gravure, et sa phrase : « Frotter et limer notre cervelle contre celle d’autrui. »">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/Greatly-retours/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/Greatly-retours/apple-touch-icon.png">
+<style>
+@font-face{font-family:B;font-weight:300 800;font-display:swap;src:url(/Greatly-retours/polices/bricolage-latin.woff2) format("woff2")}
+@font-face{font-family:D;font-weight:400 700;font-display:swap;src:url(/Greatly-retours/polices/dmsans-latin.woff2) format("woff2")}
+@font-face{font-family:I;font-style:italic;font-display:swap;src:url(/Greatly-retours/polices/instrument-italique-latin.woff2) format("woff2")}
+:root{--corail:#FF6B61;--encre:#0E2A2F;--vif:#B4F25C;--creme:#F4F2EA}
+*{margin:0;box-sizing:border-box}
+html{background:var(--corail)}
+body{min-height:100svh;display:flex;flex-direction:column;background:var(--corail) repeating-linear-gradient(90deg,transparent 0 calc(20% - 1px),rgba(255,255,255,.22) calc(20% - 1px) 20%);color:var(--encre);font-family:D,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+header{display:flex;justify-content:center;padding:28px 24px 0}
+.logo{display:inline-flex;align-items:center;gap:12px;color:var(--creme);font:500 20px/1 D;letter-spacing:.32em;text-decoration:none}
+.logo svg{width:34px;height:34px}
+main{flex:1;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;gap:clamp(32px,6vw,96px);width:min(1200px,100%);margin:0 auto;padding:clamp(24px,5vw,64px) 24px}
+.mont{justify-self:end;width:min(420px,100%);aspect-ratio:572/763;background:var(--encre);padding:10px;box-shadow:0 30px 60px -30px rgba(14,42,47,.6)}
+.mont img{display:block;width:100%;height:100%}
+.tag{display:inline-block;margin-bottom:20px;padding:9px 12px;background:var(--encre);color:var(--creme);font:700 13px/1 D;letter-spacing:.16em;text-transform:uppercase}
+blockquote{font:italic 400 clamp(38px,5.4vw,72px)/1.04 I;letter-spacing:-.01em;color:var(--creme)}
+blockquote>span{display:block}
+/* « cervelle » encadré de vert vif avec ses quatre poignées, comme sur l'accueil de greatly.club */
+.cadre{position:relative;display:inline-block;padding:0 .1em;outline:2px solid var(--vif);outline-offset:-.02em}
+.cadre>i{position:absolute;width:10px;height:10px;background:var(--vif)}
+.cadre>i:nth-of-type(1){left:-5px;top:-5px}.cadre>i:nth-of-type(2){right:-5px;top:-5px}.cadre>i:nth-of-type(3){left:-5px;bottom:-5px}.cadre>i:nth-of-type(4){right:-5px;bottom:-5px}
+/* l'arrivée, celle de greatly.club : le rideau bleu-vert et son logo (le soleil tourne), qui monte ; les lignes de Montaigne sortent de leur
+   masque une à une, puis le cadre de « cervelle » et ses poignées, puis le reste */
+.rideau{position:fixed;inset:0;z-index:10;display:grid;place-content:center;background:#23545B;color:#fff;animation:rideau .9s cubic-bezier(.76,0,.24,1) 1.1s forwards}
+.rideau p{display:flex;align-items:center;gap:.4em;font:500 clamp(34px,6vw,96px)/1 D;letter-spacing:.32em;margin-right:-.32em;animation:logo .7s cubic-bezier(.22,1,.36,1) .1s both}
+.rideau svg{width:1.6em;height:1.6em;animation:soleil 1.6s cubic-bezier(.22,1,.36,1) .1s both}
+blockquote>span{animation:ligne 1s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(1.5s + var(--i,0) * .11s)}
+blockquote>span:nth-child(2){--i:1}blockquote>span:nth-child(3){--i:2}
+.cadre{animation:cadre .5s ease 2.2s both}.cadre>i{animation:poignee .4s cubic-bezier(.34,1.56,.64,1) 2.35s both}
+.mont{animation:apparait 1s cubic-bezier(.22,1,.36,1) 1.6s both}
+.src,h1,.cta{animation:apparait .8s ease both}.src{animation-delay:2.1s}h1{animation-delay:2.4s}.cta{animation-delay:2.6s}
+@keyframes rideau{to{transform:translate3d(0,-100%,0);visibility:hidden}}
+@keyframes logo{from{opacity:0;letter-spacing:.6em}}
+@keyframes soleil{from{transform:rotate(-90deg) scale(.6)}}
+@keyframes ligne{from{clip-path:inset(100% -10% -30% -10%);transform:translate3d(0,.45em,0)}to{clip-path:inset(-30% -10% -30% -10%);transform:none}}
+@keyframes cadre{from{outline-color:transparent}}
+@keyframes poignee{from{transform:scale(0)}}
+@keyframes apparait{from{opacity:0;transform:translate3d(0,14px,0)}}
+.src{margin-top:16px;font:700 13px/1 D;letter-spacing:.16em;text-transform:uppercase}
+h1{margin-top:clamp(28px,4vw,44px);font:800 clamp(30px,3.6vw,48px)/1 B;letter-spacing:-.045em;color:var(--encre)}
+h1 span{color:var(--creme)}
+.merci{margin-top:12px;font:400 17px/1.45 D;max-width:34em}
+.cta{display:flex;align-items:center;justify-content:space-between;gap:16px;width:min(460px,100%);min-height:64px;margin-top:28px;padding:0 8px 0 24px;border:2px solid var(--creme);color:var(--creme);text-decoration:none;font:800 22px/1 B;letter-spacing:-.04em;transition:transform .35s cubic-bezier(.22,1,.36,1)}
+.cta i{display:grid;place-items:center;flex:none;width:48px;height:48px;background:var(--vif);color:var(--encre)}
+.cta svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.cta:hover{transform:translateY(-3px)}
+.cta:focus-visible{outline:3px solid var(--encre);outline-offset:4px}
+@media (max-width:820px){
+  body{min-height:100svh}
+  header{padding-top:20px}
+  main{grid-template-columns:1fr;gap:20px;padding:20px 24px 28px;align-content:center}
+  .mont{justify-self:center;width:min(200px,50vw,26svh);padding:7px}
+  blockquote{font-size:clamp(30px,9vw,40px)}
+  .src{font-size:11px;letter-spacing:.12em}
+  h1{margin-top:22px;font-size:clamp(26px,7.4vw,32px)}
+  .cta{width:100%;font-size:20px;min-height:56px}
+}
+@media (max-width:820px) and (max-height:640px){
+  header{padding-top:14px}main{gap:14px;padding:12px 24px 18px}
+  .mont{width:min(150px,22svh)}blockquote{font-size:28px}h1{margin-top:14px;font-size:24px}.cta{margin-top:18px;min-height:50px}.cta i{width:40px;height:40px}
+}
+@media (prefers-reduced-motion:reduce){.cta{transition:none}.rideau{display:none}*{animation:none!important}}
+</style>
 </head>
 <body>
-
-<!-- ÉCRAN D'ACCUEIL (split screen) -->
-<div id="gate">
-  <!-- Photo gauche -->
-  <div class="gate-photo">
-    <img src="assets/img/house.jpg" alt="Greatly House" id="gate-img">
+<div class="rideau" aria-hidden="true"><p>GREATLY<svg viewBox="0 0 24 24" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="12" y1="4" x2="12" y2="1.4"/><line x1="17.66" y1="6.34" x2="19.5" y2="4.5"/><line x1="20" y1="12" x2="22.6" y2="12"/><line x1="17.66" y1="17.66" x2="19.5" y2="19.5"/><line x1="12" y1="20" x2="12" y2="22.6"/><line x1="6.34" y1="17.66" x2="4.5" y2="19.5"/><line x1="4" y1="12" x2="1.4" y2="12"/><line x1="6.34" y1="6.34" x2="4.5" y2="4.5"/></g><circle cx="12" cy="12" r="5.4" fill="#B4F25C"/></svg></p></div>
+<header><a class="logo" href="https://greatly.club/" aria-label="Greatly, l’accueil du nouveau site">GREATLY<svg viewBox="0 0 24 24" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="12" y1="4" x2="12" y2="1.4"/><line x1="17.66" y1="6.34" x2="19.5" y2="4.5"/><line x1="20" y1="12" x2="22.6" y2="12"/><line x1="17.66" y1="17.66" x2="19.5" y2="19.5"/><line x1="12" y1="20" x2="12" y2="22.6"/><line x1="6.34" y1="17.66" x2="4.5" y2="19.5"/><line x1="4" y1="12" x2="1.4" y2="12"/><line x1="6.34" y1="6.34" x2="4.5" y2="4.5"/></g><circle cx="12" cy="12" r="5.4" fill="#B4F25C"/></svg></a></header>
+<main>
+  <figure class="mont"><img src="/Greatly-retours/montaigne-anime.svg" alt="Michel de Montaigne, gravure : il regarde deux points d’interrogation, sourit et fait un clin d’œil" width="572" height="763"></figure>
+  <div>
+    <blockquote><span>« Frotter et limer</span><span>notre <span class="cadre">cervelle<i></i><i></i><i></i><i></i></span></span><span>contre celle d’autrui. »</span></blockquote>
+    <p class="src">Montaigne · Essais, livre I, chapitre 26</p>
+    <h1>Découvrez le nouveau site <span>de Greatly.</span></h1>
+    <a class="cta" href="https://greatly.club/">greatly.club<i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></i></a>
   </div>
-
-  <!-- Contenu droite -->
-  <div class="gate-right">
-    <div class="gate-right-inner">
-
-      <div class="gate-brand">GREATLY</div>
-      <h1>Vos retours</h1>
-      <p class="gate-lead">Un espace pour écouter ce qui se vit, comprendre ce qui compte, et faire évoluer le programme ensemble.</p>
-
-      <!-- Panneaux -->
-      <div class="gate-panels">
-        <!-- Connexion (magic link) -->
-        <div class="panel active" id="panel-login">
-          <label class="gate-label">Email</label>
-          <input type="email" placeholder="votre@email.com" id="login-email" autocomplete="email">
-          <div id="login-error" style="display:none;color:var(--bad);font-size:.82rem;margin-bottom:8px"></div>
-          <button class="btn-solid" id="btn-login" onclick="login()">Se connecter →</button>
-          <p class="gate-hint">Nous vous enverrons un lien de connexion par email.</p>
-        </div>
-
-        <!-- Confirmation magic link -->
-        <div class="panel" id="panel-magic-sent">
-          <div class="confirm-msg">
-            <div class="ico">✉️</div>
-            <h3>Lien envoyé</h3>
-            <p>Vérifiez votre boîte de réception et cliquez sur le lien pour accéder à votre espace.</p>
-            <span class="panel-link" onclick="showPanel('login')">Renvoyer un lien</span>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="gate-foot">🤍 100 % anonyme · GREATLY · Verlinghem</div>
-    </div>
-  </div>
-</div>
-
-<!-- ONBOARDING (première connexion) -->
-<div id="onboarding" style="display:none">
-  <div class="onboarding-wrap">
-    <div class="onboarding-progress">
-      <span class="on"></span><span></span><span></span>
-    </div>
-
-    <!-- Étape 1 : Bienvenue -->
-    <div class="onboarding-step active" data-ob="1">
-      <div class="onboarding-icon">🤍</div>
-      <h1>Bienvenue dans votre espace retours</h1>
-      <p class="onboarding-lead">Cet outil rassemble, de façon <b>100 % anonyme</b>, les ressentis partagés après chaque séance Énergie et chaque atelier Lucidité.</p>
-      <div class="onboarding-features">
-        <div class="onboarding-feature">
-          <span class="onboarding-feat-icon">📊</span>
-          <div>
-            <b>Suivre ce qui compte</b>
-            <small>Score de recommandation, énergie ressentie, qualité des échanges… tout est mesuré sur une échelle simple de 0 à 10.</small>
-          </div>
-        </div>
-        <div class="onboarding-feature">
-          <span class="onboarding-feat-icon">💬</span>
-          <div>
-            <b>Écouter les mots</b>
-            <small>Les verbatims vous donnent accès aux ressentis bruts, sans filtre, pour comprendre ce qui se vit vraiment.</small>
-          </div>
-        </div>
-        <div class="onboarding-feature">
-          <span class="onboarding-feat-icon">🎯</span>
-          <div>
-            <b>Ajuster le programme</b>
-            <small>Repérez les signaux faibles, identifiez ce qui fonctionne et faites évoluer le programme au bon rythme.</small>
-          </div>
-        </div>
-      </div>
-      <button type="button" class="btn-solid" onclick="obNext()">Continuer</button>
-    </div>
-
-    <!-- Étape 2 : Votre profil -->
-    <div class="onboarding-step" data-ob="2">
-      <div class="onboarding-icon">🧑</div>
-      <h1>Faisons connaissance</h1>
-      <p class="onboarding-lead">Ces informations restent privées et permettent de personnaliser votre expérience.</p>
-      <div class="onboarding-form">
-        <label>Prénom <span style="color:var(--bad)">*</span></label>
-        <input type="text" id="ob-firstname" placeholder="Votre prénom" required>
-        <label>Nom <span style="color:var(--bad)">*</span></label>
-        <input type="text" id="ob-lastname" placeholder="Votre nom" required>
-        <label>Email <span style="color:var(--bad)">*</span></label>
-        <input type="email" id="ob-email" placeholder="votre@email.com" required>
-        <div id="ob-error" style="display:none;color:var(--bad);font-size:.82rem;margin-top:6px"></div>
-      </div>
-      <div class="onboarding-nav">
-        <button type="button" class="btn-ghost" onclick="obPrev()">Retour</button>
-        <button type="button" class="btn-solid" onclick="obNext()">Continuer</button>
-      </div>
-    </div>
-
-    <!-- Étape 3 : C'est parti -->
-    <div class="onboarding-step" data-ob="3">
-      <div class="onboarding-icon">🚀</div>
-      <h1>Tout est prêt, <span id="ob-hello"></span></h1>
-      <p class="onboarding-lead">Votre espace est configuré. Vous pouvez maintenant explorer les retours, suivre les indicateurs et consulter les verbatims du groupe.</p>
-      <div class="onboarding-tips">
-        <div class="onboarding-tip">🔍 <b>Filtrez</b> par parcours, activité ou période pour affiner la lecture</div>
-        <div class="onboarding-tip">📋 <b>Partagez le formulaire</b> aux membres et intervenants depuis l'onglet dédié</div>
-        <div class="onboarding-tip">👤 <b>Modifiez votre profil</b> à tout moment depuis l'avatar en haut à droite</div>
-      </div>
-      <button type="button" class="btn-solid" onclick="obFinish()">Accéder au tableau de bord</button>
-    </div>
-  </div>
-</div>
-
-<!-- DASHBOARD -->
-<div id="app">
-
-<!-- ============ NAVBAR ============ -->
-<nav class="navbar" id="navbar">
-  <div class="navbar-inner">
-    <!-- Logo + Guide -->
-    <div class="navbar-brand" id="logo-home" style="cursor:pointer">GREATLY</div>
-    <a class="guide-badge" href="guide.html">📖 Guide · À lire</a>
-    <a class="guide-badge" href="#" id="btn-question" style="background:var(--lucidite);animation:none">💬 Une question ?</a>
-
-    <!-- Menu principal -->
-    <div class="navbar-menu">
-      <button class="navbar-item on" data-view="dashboard" title="Tableau de bord"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></button>
-
-      <!-- Formulaires (dropdown) -->
-      <div class="navbar-dropdown-wrap">
-        <button class="navbar-item navbar-has-dropdown">📋 Formulaires ▾</button>
-        <div class="navbar-dropdown">
-          <a href="membre.html" target="_blank">🌱 Formulaire membres</a>
-          <a href="intervenant.html" target="_blank">🧭 Formulaire intervenants</a>
-          <a href="prospect.html" target="_blank">🌿 Formulaire futurs membres</a>
-        </div>
-      </div>
-
-      <button class="navbar-item admin-only" data-view="admin">🔒 Administration</button>
-    </div>
-
-    <!-- Profil (droite) -->
-    <div class="profile-widget" id="profile-widget">
-      <button type="button" class="profile-trigger" onclick="toggleProfile()">
-        <span class="profile-avatar" id="profile-avatar"></span>
-        <span class="profile-name" id="profile-name"></span>
-        <span class="profile-chevron">▾</span>
-      </button>
-      <div class="profile-dropdown" id="profile-dropdown">
-        <div class="profile-dropdown-header">
-          <span class="profile-avatar lg" id="profile-avatar-lg"></span>
-          <div>
-            <div class="profile-fullname" id="profile-fullname"></div>
-            <div class="profile-role" id="profile-role"></div>
-          </div>
-        </div>
-        <div class="profile-form" id="profile-form">
-          <label>Prénom</label>
-          <input type="text" id="pf-firstname" placeholder="Prénom">
-          <label>Nom</label>
-          <input type="text" id="pf-lastname" placeholder="Nom">
-          <label>Email</label>
-          <input type="email" id="pf-email" placeholder="Email" readonly style="opacity:.6;cursor:not-allowed">
-          <button type="button" class="btn-solid" style="width:100%;margin-top:6px;padding:10px;font-size:.83rem" onclick="saveProfile()">Enregistrer</button>
-        </div>
-        <div class="profile-dropdown-footer">
-          <button type="button" onclick="logout()">Déconnexion</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</nav>
-
-<div class="wrap" style="padding-top:70px">
-
-  <!-- Welcome -->
-  <div style="margin-bottom:20px">
-    <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:400;font-size:1.9rem;letter-spacing:-.3px">Vos retours</h1>
-    <p id="head-welcome" style="color:var(--warm-grey);font-size:.92rem;margin-top:6px;max-width:520px;line-height:1.45"></p>
-  </div>
-
-  <!-- ============ VUE TABLEAU DE BORD ============ -->
-  <div class="view active" id="view-dashboard">
-
-    <!-- Onglets plats : 1 par questionnaire / source de retours -->
-    <div class="filters" id="filters-bar">
-      <div class="fgroup" id="f-who">
-        <button class="on" data-v="membres">Membres</button>
-        <button data-v="intervenants">Intervenants</button>
-        <button data-v="prospects">Prospects</button>
-        <button data-v="greatly">Greatly</button>
-        <button data-v="greatlyhouse">Greatly House</button>
-      </div>
-      <a href="guide.html#filtres" target="_blank" class="help-link" style="align-self:center">?</a>
-    </div>
-
-    <!-- Contenu standard (masqué en vue Lieux) -->
-    <div id="standard-section">
-
-    <!-- KPIs : recommandation par canal (Énergie / Lucidité / Greatly House) + nombre de retours -->
-    <div class="kpis">
-      <div class="kpi k-nps">
-        <div class="lab">Reco Énergie <a href="guide.html#nps" target="_blank" class="help-link">?</a></div>
-        <div class="kpi-q">« Imaginez qu'un proche traverse une période intense — lui conseilleriez-vous de vivre cette expérience ? »</div>
-        <div class="val" id="k-nps-energie">—</div>
-        <div class="sub"><span class="up" id="k-nps-energie-d"></span> sur la période</div>
-      </div>
-      <div class="kpi">
-        <div class="lab">Reco Lucidité <a href="guide.html#nps" target="_blank" class="help-link">?</a></div>
-        <div class="kpi-q">« Imaginez qu'un proche traverse une période intense — lui conseilleriez-vous de vivre cette expérience ? »</div>
-        <div class="val" id="k-nps-lucidite">—</div>
-        <div class="sub"><span class="up" id="k-nps-lucidite-d"></span> sur la période</div>
-      </div>
-      <div class="kpi">
-        <div class="lab">Reco Greatly House <a href="guide.html#nps" target="_blank" class="help-link">?</a></div>
-        <div class="kpi-q">« Recommanderiez-vous ce lieu ? »</div>
-        <div class="val" id="k-nps-house">—</div>
-        <div class="sub"><span class="up" id="k-nps-house-d"></span> sur la période</div>
-      </div>
-      <div class="kpi">
-        <div class="lab">Nombre de retours</div>
-        <div class="kpi-q">Total des retours reçus dans cette audience</div>
-        <div class="val" id="k-tx">—</div>
-        <div class="sub" id="k-tx-sub"></div>
-      </div>
-    </div>
-
-    <!-- Graphiques -->
-    <div class="grid">
-      <div class="card full">
-        <h3>Évolution du score de recommandation <a href="guide.html#nps" target="_blank" class="help-link">?</a></h3>
-        <div class="sub">« Imaginez qu'un proche traverse une période intense — lui conseilleriez-vous de vivre cette expérience ? » · par mois</div>
-        <div class="chartbox"><canvas id="c-nps"></canvas></div>
-      </div>
-
-      <div class="card" id="card-energie">
-        <h3>Énergie ressentie avant / après séance <a href="guide.html#kpis" target="_blank" class="help-link">?</a></h3>
-        <div class="sub">« Comment vous sentiez-vous en arrivant ? » vs « Et maintenant ? » · moyenne mensuelle</div>
-        <div class="chartbox"><canvas id="c-energie"></canvas></div>
-      </div>
-
-      <div class="card">
-        <h3>Répartition des recommandations <a href="guide.html#nps" target="_blank" class="help-link">?</a></h3>
-        <div class="sub">Promoteurs (9–10) · Passifs (7–8) · Détracteurs (0–6)</div>
-        <div class="chartbox"><canvas id="c-repart"></canvas></div>
-      </div>
-
-      <div class="card full" id="card-ateliers">
-        <h3>Recommandation par atelier — Lucidité</h3>
-        <div class="sub">Les 6 ateliers du programme + bilan · juin 2026 → janvier 2027</div>
-        <div class="chartbox"><canvas id="c-ateliers"></canvas></div>
-      </div>
-
-      <div class="card" id="card-sports">
-        <h3>Par sport — Yoga vs Padel</h3>
-        <div class="sub">Recommandation et note moyenne de séance (0–10)</div>
-        <div class="chartbox"><canvas id="c-sports"></canvas></div>
-      </div>
-
-      <div class="card" id="card-phases-e">
-        <h3>La séance Énergie, étape par étape</h3>
-        <div class="sub">« Comment avez-vous vécu chaque temps de la séance ? » · note 0–10</div>
-        <div class="chartbox"><canvas id="c-phases-e"></canvas></div>
-      </div>
-
-      <div class="card" id="card-phases-l">
-        <h3>La rencontre Lucidité, étape par étape</h3>
-        <div class="sub">« Comment avez-vous vécu chaque temps de la rencontre ? » · note 0–10</div>
-        <div class="chartbox"><canvas id="c-phases-l"></canvas></div>
-      </div>
-
-      <div class="card full" id="card-detail">
-        <h3>Détail par question <a href="guide.html#detail" target="_blank" class="help-link">?</a></h3>
-        <div class="sub">Une carte par question · note du dernier mois, progression et évolution mensuelle (0–10)</div>
-        <div class="qgrid" id="detail-grid"></div>
-      </div>
-
-      <div class="card full" id="card-perint">
-        <h3>Par intervenant·e <a href="guide.html#graphiques" target="_blank" class="help-link">?</a></h3>
-        <div class="sub">« Comment avez-vous trouvé l'accompagnement du coach ? » · note moyenne par mois · suit le filtre Activité en haut</div>
-        <div class="chartbox" style="height:220px"><canvas id="c-coach"></canvas></div>
-      </div>
-
-      <div class="card full" id="card-lieux">
-        <h3>Les lieux <a href="guide.html#lieux" target="_blank" class="help-link">?</a></h3>
-        <div class="sub">Note moyenne (0–10) · Greatly House (Lucidité) et lieux extérieurs (Énergie)</div>
-        <div class="chartbox" style="height:180px"><canvas id="c-lieux"></canvas></div>
-      </div>
-
-    </div><!-- /.grid -->
-    </div><!-- /standard-section (also closes .grid) -->
-
-      <!-- ============ VUE LIEUX (filtre 📍 Lieux) ============ -->
-      <div id="lieux-section" style="display:none">
-
-        <!-- KPIs Greatly House : reco membres / intervenants / prospects + nombre de retours -->
-        <div class="kpis">
-          <div class="kpi k-nps">
-            <div class="lab">Reco membres <a href="guide.html#lieux" target="_blank" class="help-link">?</a></div>
-            <div class="kpi-q">« Recommanderiez-vous ce lieu ? » — note des membres</div>
-            <div class="val" id="gh-reco-membres">—</div>
-            <div class="sub" id="gh-reco-membres-sub">sur la période</div>
-          </div>
-          <div class="kpi">
-            <div class="lab">Reco intervenants <a href="guide.html#lieux" target="_blank" class="help-link">?</a></div>
-            <div class="kpi-q">« Recommanderiez-vous ce lieu ? » — note des intervenants</div>
-            <div class="val" id="gh-reco-intervenants">—</div>
-            <div class="sub" id="gh-reco-intervenants-sub">sur la période</div>
-          </div>
-          <div class="kpi">
-            <div class="lab">Reco prospects <a href="guide.html#lieux" target="_blank" class="help-link">?</a></div>
-            <div class="kpi-q">« Recommanderiez-vous ce lieu ? » — note des futurs membres</div>
-            <div class="val" id="gh-reco-prospects">—</div>
-            <div class="sub" id="gh-reco-prospects-sub">sur la période</div>
-          </div>
-          <div class="kpi">
-            <div class="lab">Nombre de retours</div>
-            <div class="kpi-q">Total des réponses Greatly House reçues</div>
-            <div class="val" id="gh-nb">—</div>
-            <div class="sub" id="gh-nb-sub"></div>
-          </div>
-        </div>
-
-        <div class="grid">
-          <div class="card full">
-            <h3>Vue d'ensemble — Greatly House <a href="guide.html#lieux" target="_blank" class="help-link">?</a></h3>
-            <div class="sub">Note moyenne (0–10) donnée à la Greatly House par chaque audience</div>
-            <div class="chartbox" style="height:200px"><canvas id="c-lieux-overview"></canvas></div>
-          </div>
-
-          <div class="card">
-            <h3>🏡 Greatly House</h3>
-            <div class="sub">Accueil, confort, cadre, atmosphère · ateliers Lucidité</div>
-            <div class="kpi" style="border:none;padding:12px 0">
-              <div class="val" id="lx-house">—<span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-              <div class="sub" id="lx-house-sub">note moyenne sur la période</div>
-            </div>
-            <div class="chartbox" style="height:140px"><canvas id="c-lieux-house"></canvas></div>
-          </div>
-
-          <div class="card full" id="card-gh-detail">
-            <h3>🏡 Greatly House — Détail par question</h3>
-            <div class="sub">Formulaire dédié · note 0–10 · évolution mensuelle</div>
-            <div class="qgrid" id="gh-detail-grid"></div>
-          </div>
-
-          <div class="card full" id="card-gh-verbatim">
-            <h3>Un mot sur la Greatly House ?</h3>
-            <div class="sub">Ce que vous aimez, ce qui pourrait évoluer, un détail qui vous a marqué…</div>
-            <div id="gh-verbatim-list"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ============ VUE FUTURS MEMBRES (filtre 🌱 Futurs membres) ============ -->
-      <div id="prospect-section" style="display:none">
-
-        <!-- KPIs prospect : toutes les questions 0-10 du formulaire en avant -->
-        <div class="kpis">
-          <div class="kpi k-nps">
-            <div class="lab">Recommandation prospect <a href="guide.html#prospects" target="_blank" class="help-link">?</a></div>
-            <div class="val" id="pk-nps">—</div>
-            <div class="sub">« Si quelqu'un de votre entourage cherchait à cultiver son énergie et sa lucidité, lui parleriez-vous de Greatly ? »</div>
-          </div>
-          <div class="kpi">
-            <div class="lab">Première impression</div>
-            <div class="val"><span id="pk-impression">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">« Votre première impression en découvrant Greatly »</div>
-          </div>
-          <div class="kpi">
-            <div class="lab">Clarté de l'offre</div>
-            <div class="val"><span id="pk-clarte">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">« Vous avez compris ce que Greatly propose »</div>
-          </div>
-          <div class="kpi">
-            <div class="lab">Pertinence ressentie</div>
-            <div class="val"><span id="pk-pertinence">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">« Ce que Greatly propose résonne avec ce que vous vivez »</div>
-          </div>
-          <div class="kpi">
-            <div class="lab">Perception de la valeur</div>
-            <div class="val"><span id="pk-valeur">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">« Le programme vous semble à la hauteur de ce qu'il représente »</div>
-          </div>
-          <div class="kpi">
-            <div class="lab">Projection</div>
-            <div class="val"><span id="pk-projection">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">« Vous vous imaginez rejoindre un groupe Greatly ? »</div>
-          </div>
-        </div>
-
-        <div class="grid">
-          <!-- Sources de découverte -->
-          <div class="card">
-            <h3>Comment ils nous découvrent</h3>
-            <div class="sub">« Comment nos chemins se sont-ils croisés ? »</div>
-            <div class="chartbox"><canvas id="c-prospect-sources"></canvas></div>
-          </div>
-
-          <!-- Perception valeur -->
-          <div class="card">
-            <h3>Perception de la valeur</h3>
-            <div class="sub">« Le programme vous semble à la hauteur de ce qu'il représente » · note 0–10</div>
-            <div class="chartbox"><canvas id="c-prospect-valeur"></canvas></div>
-          </div>
-
-          <!-- Freins identifiés -->
-          <div class="card">
-            <h3>Ce qui freine</h3>
-            <div class="sub">« Y a-t-il des choses qui vous retiennent aujourd'hui ? »</div>
-            <div class="chartbox"><canvas id="c-prospect-freins"></canvas></div>
-          </div>
-
-          <!-- Attraits -->
-          <div class="card">
-            <h3>Ce qui attire</h3>
-            <div class="sub">« Qu'est-ce qui vous a touché ou donné envie ? »</div>
-            <div class="chartbox"><canvas id="c-prospect-attraits"></canvas></div>
-          </div>
-
-          <!-- NPS prospect dans le temps -->
-          <div class="card">
-            <h3>Évolution de la recommandation prospect</h3>
-            <div class="sub">« Si quelqu'un de votre entourage cherchait à cultiver son énergie et sa lucidité, lui parleriez-vous de Greatly ? » · par mois</div>
-            <div class="metric-headline">
-              <span class="metric-val" id="prospect-nps-val">—</span><span class="metric-unit">/10</span>
-              <span class="metric-lab">note moyenne</span>
-            </div>
-            <div class="chartbox"><canvas id="c-prospect-nps"></canvas></div>
-          </div>
-
-          <!-- Pertinence vs Projection -->
-          <div class="card">
-            <h3>Pertinence perçue vs projection</h3>
-            <div class="sub">« Ce que Greatly propose résonne avec ce que vous vivez » vs « Vous vous imaginez rejoindre ? » · par mois</div>
-            <div class="chartbox"><canvas id="c-prospect-pertproj"></canvas></div>
-          </div>
-
-          <!-- Verbatims : ce qui ferait franchir le pas -->
-          <div class="card">
-            <h3>Ce qui ferait franchir le pas</h3>
-            <div class="sub">« Qu'est-ce qui vous ferait franchir le pas ? »</div>
-            <div id="prospect-verbatims-pas"></div>
-            <button type="button" class="btn-ghost" style="margin-top:12px;width:100%" onclick="openVerbatims()">Voir tous les retours</button>
-          </div>
-
-          <!-- Verbatims : suggestions -->
-          <div class="card">
-            <h3>Un dernier mot</h3>
-            <div class="sub">« Un dernier mot, une idée, quelque chose que vous aimeriez nous dire ? »</div>
-            <div id="prospect-verbatims-suggestions"></div>
-            <button type="button" class="btn-ghost" style="margin-top:12px;width:100%" onclick="openVerbatims()">Voir tous les retours</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ============ VUE INTERVENANTS + GREATLY ============ -->
-      <div id="ivgreatly-section" style="display:none">
-
-        <!-- KPIs -->
-        <div class="kpis">
-          <div class="kpi k-nps">
-            <div class="lab">Satisfaction globale <a href="guide.html#intervenants" target="_blank" class="help-link">?</a></div>
-            <div class="val" id="ig-satisfaction">—<span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">moyenne des 6 dimensions Greatly & vous</div>
-          </div>
-          <div class="kpi">
-            <div class="lab">Logistique</div>
-            <div class="val"><span id="ig-logistique">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">« Comment trouvez-vous la logistique autour de vos interventions ? »</div>
-          </div>
-          <div class="kpi">
-            <div class="lab">Accompagnement pédagogique</div>
-            <div class="val"><span id="ig-pedagogie">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">« Comment vivez-vous l'accompagnement pédagogique ? »</div>
-          </div>
-          <div class="kpi">
-            <div class="lab">Relation avec l'équipe</div>
-            <div class="val"><span id="ig-relation">—</span><span style="font-size:1rem;color:var(--warm-grey)">/10</span></div>
-            <div class="sub">« Comment décririez-vous votre relation avec l'équipe Greatly ? »</div>
-          </div>
-        </div>
-
-        <div class="grid">
-          <!-- Vue d'ensemble des 6 dimensions -->
-          <div class="card full">
-            <h3>Les 6 dimensions de la collaboration</h3>
-            <div class="sub">Note moyenne (0–10) · logistique, administratif, pédagogie, communication, cadre, relation</div>
-            <div class="chartbox" style="height:260px"><canvas id="c-ig-radar"></canvas></div>
-          </div>
-
-          <!-- Évolution dans le temps -->
-          <div class="card full">
-            <h3>Évolution de la satisfaction</h3>
-            <div class="sub">Moyenne des 6 dimensions par mois</div>
-            <div class="chartbox"><canvas id="c-ig-evol"></canvas></div>
-          </div>
-
-          <!-- Détail par dimension -->
-          <div class="card">
-            <h3>Suivi administratif</h3>
-            <div class="sub">« Êtes-vous satisfait du suivi administratif ? »</div>
-            <div class="kpi" style="border:none;padding:8px 0"><div class="val" id="ig-admin">—<span style="font-size:1rem;color:var(--warm-grey)">/10</span></div></div>
-            <div class="chartbox" style="height:120px"><canvas id="c-ig-admin"></canvas></div>
-          </div>
-
-          <div class="card">
-            <h3>Communication interne</h3>
-            <div class="sub">« La communication interne vous convient-elle ? »</div>
-            <div class="kpi" style="border:none;padding:8px 0"><div class="val" id="ig-comm">—<span style="font-size:1rem;color:var(--warm-grey)">/10</span></div></div>
-            <div class="chartbox" style="height:120px"><canvas id="c-ig-comm"></canvas></div>
-          </div>
-
-          <div class="card full">
-            <h3>Cadre & confort des lieux</h3>
-            <div class="sub">« Que pensez-vous du cadre et du confort des lieux où vous intervenez ? » · Greatly House + lieux sportifs</div>
-            <div class="chartbox" style="height:180px"><canvas id="c-ig-cadre"></canvas></div>
-          </div>
-
-          <!-- Phases intervenants : étape par étape -->
-          <div class="card" id="card-phases-iv-e">
-            <h3>Séance Énergie, étape par étape</h3>
-            <div class="sub">Note moyenne par temps de séance (0–10) · vue intervenants</div>
-            <div class="chartbox"><canvas id="c-phases-iv-e"></canvas></div>
-          </div>
-
-          <div class="card" id="card-phases-iv-l">
-            <h3>Rencontre Lucidité, étape par étape</h3>
-            <div class="sub">Note moyenne par temps de rencontre (0–10) · vue intervenants</div>
-            <div class="chartbox"><canvas id="c-phases-iv-l"></canvas></div>
-          </div>
-
-          <!-- Retours de séance des intervenants : échelles -->
-          <div class="card full">
-            <h3>Retours de séance — vue intervenants</h3>
-            <div class="sub">Échelles remplies par les intervenants après chaque séance ou atelier · note 0–10 · par parcours</div>
-            <div class="qgrid" id="iv-seance-grid"></div>
-          </div>
-
-          <!-- Questions Greatly & vous : réponses libres par question -->
-          <div class="card full">
-            <h3>Réponses libres — Greatly & vous</h3>
-            <div class="sub">Les 2 questions ouvertes posées aux intervenants sur leur collaboration avec Greatly</div>
-            <div id="opens-list-greatly"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card full" id="card-opens">
-        <h3>Réponses libres par question</h3>
-        <div class="sub">Ce que chacun a écrit, regroupé sous la question posée dans le formulaire</div>
-        <div id="opens-list"></div>
-      </div>
-
-      <div class="card" id="card-feedbacks">
-        <h3>✍️ Feedbacks écrits <a href="guide.html#form-ecrit" target="_blank" class="help-link">?</a></h3>
-        <div class="sub">Retours détaillés rédigés librement par les membres et intervenants</div>
-        <div id="feedbacks-list"></div>
-        <button type="button" class="btn-ghost" style="margin-top:12px;width:100%" onclick="openFeedbacks()">Voir tous les feedbacks</button>
-      </div>
-
-  </div>
-
-  <!-- ============ VUE COMMUNAUTÉ ============ -->
-  <div class="view" id="view-community">
-
-    <!-- Zone de chat -->
-    <div class="chat-box">
-      <div class="chat-messages" id="chat-messages"></div>
-      <div class="chat-input-bar">
-        <input type="text" id="chat-input" placeholder="Écrire un message…" autocomplete="off">
-        <button type="button" class="chat-send" id="chat-send" onclick="sendMessage()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ============ VUE ADMINISTRATION ============ -->
-  <div class="view" id="view-admin">
-
-    <div class="admin-banner">
-      🔒 Espace réservé au super-admin. Les actions effectuées ici sont journalisées.
-    </div>
-
-    <!-- KPIs admin -->
-    <div class="kpis" style="margin-bottom:22px">
-      <div class="kpi"><div class="lab">Membres actifs</div><div class="val" id="ak-active">—</div></div>
-      <div class="kpi"><div class="lab">Invitations en attente</div><div class="val" id="ak-pending">—</div></div>
-      <div class="kpi"><div class="lab">Connexions (30 j)</div><div class="val" id="ak-conn">—</div></div>
-      <div class="kpi"><div class="lab">Temps moyen / personne</div><div class="val" id="ak-time">—</div></div>
-    </div>
-
-    <!-- Inviter -->
-    <div class="card" style="margin-bottom:14px">
-      <h3>Inviter une personne</h3>
-      <div class="sub">Un email d'invitation sera envoyé avec un lien d'accès au dashboard.</div>
-      <button class="btn-solid" style="margin-top:12px" onclick="openInvitePopup()">+ Inviter</button>
-    </div>
-
-    <!-- Liste des personnes -->
-    <div class="card" style="margin-bottom:14px">
-      <h3>Personnes</h3>
-      <div class="sub">Comptes d'accès au dashboard</div>
-      <div id="people-container" style="overflow-x:auto;margin-top:10px"></div>
-    </div>
-
-    <!-- Journal d'activité -->
-    <div class="card">
-      <h3>Journal d'activité</h3>
-      <div class="sub">Connexions et actions d'administration</div>
-      <div id="log-container" style="margin-top:10px"></div>
-    </div>
-
-  </div>
-
-  <div class="foot">GREATLY · Espace réservé à l'équipe · Les retours sont anonymes, aucune réponse n'est rattachée à un membre.</div>
-</div>
-</div>
-
-<!-- Popup tous les retours -->
-<div class="overlay" id="verbatims-overlay">
-  <div class="popup">
-    <button type="button" class="close" onclick="closeVerbatims()">✕</button>
-    <h3 style="margin-bottom:4px">Tous les retours</h3>
-    <div class="sub" style="margin-bottom:16px">Verbatims des membres et intervenants, par ordre chronologique</div>
-    <div id="verbatims-detail"></div>
-  </div>
-</div>
-
-<!-- Popup feedbacks écrits -->
-<div class="overlay" id="feedbacks-overlay">
-  <div class="popup">
-    <button type="button" class="close" onclick="closeFeedbacks()">✕</button>
-    <h3 style="margin-bottom:4px">Tous les feedbacks écrits</h3>
-    <div class="sub" style="margin-bottom:16px">Retours détaillés rédigés librement, par ordre chronologique</div>
-    <div id="feedbacks-detail"></div>
-  </div>
-</div>
-
-<!-- Popup points d'attention -->
-<div class="overlay" id="alerts-overlay">
-  <div class="popup">
-    <button type="button" class="close" onclick="closeAlerts()">✕</button>
-    <h3 style="margin-bottom:4px">Points d'attention</h3>
-    <div class="sub" style="margin-bottom:16px">Signaux remontés par les intervenants et verbatims source</div>
-    <div id="alerts-detail"></div>
-  </div>
-</div>
-
-<!-- Popup invitation -->
-<div class="overlay" id="invite-overlay">
-  <div class="popup" style="max-width:440px">
-    <button type="button" class="close" onclick="closeInvitePopup()">✕</button>
-    <h3 style="margin-bottom:4px">Inviter une personne</h3>
-    <div class="sub" style="margin-bottom:16px">Un email d'invitation sera envoyé automatiquement.</div>
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <div style="display:flex;gap:8px">
-        <input type="text" id="invite-firstname" placeholder="Prénom" style="flex:1">
-        <input type="text" id="invite-lastname" placeholder="Nom" style="flex:1">
-      </div>
-      <input type="email" id="invite-email" placeholder="Email">
-      <div>
-        <label style="font-size:.82rem;font-weight:600;color:var(--warm-grey);display:block;margin-bottom:6px">Rôle</label>
-        <div style="display:flex;gap:8px">
-          <button type="button" class="chip invite-role-btn" data-role="Membre" style="flex:1;text-align:center" onclick="selectInviteRole(this)">
-            🌱 Membre
-          </button>
-          <button type="button" class="chip invite-role-btn" data-role="Super-admin" style="flex:1;text-align:center" onclick="selectInviteRole(this)">
-            🔒 Super-admin
-          </button>
-        </div>
-        <div style="font-size:.74rem;color:var(--warm-grey);margin-top:6px" id="invite-role-hint">
-          Choisissez un rôle pour cette personne.
-        </div>
-      </div>
-      <div id="invite-error" style="display:none;color:var(--bad);font-size:.82rem"></div>
-      <button class="btn-solid" style="width:100%;margin-top:4px" id="invite-submit" onclick="submitInvite()">Envoyer l'invitation</button>
-    </div>
-  </div>
-</div>
-
-<!-- Scripts (chargés avec un timestamp pour éviter le cache navigateur) -->
-<script>
-(function(){
-  var v = '?v=' + Date.now();
-  var files = [
-    'config.js', 'api.js',
-    'dashboard/filters.js', 'dashboard/charts.js', 'dashboard/auth.js',
-    'dashboard/data.js', 'dashboard/admin.js', 'dashboard/alerts.js', 'dashboard/chat.js'
-  ];
-  files.forEach(function(f){
-    document.write('<script src="assets/js/' + f + v + '"><\/script>');
-  });
-})();
-</script>
-<script>
-// Navigation principale (navbar)
-// Navigation principale (navbar views)
-function switchView(viewName) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-' + viewName).classList.add('active');
-}
-
-document.querySelectorAll('.navbar-item[data-view]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    // Reset visuels
-    document.querySelectorAll('.navbar-item[data-view]').forEach(x => x.classList.remove('on'));
-    btn.classList.add('on');
-    switchView(btn.dataset.view);
-    if (btn.dataset.view === 'admin') loadPeople();
-    if (btn.dataset.view === 'community') { renderChat(); startChatRefresh(); }
-    else { stopChatRefresh(); }
-  });
-});
-
-// Icône maison — toujours ramener à vue dashboard + reset onglet Membres + scroll top
-document.querySelector('.navbar-item[data-view="dashboard"]').addEventListener('click', () => {
-  document.querySelectorAll('.navbar-item[data-view]').forEach(x => x.classList.remove('on'));
-  document.querySelector('.navbar-item[data-view="dashboard"]').classList.add('on');
-  switchView('dashboard');
-  F.who = 'membres';
-  document.querySelectorAll('#f-who button').forEach(b => {
-    b.classList.toggle('on', b.dataset.v === 'membres');
-  });
-  render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-// Logo GREATLY — même comportement que la maison
-document.getElementById('logo-home').addEventListener('click', () => {
-  document.querySelector('.navbar-item[data-view="dashboard"]').click();
-});
-
-// Dropdowns navbar
-document.querySelectorAll('.navbar-has-dropdown').forEach(btn => {
-  btn.addEventListener('click', e => {
-    e.stopPropagation();
-    const wrap = btn.closest('.navbar-dropdown-wrap');
-    const wasOpen = wrap.classList.contains('open');
-    document.querySelectorAll('.navbar-dropdown-wrap').forEach(w => w.classList.remove('open'));
-    if (!wasOpen) wrap.classList.add('open');
-  });
-});
-document.addEventListener('click', () => {
-  document.querySelectorAll('.navbar-dropdown-wrap').forEach(w => w.classList.remove('open'));
-});
-
-// Onglet unique = audience
-bindFilter('f-who', 'who');
-// Scroll to top quand on change d'onglet
-document.querySelectorAll('#f-who button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-});
-
-// Enter sur le champ email de connexion
-document.getElementById('login-email').addEventListener('keydown', e => {
-  if (e.key === 'Enter') login();
-});
-
-// Sticky filters — ajoute une ombre quand les filtres collent sous la navbar
-const filtersBar = document.getElementById('filters-bar');
-if (filtersBar) {
-  const observer = new IntersectionObserver(
-    ([e]) => filtersBar.classList.toggle('stuck', e.intersectionRatio < 1),
-    { threshold: [1], rootMargin: '-57px 0px 0px 0px' }
-  );
-  observer.observe(filtersBar);
-}
-
-// Vérifier la session existante au chargement
-// Bouton "Une question ?" → ouvre la vue communauté
-document.getElementById('btn-question').addEventListener('click', e => {
-  e.preventDefault();
-  document.querySelectorAll('.navbar-item').forEach(x => x.classList.remove('on'));
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-community').classList.add('active');
-  if (typeof renderChat === 'function') renderChat();
-});
-
-// Au chargement : d'abord vérifier un magic link dans l'URL, sinon check session
-(async function() {
-  const params = new URLSearchParams(window.location.search);
-  const magicToken = params.get('magic');
-
-  if (magicToken) {
-    // Nettoyer l'URL
-    window.history.replaceState({}, '', window.location.pathname);
-
-    // Afficher un état de chargement plein écran
-    document.getElementById('gate').innerHTML = '';
-    document.getElementById('gate').style.cssText = 'min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--cream,#F7F4EF)';
-    document.getElementById('gate').innerHTML = '<div style="text-align:center"><div style="font-size:.82rem;letter-spacing:.32em;font-weight:700;color:#4f5e42;text-transform:uppercase;margin-bottom:16px">GREATLY</div><div style="width:36px;height:36px;border:3px solid #E7E1D7;border-top-color:#6B7D5C;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px"></div><p style="color:#6B6460;font-size:.95rem">Connexion en cours…</p><style>@keyframes spin{to{transform:rotate(360deg)}}</style></div>';
-
-    try {
-      const res = await API.call('verify-token', { token: magicToken });
-      if (res.ok && res.token) {
-        localStorage.setItem(CONFIG.TOKEN_KEY, res.token);
-        localStorage.setItem(CONFIG.ROLE_KEY, res.role);
-        localStorage.setItem(CONFIG.SESSION_START_KEY, Date.now().toString());
-        const profile = { firstname: res.firstname || '', lastname: res.lastname || '', email: res.email || '' };
-        localStorage.setItem('greatly_retours_profile', JSON.stringify(profile));
-        enterDashboard(res.role);
-        return;
-      } else {
-        alert(res.error || 'Lien invalide ou expiré.');
-      }
-    } catch (err) {
-      console.error('Erreur magic link:', err);
-    }
-    location.reload();
-    return;
-  }
-
-  // Pas de magic link → check session classique
-  checkSession();
-})();
-</script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}</script>
+</main>
 </body>
 </html>
